@@ -165,30 +165,28 @@ overflow: visible;
 margin-top: 40px;
     }
 .card {
-  perspective: 1200px;
-  -webkit-perspective: 1200px;
-  transform-origin: center center;
-  transition: transform .6s cubic-bezier(.2,.9,.2,1), opacity .45s;
-  display: block;
-  width: 100%;
-}
-
+perspective: 1200px;
+transform-origin: center center;
+transition: transform .6s cubic-bezier(.2,.9,.2,1), opacity .45s;
+display: block;
+width: 100%;
+    }
 .card-inner {
-  position: relative;
-  width: 100%;
-  transform-style: preserve-3d;
-  -webkit-transform-style: preserve-3d;
-  transition: transform 0.8s cubic-bezier(.2,.9,.2,1);
-  min-height: 180px;
-  will-change: transform;
-}
-
-/* backface visibility with prefixes */
+position: relative;
+width: 100%;
+transform-style: preserve-3d;
+transition: transform 0.8s cubic-bezier(.2,.9,.2,1);
+min-height: 180px;
+will-change: transform;
+    }
 .card-front, .card-back {
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
-}
-
+position: absolute;
+inset: 0;
+border-radius: 12px;
+padding: 18px;
+backface-visibility: hidden;
+box-shadow: 0 10px 20px rgba(2,6,23,0.6);
+    }
 .card-front {
 background: linear-gradient(180deg, #ffffff 0%, #f4efe9 100%);
 color: #111;
@@ -242,8 +240,7 @@ transform: translateY(-2px);
     }
 .card:hover .card-inner,
 .card.flipped .card-inner {
-  transform: rotateY(180deg);
-  -webkit-transform: rotateY(180deg);
+transform: rotateY(180deg);
 }
 .card {
 cursor: pointer;
@@ -1013,48 +1010,38 @@ targ.scrollIntoView({ behavior: 'smooth' });
       });
     });
 (function(){
-  // For accessibility: ensure cards are focusable
-  document.querySelectorAll('.card').forEach(card => {
-    if (!card.hasAttribute('tabindex')) card.setAttribute('tabindex', '0');
+// For accessibility
+document.querySelectorAll('.card').forEach(card => {
+if (!card.hasAttribute('tabindex')) card.setAttribute('tabindex', '0');
   });
-
-  function toggleFlip(card) {
-    if (!card || card.classList.contains('static-card')) return;
-    card.classList.toggle('flipped');
+function toggleFlip(card) {
+if (!card || card.classList.contains('static-card')) return;
+card.classList.toggle('flipped');
   }
-
-  // Use pointer events (works for mouse + touch + pen)
-  document.addEventListener('pointerup', (ev) => {
-    // Only left mouse button or primary pointer
-    if (ev.pointerType === 'mouse' && ev.button !== 0) return;
-
-    const card = ev.target.closest('.card');
-    if (!card) return;
-
-    // skip if interactive element was clicked/tapped
-    if (ev.target.closest('a, button, summary, input, select, textarea, label')) return;
-
-    // toggle flip
-    toggleFlip(card);
+// Handle click for flip
+document.addEventListener('click', (ev) => {
+const card = ev.target.closest('.card');
+if (!card) return;
+// skip if interactive element was clicked
+if (ev.target.closest('a, button, summary, input, select, textarea, label')) return;
+// toggle flip state
+toggleFlip(card);
   });
-
-  // Allow Enter/Space keyboard flip (keep your keyboard support)
-  document.addEventListener('keydown', (ev) => {
-    const active = document.activeElement;
-    if (!active || !active.classList.contains('card')) return;
-    if (ev.key === 'Enter' || ev.key === ' ') {
-      ev.preventDefault();
-      toggleFlip(active);
+// Allow Enter/Space keyboard flip
+document.addEventListener('keydown', (ev) => {
+const active = document.activeElement;
+if (!active || !active.classList.contains('card')) return;
+if (ev.key === 'Enter' || ev.key === ' ') {
+ev.preventDefault();
+toggleFlip(active);
     }
   });
-
-  // Reset flipped cards when clicking/tapping outside
-  document.addEventListener('pointerup', (ev) => {
-    const card = ev.target.closest('.card');
-    if (card) return; // inside a card → do nothing
-    document.querySelectorAll('.card.flipped').forEach(c => c.classList.remove('flipped'));
+// Reset flipped cards when clicking outside
+document.addEventListener('click', (ev) => {
+const card = ev.target.closest('.card');
+if (card) return; // inside card, do nothing
+document.querySelectorAll('.card.flipped').forEach(c => c.classList.remove('flipped'));
   });
-
 })();
 </script>
 </body>
