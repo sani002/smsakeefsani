@@ -248,6 +248,23 @@ cursor: pointer;
 touch-action: manipulation; /* prevent some double-tap / gesture issues */
 user-select: none;
     }
+
+.card-more-btn, .card-close-btn {
+  align-self: flex-end;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 0.4rem 0.8rem;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: background 0.2s;
+}
+
+.card-more-btn:hover, .card-close-btn:hover {
+  background: #0056b3;
+}
+
 .title { font-weight:700; margin: 0 0 8px; }
 .summary { font-size: 14px; color: #5b5b5b; margin: 0; }
 .badges { margin-top:12px; display:flex; gap:8px; flex-wrap:wrap; }
@@ -637,6 +654,7 @@ font-weight: 500;
 <div class="card-front">
 <h3 class="title">Efficient Antihallucinogenic AI for Tropical Medicine: A Probabilistic Framework for Differential Diagnosis</h3>
 <p class="summary">AAAI 2025 — Led development of mLabLLM (LLaMA 3.2 fine-tuned) for differential diagnosis (Dengue, Malaria, Chikungunya). Integrated Bayesian reasoning + LoRA + pruning to reach 82.8% Top-3 accuracy for low-cost clinical support.</p>
+<button class="card-more-btn" aria-label="Show more">More →</button>
 <div class="badges">
 <span class="badge">AAAI 2025</span>
 <span class="badge">LLM</span>
@@ -1009,40 +1027,30 @@ targ.scrollIntoView({ behavior: 'smooth' });
         }
       });
     });
+
 (function(){
-// For accessibility
-document.querySelectorAll('.card').forEach(card => {
-if (!card.hasAttribute('tabindex')) card.setAttribute('tabindex', '0');
-  });
-function toggleFlip(card) {
-if (!card || card.classList.contains('static-card')) return;
-card.classList.toggle('flipped');
-  }
-// Handle click for flip
-document.addEventListener('click', (ev) => {
-const card = ev.target.closest('.card');
-if (!card) return;
-// skip if interactive element was clicked
-if (ev.target.closest('a, button, summary, input, select, textarea, label')) return;
-// toggle flip state
-toggleFlip(card);
-  });
-// Allow Enter/Space keyboard flip
-document.addEventListener('keydown', (ev) => {
-const active = document.activeElement;
-if (!active || !active.classList.contains('card')) return;
-if (ev.key === 'Enter' || ev.key === ' ') {
-ev.preventDefault();
-toggleFlip(active);
+  document.addEventListener('click', (ev) => {
+    // Handle "More" button
+    if (ev.target.matches('.card-more-btn')) {
+      const card = ev.target.closest('.card');
+      if (card) card.classList.add('flipped');
+    }
+
+    // Handle "Back" button
+    if (ev.target.matches('.card-close-btn')) {
+      const card = ev.target.closest('.card');
+      if (card) card.classList.remove('flipped');
     }
   });
-// Reset flipped cards when clicking outside
-document.addEventListener('click', (ev) => {
-const card = ev.target.closest('.card');
-if (card) return; // inside card, do nothing
-document.querySelectorAll('.card.flipped').forEach(c => c.classList.remove('flipped'));
-  });
 })();
+
+document.addEventListener('click', (ev) => {
+  if (!ev.target.closest('.card')) {
+    document.querySelectorAll('.card.flipped')
+      .forEach(c => c.classList.remove('flipped'));
+  }
+});
+
 </script>
 </body>
 </html>
