@@ -1001,50 +1001,52 @@ e.target.classList.add('in');
     }, { threshold: 0.12 });
 cards.forEach(c => io.observe(c));
 // Smooth scroll for anchor links
-document.querySelectorAll('a[href^="#"]').forEach(a=>{
-a.addEventListener('click', (ev)=>{
-const targ = document.querySelector(a.getAttribute('href'));
-if(targ) {
-ev.preventDefault();
-targ.scrollIntoView({ behavior: 'smooth' });
-        }
-      });
-    });
 (function() {
-  // Accessibility: make cards focusable
+  // Make all cards focusable for accessibility
   document.querySelectorAll('.card').forEach(card => {
     if (!card.hasAttribute('tabindex')) card.setAttribute('tabindex', '0');
   });
 
-  function toggleFlip(card) {
+  function flipCard(card) {
     if (!card || card.classList.contains('static-card')) return;
+
+    // Unflip all other cards first
+    document.querySelectorAll('.card.flipped').forEach(c => {
+      if (c !== card) c.classList.remove('flipped');
+    });
+
+    // Toggle this card
     card.classList.toggle('flipped');
   }
 
-  // Handle click for flip & outside-click reset
-  document.addEventListener('click', (ev) => {
+  // Handle both click & touch to ensure immediate response on mobile
+  function handleInteraction(ev) {
     const card = ev.target.closest('.card');
 
-    // If clicking outside any card → reset all flips
     if (!card) {
+      // Clicked outside → unflip all
       document.querySelectorAll('.card.flipped').forEach(c => c.classList.remove('flipped'));
       return;
     }
 
-    // Ignore clicks on interactive elements inside the card
+    // Ignore if tapping interactive element inside a card
     if (ev.target.closest('a, button, summary, input, select, textarea, label')) return;
 
-    // Flip this card
-    toggleFlip(card);
-  });
+    ev.preventDefault(); // prevent ghost click on mobile
+    flipCard(card);
+  }
 
-  // Allow Enter/Space keyboard flip
+  // Use both pointer and touch events for immediate tap response
+  document.addEventListener('pointerup', handleInteraction);
+  document.addEventListener('touchend', handleInteraction);
+
+  // Keyboard support: Enter or Space flips focused card
   document.addEventListener('keydown', (ev) => {
     const active = document.activeElement;
     if (!active || !active.classList.contains('card')) return;
     if (ev.key === 'Enter' || ev.key === ' ') {
       ev.preventDefault();
-      toggleFlip(active);
+      flipCard(active);
     }
   });
 })();
