@@ -1,724 +1,1177 @@
 <!doctype html>
 <html lang="en">
-
 <head>
-  <title>S.M. Sakeef Sani &mdash; My Journey</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>S. M. Sakeef Sani</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0f0f10;
+      --card: #f7f3ef;
+      --muted: #bdb7b0;
+      --accent: #e76f51;
+      --glass: rgba(255,255,255,0.06);
+      --maxw: 1200px;
+      --gutter: 18px;
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; font-family: Montserrat, system-ui, Segoe UI, Roboto, 'Helvetica Neue', Arial; }
+    body { background: linear-gradient(180deg, #0b0b0b 0%, #101214 100%); color: #fff; -webkit-font-smoothing: antialiased; }
 
-  <meta name="description" content="">
-  <meta name="keywords" content="html, css, javascript, jquery">
-  <meta name="author" content="">
+    /* HERO */
+.hero {
+  position: relative;
+  height: 100vh;
+  min-height: 600px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  isolation: isolate;
+  /* Add this to ensure hero takes full width */
+  width: 100%;
+}
 
-  <link rel="stylesheet" href="css/vendor/icomoon/style.css">
-  <link rel="stylesheet" href="css/vendor/owl.carousel.min.css">
-  <link rel="stylesheet" href="css/vendor/animate.min.css">
-  <link rel="stylesheet" href="css/vendor/aos.css">
-  <link rel="stylesheet" href="css/vendor/bootstrap.min.css">
-  <link rel="stylesheet" href="css/vendor/jquery.fancybox.min.css">
+/* FIX: Make background cover full area + extend downward */
+.parallax-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-image: url('bg-2.jpg');
+  background-size: cover;           /* CHANGE: cover instead of contain */
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: #0b0b0b;
+  transform: translateZ(0);
+  will-change: transform;
+  filter: contrast(1.05) saturate(1.5);
+  
+  /* EXTEND BACKGROUND DOWNWARD to cover content gap */
+  top: -50vh;           /* Start higher */
+  height: 200vh;        /* Extend 100vh below hero */
+  background-attachment: fixed; /* Optional: stronger parallax feel */
+}
+
+/* Optional: Fine-tune parallax speed */
+.parallax-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: inherit;
+  background-size: inherit;
+  background-position: inherit;
+  transform: translateY(0);
+  will-change: transform;
+  z-index: -1;
+}
+
+/* Gradient overlay as pseudo-element to avoid stretching issue */
+.parallax-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 100%);
+  pointer-events: none; /* so overlay doesn’t block clicks */
+}
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: var(--maxw);
+      width: 100%;
+      padding: 48px;
+      display: grid;
+      grid-template-columns: 1fr 420px;
+      gap: 28px;
+      align-items: center;
+    }
+    .intro {
+      padding: 48px 36px;
+      border-radius: 18px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      backdrop-filter: blur(6px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+    }
+    .eyebrow {
+      font-weight: 600; letter-spacing: 2px; color: var(--muted);
+      font-size: 12px; text-transform: uppercase;
+    }
+    h1 {
+      font-size: 48px; margin: 8px 0 6px; line-height: 1.02; font-weight: 800;
+    }
+    h2 {
+      font-size: 18px; color: var(--muted); font-weight: 400; margin: 0 0 12px;
+    }
+    p.lead {
+      margin: 12px 0 0; color: #e6dfd9; font-weight: 300;
+    }
+
+    .hero-card {
+      padding: 22px; border-radius: 14px; background: var(--glass);
+      border: 1px solid rgba(255,255,255,0.03);
+    }
+    .meta {
+      font-size: 14px; color: var(--muted); margin-top: 12px;
+    }
+.cta {
+  display: flex;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.btn {
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  cursor: pointer;
+  font-weight: 600;
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.3s ease;
+  transform: translateY(0);
+}
+
+.btn:hover {
+  transform: translateY(-4px);
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 18px rgba(255, 255, 255, 0.08);
+}
+
+.btn.primary {
+  background: linear-gradient(90deg, var(--accent), #ff9d76);
+  color: #0b0b0b;
+  border: none;
+  transition: all 0.35s ease;
+  background-size: 200%;
+  background-position: left;
+}
+
+.btn.primary:hover {
+  background-position: right;
+  box-shadow: 0 8px 20px rgba(255, 157, 118, 0.4);
+  transform: translateY(-4px);
+}
 
 
-  <!-- Theme Style -->
-  <link rel="stylesheet" href="css/style.css">
+    .scroll-hint {
+      position: absolute; left: 50%; transform: translateX(-50%);
+      bottom: 20px; font-size: 12px; color: var(--muted); z-index: 3;
+    }
 
+    /* MAIN / CARDS */
+    main {
+      max-width: var(--maxw);
+      margin: 0 auto 120px;
+      padding: 60px var(--gutter) 0;
+      position: relative;
+      z-index: 6;
+      overflow: visible;
+    }
+
+    .masonry {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: var(--gutter);
+      position: relative;
+      z-index: 5;
+      overflow: visible;
+      margin-top: 40px;
+    }
+
+    .card {
+      perspective: 1200px;
+      transform-origin: center center;
+      transition: transform .6s cubic-bezier(.2,.9,.2,1), opacity .45s;
+      display: block;
+      width: 100%;
+    }
+
+    .card-inner {
+      position: relative;
+      width: 100%;
+      transform-style: preserve-3d;
+      transition: transform 0.8s cubic-bezier(.2,.9,.2,1);
+      min-height: 180px;
+      will-change: transform;
+    }
+
+    .card-front, .card-back {
+      position: absolute;
+      inset: 0;
+      border-radius: 12px;
+      padding: 18px;
+      backface-visibility: hidden;
+      box-shadow: 0 10px 20px rgba(2,6,23,0.6);
+    }
+
+    .card-front {
+      background: linear-gradient(180deg, #ffffff 0%, #f4efe9 100%);
+      color: #111;
+      position: relative;
+    }
+
+    .card-back {
+      position: absolute;
+      inset: 0;
+      border-radius: 12px;
+      overflow: hidden;
+      backface-visibility: hidden;
+      transform: rotateY(180deg);
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: center;
+      padding: 20px;
+      color: #fff;
+      text-align: center;
+    }
+
+    .card-back::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0);
+      z-index: 0;
+    }
+
+    .card-back .back-links {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .card-back .link {
+      background: rgba(255,255,255,.6);
+      border: 1px solid rgba(255,255,255,1);
+      color: #0b0b0b;
+      font-weight: 600;
+      padding: 10px 14px;
+      border-radius: 10px;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .card-back .link:hover {
+      background: rgba(255,255,255,1);
+      transform: translateY(-2px);
+    }
+
+    .card:hover .card-inner {
+      transform: rotateY(180deg);
+    }
+
+    .title { font-weight:700; margin: 0 0 8px; }
+    .summary { font-size: 14px; color: #5b5b5b; margin: 0; }
+    .badges { margin-top:12px; display:flex; gap:8px; flex-wrap:wrap; }
+    .badge { background: rgba(11,11,11,0.06); color: #222; padding:6px 10px; border-radius:999px; font-size:12px; }
+
+    footer {
+      position: relative;
+      clear: both;
+      max-width: var(--maxw);
+      margin: 100px auto;
+      padding: 0 var(--gutter);
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 10;
+    }
+
+    .reveal { opacity: 0; transform: translateY(28px) scale(.995); }
+    .reveal.in { opacity:1; transform:none; transition: all 700ms cubic-bezier(.2,.9,.2,1); }
+
+    .retro-line { height:2px; width:100px; background: linear-gradient(90deg, var(--accent), transparent); border-radius:4px; margin:10px 0; }
+
+    .muted { color: var(--muted); }
+    a { color: inherit; text-decoration: none; }
+
+    @media (max-width: 1000px) {
+      .hero-content { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 640px) {
+      .masonry {
+        grid-template-columns: 1fr; /* Two columns instead of one */
+      }
+    }
+
+    .research .card-front {
+        background: #ed1c22;
+        color: #fff;
+    }
+
+    .research .card-front .title {
+        color: #fff;
+    }
+
+    .research .card-front .summary {
+        color: rgba(255, 255, 255, 0.85);
+    }
+
+    .research .card-front .badge {
+        background: rgba(255, 255, 255, 0.15);
+        color: #fff;
+    }
+
+    .awards .card-front {
+        background: #b21b46;
+        color: #fff;
+    }
+
+    .awards .card-front .title {
+        color: #fff;
+    }
+
+    .awards .card-front .summary {
+        color: rgba(255, 255, 255, 0.85);
+    }
+
+    .awards .card-front .badge {
+        background: rgba(255, 255, 255, 0.15);
+        color: #fff;
+    }
+
+    .experience .card-front {
+        background: #761a65;
+        color: #fff;
+    }
+
+    .experience .card-front .title {
+        color: #fff;
+    }
+
+    .experience .card-front .summary {
+        color: rgba(255, 255, 255, 0.85);
+    }
+
+    .experience .card-front .badge {
+        background: rgba(255, 255, 255, 0.15);
+        color: #fff;
+    }
+
+    .animation .card-front {
+        background: #3b1989;
+        color: #fff;
+    }
+
+    .animation .card-front .title {
+        color: #fff;
+    }
+
+    .animation .card-front .summary {
+        color: rgba(255, 255, 255, 0.85);
+    }
+
+    .animation .card-front .badge {
+        background: rgba(255, 255, 255, 0.15);
+        color: #fff;
+    }
+
+    /* Disable flip and add slide-zoom for static cards */
+    .static-card .card-inner {
+        transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.2, 1), box-shadow 0.3s cubic-bezier(0.2, 0.9, 0.2, 1);
+    }
+
+    .static-card:hover .card-inner {
+        transform: scale(1.05) translateY(-10px); /* Zoom in + slide up */
+        box-shadow: 0 20px 40px rgba(2, 6, 23, 0.8); /* Increased shadow for lift effect */
+    }
+
+    /* Ensure back stays hidden (optional but good for consistency) */
+    .static-card .card-back {
+        display: none; /* Hide empty back since no flip */
+    }
+
+    .card:hover .card-inner,
+    .card.flipped .card-inner {
+      transform: rotateY(180deg);
+    }
+
+    /* For static cards (if you have them), keep hover but add tap toggle if needed */
+    .static-card:hover .card-inner,
+    .static-card.flipped .card-inner {
+      transform: scale(1.05) translateY(-10px); /* Or your custom effect */
+      box-shadow: 0 20px 40px rgba(2, 6, 23, 0.8);
+    }
+
+    /* Prevent double-flip on hover+tap */
+    @media (hover: none) {
+      .card:hover .card-inner {
+        transform: none; /* Disable hover on touch devices */
+      }
+    }
+    
+/* GALLERY SECTION */
+.image-gallery {
+  max-width: var(--maxw);
+  margin: 120px auto;
+  padding: 0 var(--gutter);
+  position: relative;
+  z-index: 10;
+}
+
+.gallery-title {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 32px;
+  text-align: center;
+  color: #fff;
+}
+
+.image-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 18px;
+}
+
+.image-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 14px;
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 10px 24px rgba(0,0,0,0.5);
+  cursor: pointer;
+  transition: transform 0.4s cubic-bezier(.2,.9,.2,1), box-shadow 0.4s cubic-bezier(.2,.9,.2,1);
+}
+
+.image-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.4s ease, filter 0.4s ease;
+}
+
+.image-card span {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 10px 14px;
+  background: linear-gradient(180deg, transparent, rgba(0,0,0,0.7));
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+/* Hover effect */
+.image-card:hover {
+  transform: scale(1.05) translateY(-6px);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+}
+
+.image-card:hover img {
+  transform: scale(1.08);
+  filter: brightness(1.15);
+}
+
+.image-card:hover span {
+  background: linear-gradient(180deg, rgba(0,0,0,0.2), rgba(0,0,0,0.85));
+}
+
+/* LIGHTBOX STYLES */
+.lightbox {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.9);
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  backdrop-filter: blur(4px);
+  transition: opacity 0.3s ease;
+}
+
+.lightbox.active {
+  display: flex;
+  animation: fadeIn 0.3s ease forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.lightbox img {
+  max-width: 90%;
+  max-height: 80vh;
+  border-radius: 12px;
+  box-shadow: 0 0 40px rgba(255,255,255,0.2);
+  animation: zoomIn 0.3s ease;
+}
+
+@keyframes zoomIn {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.lightbox p {
+  color: #fff;
+  margin-top: 20px;
+  font-size: 16px;
+  text-align: center;
+}
+
+.lightbox-close {
+  position: absolute;
+  top: 30px;
+  right: 40px;
+  color: #fff;
+  font-size: 40px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.lightbox-close:hover {
+  color: #ff5555;
+}
+
+/* === MOBILE-FIRST HERO FIXES === */
+.hero-content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 32px 20px;
+  max-width: 100%;
+  text-align: center;
+}
+
+.intro {
+  padding: 28px 20px;
+  border-radius: 16px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+  backdrop-filter: blur(8px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.eyebrow {
+  font-size: 11px;
+  letter-spacing: 2.5px;
+}
+
+h1 {
+  font-size: 32px;
+  line-height: 1.1;
+  margin: 8px 0;
+  font-weight: 800;
+}
+
+h2 {
+  font-size: 16px;
+  line-height: 1.4;
+  margin: 12px 0;
+  color: var(--muted);
+}
+
+.cta {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 20px;
+  align-items: center;
+}
+
+.social-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+.btn {
+  padding: 10px 16px;
+  font-size: 14px;
+  min-width: 100px;
+}
+
+.btn.primary {
+  width: 100%;
+  max-width: 280px;
+}
+
+/* Hero Card → <details> collapsible */
+.hero-card {
+  padding: 20px;
+  border-radius: 14px;
+  background: var(--glass);
+  border: 1px solid rgba(255,255,255,0.03);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.hero-card[open] {
+  padding-bottom: 24px;
+}
+
+.hero-card summary {
+  list-style: none;
+  font-weight: 600;
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.hero-card summary::after {
+  content: '▼';
+  font-size: 12px;
+  transition: transform 0.3s ease;
+}
+
+.hero-card[open] summary::after {
+  transform: rotate(180deg);
+}
+
+.hero-card ul {
+  margin: 0;
+  padding-left: 18px;
+  text-align: left;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #e6dfd9;
+}
+
+.meta-badge {
+  margin-top: 14px;
+  font-size: 12px;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+  </style>
 </head>
+<body>
 
-<body data-spy="scroll" data-target=".site-nav-target" data-offset="200">
-
-  <nav class="unslate_co--site-mobile-menu">
-    <div class="close-wrap d-flex">
-      <a href="#" class="d-flex ml-auto js-menu-toggle">
-        <span class="close-label">Close</span>
-        <div class="close-times">
-          <span class="bar1"></span>
-          <span class="bar2"></span>
+<header class="hero">
+  <div class="parallax-bg" id="parallax"></div>
+  
+  <div class="hero-content">
+    <!-- Intro Text -->
+    <div class="intro">
+      <div class="eyebrow">S. M. Sakeef Sani</div>
+      <h1>Biomedical Engineer · ML Researcher · Founder · Designer</h1>
+      <h2>ML for Medical Imaging · Clinical Decision Systems · Animation & VFX · Business Analytics</h2>
+      
+      <div class="cta">
+        <button class="btn primary" onclick="document.getElementById('work').scrollIntoView({behavior:'smooth'})">
+          View Work
+        </button>
+        <div class="social-links">
+            <a class="btn" href="https://github.com/sani002" target="_blank">Github</a>
+            <a class="btn" href="https://www.researchgate.net/profile/Sm-Sani?ev=hdr_xprf" target="_blank">ResearchGate</a>
+            <a class="btn" href="https://facebook.com/sakeef.sani007" target="_blank">Facebook</a>
+            <a class="btn" href="https://www.facebook.com/EnigmatterOfficial" target="_blank">Studio</a>
         </div>
-      </a>
+      </div>
     </div>
-    <div class="site-mobile-inner"></div>
-  </nav>
 
+    <!-- Highlighted Projects (collapses into accordion on mobile) -->
+    <details class="hero-card">
+      <summary><strong>Highlighted Projects</strong></summary>
+      <ul>
+        <li>Specializing in machine learning for medical imaging and AI-driven healthcare solutions for low-resource settings.</li>
+        <li>Founder/co-founder of ventures like PakhiDrone BD (agro-tech) and Enigmatter Studio (animation & VFX), blending business acumen with technology.</li>
+        <li>Recognized globally with honors such as the Honda Y-E-S Award, Johns Hopkins Design Competition (2× 2nd Place), and IPAS Innovation Award.</li>
+        <li>Currently at British American Tobacco, managing multimillion-BDT operations and developing data-driven distribution systems for emerging markets.</li>
+        <li>Expert in 3D animation and VFX, crafting impactful stories that merge science, art, and entrepreneurship for global good.</li>
+      </ul>
+    </details>
+  </div>
 
-  <div class="unslate_co--site-wrap">
+  <div class="scroll-hint">scroll ↓</div>
+</header>
 
-    <div class="unslate_co--site-inner">
-
-      <div class="lines-wrap">
-        <div class="lines-inner">
-          <div class="lines"></div>
-        </div>
+  <main id="work">
+    <section class="masonry" id="masonry">
+<!-- Research Summary Card -->
+<article class="card reveal static-card research">
+  <div class="card-inner">
+    <div class="card-front">
+      <h3 class="title">Research: Pioneering AI for Accessible Healthcare</h3>
+      <p class="summary">Leveraging machine learning to democratize medical diagnostics in underserved regions. Focused on efficient, bias-aware AI for tropical diseases and skin lesions — building scalable tools from limited data to empower clinicians worldwide.</p>
+      <div class="badges">
+        <span class="badge">ML</span>
+        <span class="badge">Healthcare</span>
+        <span class="badge">Tropical Diseases</span>
       </div>
-      <!-- END lines -->
-
-      <nav class="unslate_co--site-nav site-nav-target">
-
-        <div class="container">
-
-          <div class="row align-items-center justify-content-between text-left">
-            <div class="col-md-5 text-right">
-              <ul class="site-nav-ul js-clone-nav text-left d-none d-lg-inline-block">
-                <li class="has-children">
-                  <a href="#home-section" class="nav-link">Home</a>
-                  <ul class="dropdown">
-                    <li>
-                      <a href="index.html">Hero Image BG</a>
-                    </li>
-                    <li>
-                      <a href="index-video.html">Video BG</a>
-                    </li>
-                    <li>
-                      <a href="index-hero-slider.html">Hero Slider</a>
-                    </li>
-                    <li>
-                      <a href="index-sidebar-menu.html">Sidebar Menu</a>
-                    </li>
-                    <li>
-                      <a href="index-right-menu.html">Right Menu</a>
-                    </li>
-                  </ul>
-                </li>
-                <li><a href="#portfolio-section" class="nav-link">Portfolio</a></li>
-                <li><a href="#about-section" class="nav-link">About</a></li>
-                <li><a href="#services-section" class="nav-link">Services</a></li>
-              </ul>
-            </div>
-            <div class="site-logo pos-absolute">
-              <a href="index.html" class="unslate_co--site-logo">Sani<span>.</span></a>
-            </div>
-            <div class="col-md-5 text-right text-lg-left">
-              <ul class="site-nav-ul js-clone-nav text-left d-none d-lg-inline-block">
-                <li><a href="#skills-section" class="nav-link">Skills</a></li>
-                <li><a href="#testimonial-section" class="nav-link">Testimonial</a></li>
-                <li><a href="#journal-section" class="nav-link">Journal</a></li>
-                <li><a href="#contact-section" class="nav-link">Contact</a></li>
-              </ul>
-
-              <ul class="site-nav-ul-none-onepage text-right d-inline-block d-lg-none">
-                <li><a href="#" class="js-menu-toggle">Menu</a></li>
-              </ul>
-
-            </div>
-          </div>
-        </div>
-
-      </nav>
-      <!-- END nav -->
-
-      <div class="cover-v1 jarallax" style="background-image: url('images/cover_bg_2.png');" id="home-section">
-        <div class="container">
-          <div class="row align-items-center">
-
-            <div class="col-md-7 mx-auto text-center">
-              <h1 class="heading gsap-reveal-hero">Hello!</h1>
-              <h2 class="subheading gsap-reveal-hero">I’m S.M. Sakeef Sani <br> A Programmer An Animator <br> A VFX
-                Artist
-                <br> Based In Dhaka, Bangladesh
-              </h2>
-            </div>
-
-          </div>
-        </div>
-
-
-        <a href="#portfolio-section" class="mouse-wrap smoothscroll">
-          <span class="mouse">
-            <span class="scroll"></span>
-          </span>
-          <span class="mouse-label">Scroll</span>
-        </a>
-
+    </div>
+    <div class="card-back" style="background-image: url('assets/images/photo-portfolio-research.jpeg');">
+      <div class="back-links">
+        <!-- No external links for the section summary -->
       </div>
-      <!-- END .cover-v1 -->
+    </div>
+  </div>
+</article>
 
-
-      <div class="unslate_co--section" id="portfolio-section">
-        <div class="container">
-
-
-          <div class="relative">
-            <div class="loader-portfolio-wrap">
-              <div class="loader-portfolio"></div>
-            </div>
-          </div>
-          <div id="portfolio-single-holder"></div>
-
-          <div class="portfolio-wrapper">
-
-            <div class="section-heading-wrap text-center mb-5">
-              <h2 class="heading-h2 text-center divider"><span class="gsap-reveal">About Me</span></h2>
-              <span class="gsap-reveal">
-                <img src="images/divider.png" alt="divider" width="76">
-              </span>
-            </div>
-
-            <div id="posts" class="row gutter-isotope-item">
-              <div class="item web branding col-sm-6 col-md-6 col-lg-4 isotope-mb-2">
-                <a href="portfolio-single-1.html" class="portfolio-item ajax-load-page isotope-item gsap-reveal-img"
-                  data-id="1">
-                  <div class="overlay">
-                    <span class="wrap-icon icon-link2"></span>
-                    <div class="portfolio-item-content">
-                      <h3>Shoe Rebranding</h3>
-                      <p>web, branding</p>
-                    </div>
-                  </div>
-                  <img src="images/work_1_md.jpg" class="lazyload  img-fluid" alt="Images" />
-                </a>
-              </div>
-              <div class="item branding packaging illustration col-sm-6 col-md-6 col-lg-4 isotope-mb-2 ">
-                <a href="portfolio-single-3.html"
-                  class="portfolio-item ajax-load-page item-portrait isotope-item gsap-reveal-img" data-id="3">
-                  <div class="overlay">
-                    <span class="wrap-icon icon-link2"></span>
-                    <div class="portfolio-item-content">
-                      <h3>Reworking</h3>
-                      <p>branding, packaging, illustration</p>
-                    </div>
-                  </div>
-                  <img src="images/work_2_md.jpg" class="lazyload  img-fluid" alt="Images" />
-                </a>
-              </div>
-
-              <div class="item branding packaging col-sm-6 col-md-6 col-lg-4 isotope-mb-2">
-                <a href="portfolio-single-4.html" class="portfolio-item isotope-item gsap-reveal-img ajax-load-page"
-                  data-id="4">
-                  <div class="overlay">
-                    <span class="wrap-icon icon-link2"></span>
-                    <div class="portfolio-item-content">
-                      <h3>Modern Building</h3>
-                      <p>branding, packaging</p>
-                    </div>
-                  </div>
-                  <img src="images/work_3_md.jpg" class="lazyload  img-fluid" alt="Images" />
-                </a>
-              </div>
-
-              <div class="item web packaging col-sm-6 col-md-6 col-lg-4 isotope-mb-2">
-
-                <a href="images/work_4_full.jpg" class="portfolio-item isotope-item gsap-reveal-img"
-                  data-fancybox="gallery" data-caption="Watch">
-                  <div class="overlay">
-                    <span class="wrap-icon icon-photo2"></span>
-                    <div class="portfolio-item-content">
-                      <h3>Watch</h3>
-                      <p>web, packaging</p>
-                    </div>
-                  </div>
-                  <img src="images/work_4_full.jpg" class="lazyload  img-fluid" alt="Images" />
-                </a>
-
-              </div>
-
-              <div class="item illustration packaging col-sm-6 col-md-6 col-lg-4 isotope-mb-2">
-                <a href="images/work_5_md.jpg" class="portfolio-item isotope-item gsap-reveal-img"
-                  data-fancybox="gallery" data-caption="Shoe Rebranding">
-                  <div class="overlay">
-                    <span class="wrap-icon icon-photo2"></span>
-                    <div class="portfolio-item-content">
-                      <h3>Shoe Rebranding</h3>
-                      <p>illustration, packaging</p>
-                    </div>
-                  </div>
-                  <img src="images/work_5_md.jpg" class="lazyload  img-fluid" alt="Images" />
-                </a>
-              </div>
-
-              <div class="item web branding col-sm-6 col-md-6 col-lg-4 isotope-mb-2">
-                <a href="portfolio-single-2.html"
-                  class="portfolio-item ajax-load-page item-portrait isotope-item gsap-reveal-img" data-id="2">
-                  <div class="overlay">
-                    <span class="wrap-icon icon-link2"></span>
-                    <div class="portfolio-item-content">
-                      <h3>Reshape</h3>
-                      <p>web, branding</p>
-                    </div>
-                  </div>
-                  <img src="images/work_6_md.jpg" class="lazyload  img-fluid" alt="Images" />
-                </a>
-              </div>
-
-              <div class="item branding packaging col-sm-6 col-md-6 col-lg-4 isotope-mb-2">
-                <a href="images/work_7_a_md.jpg" class="portfolio-item item-portrait isotope-item gsap-reveal-img "
-                  data-fancybox="gallery" data-caption="Modern Building">
-                  <div class="overlay">
-                    <span class="wrap-icon icon-photo2"></span>
-                    <div class="portfolio-item-content">
-                      <h3>Modern Building</h3>
-                      <p>branding, packaging</p>
-                    </div>
-                  </div>
-                  <img src="images/work_7_a_md.jpg" class="lazyload  img-fluid" alt="Images" />
-                </a>
-              </div>
-
-              <div class="item web branding col-sm-6 col-md-6 col-lg-4 isotope-mb-2">
-                <a href="https://www.youtube.com/watch?v=mwtbEGNABWU"
-                  class="portfolio-item isotope-item gsap-reveal-img" data-fancybox="gallery"
-                  data-caption="Showreel 2019">
-                  <div class="overlay">
-                    <span class="wrap-icon icon-play_circle_filled"></span>
-                    <div class="portfolio-item-content">
-                      <h3>Showreel 2019</h3>
-                      <p>web, branding</p>
-                    </div>
-                  </div>
-                  <img src="images/work_8_md.jpg" class="lazyload  img-fluid" alt="Images" />
-                </a>
-              </div>
-
-              <div class="item web illustration col-sm-6 col-md-6 col-lg-4 isotope-mb-2">
-                <a href="images/work_9_a_md.jpg" class="portfolio-item isotope-item gsap-reveal-img"
-                  data-fancybox="gallery" data-caption="Render Packaging">
-                  <div class="overlay">
-                    <span class="wrap-icon icon-photo2"></span>
-                    <div class="portfolio-item-content">
-                      <h3>Render Packaging</h3>
-                      <p>web, illustration</p>
-                    </div>
-                  </div>
-                  <img src="images/work_9_a_md.jpg" class="lazyload  img-fluid" alt="Images" />
-                </a>
-              </div>
-
-            </div>
-
-          </div>
-
-
-        </div>
+<!-- Efficient Antihallucinogenic AI (AAAI 2025) -->
+<article class="card reveal research">
+  <div class="card-inner">
+    <div class="card-front">
+      <h3 class="title">Efficient Antihallucinogenic AI for Tropical Medicine: A Probabilistic Framework for Differential Diagnosis</h3>
+      <p class="summary">AAAI 2025 — Led development of mLabLLM (LLaMA 3.2 fine-tuned) for differential diagnosis (Dengue, Malaria, Chikungunya). Integrated Bayesian reasoning + LoRA + pruning to reach 82.8% Top-3 accuracy for low-cost clinical support.</p>
+      <div class="badges">
+        <span class="badge">AAAI 2025</span>
+        <span class="badge">LLM</span>
+        <span class="badge">Bayesian</span>
       </div>
-
-
-      <div class="unslate_co--section">
-        <div class="container">
-          <div class="owl-carousel logo-slider">
-            <div class="logo-v1 gsap-reveal">
-              <img src="images/logo-google.png" alt="Image" class="img-fluid">
-            </div>
-            <div class="logo-v1 gsap-reveal">
-              <img src="images/logo-puma.png" alt="Image" class="img-fluid">
-            </div>
-            <div class="logo-v1 gsap-reveal">
-              <img src="images/logo-paypal.png" alt="Image" class="img-fluid">
-            </div>
-            <div class="logo-v1 gsap-reveal">
-              <img src="images/logo-adobe.png" alt="Image" class="img-fluid">
-            </div>
-          </div>
-        </div>
+    </div>
+    <div class="card-back" style="background-image: url('assets/images/photo-1612672358701-4253f876ac31.jpeg');">
+      <div class="back-links">
+        <a class="link" href="https://openreview.net/forum?id=E6J9IFPE0w" target="_blank">📄 Paper (OpenReview)</a>
       </div>
+    </div>
+  </div>
+</article>
 
-
-      <div class="unslate_co--section" id="about-section">
-        <div class="container">
-
-          <div class="section-heading-wrap text-center mb-5">
-            <h2 class="heading-h2 text-center divider"><span class="gsap-reveal">About Me</span></h2>
-            <span class="gsap-reveal">
-              <img src="images/divider.png" alt="divider" width="76">
-            </span>
-          </div>
-
-
-          <div class="row mt-5 justify-content-between">
-            <div class="col-lg-7 mb-5 mb-lg-0">
-              <figure class="dotted-bg gsap-reveal-img ">
-                <img src="images/about_me_pic2.jpg" alt="Image" class="img-fluid">
-              </figure>
-            </div>
-            <div class="col-lg-4 pr-lg-5">
-              <h3 class="mb-4 heading-h3"><span class="gsap-reveal">We can make it together</span></h3>
-              <p class="lead gsap-reveal">Far far away, behind the word mountains, far from the countries Vokalia and
-                Consonantia, there <a href="#">live the blind</a> texts. </p>
-              <p class="mb-4 gsap-reveal">A small river named Duden flows by their place and supplies it with the
-                necessary regelialia. It is a paradisematic country, in which roasted parts of sentences fly into your
-                mouth.</p>
-              <p class="gsap-reveal"><a href="#" class="btn btn-outline-pill btn-custom-light">Download my CV</a></p>
-            </div>
-          </div>
-        </div>
+<!-- Web-Based Mpox Skin Lesion Detection (ScienceDirect 2025) -->
+<article class="card reveal research">
+  <div class="card-inner">
+    <div class="card-front">
+      <h3 class="title">A Web-Based Mpox Skin Lesion Detection System Using State-of-the-Art Deep Learning Models Considering Racial Diversity</h3>
+      <p class="summary">ScienceDirect 2025 — Built MSLD v2.0 dataset with diverse skin tones and benchmarked models (ResNet50 + transfer learning). Prototype web app for inclusive rapid screening.</p>
+      <div class="badges">
+        <span class="badge">Dataset</span>
+        <span class="badge">Deep Learning</span>
+        <span class="badge">Fairness</span>
       </div>
-
-      <div class="unslate_co--section" id="services-section">
-        <div class="container">
-
-          <div class="section-heading-wrap text-center mb-5">
-            <h2 class="heading-h2 text-center divider"><span class="gsap-reveal">My Services</span></h2>
-            <span class="gsap-reveal"><img src="images/divider.png" alt="divider" width="76"></span>
-          </div>
-
-          <div class="row gutter-v3">
-            <div class="col-md-6 col-lg-4 mb-4">
-              <div class="feature-v1" data-aos="fade-up" data-aos-delay="0">
-                <div class="wrap-icon mb-3">
-                  <img src="images/svg/001-options.svg" alt="Image" width="45">
-                </div>
-                <h3>Digital <br> Strategy</h3>
-                <p>A small river named Duden flows by their place and supplies it with the necessary regelialia. </p>
-              </div>
-            </div>
-            <div class="col-md-6 col-lg-4 mb-4">
-              <div class="feature-v1" data-aos="fade-up" data-aos-delay="100">
-                <div class="wrap-icon mb-3">
-                  <img src="images/svg/002-chat.svg" alt="Icon" width="45">
-                </div>
-                <h3>Web <br> Design</h3>
-                <p>A small river named Duden flows by their place and supplies it with the necessary regelialia. </p>
-              </div>
-            </div>
-            <div class="col-md-6 col-lg-4 mb-4">
-              <div class="feature-v1" data-aos="fade-up" data-aos-delay="200">
-                <div class="wrap-icon mb-3">
-                  <img src="images/svg/003-contact-book.svg" alt="Image" class="img-fluid" width="45">
-                </div>
-                <h3>User <br> Experience</h3>
-                <p>A small river named Duden flows by their place and supplies it with the necessary regelialia. </p>
-              </div>
-            </div>
-
-            <div class="col-md-6 col-lg-4 mb-4">
-              <div class="feature-v1" data-aos="fade-up" data-aos-delay="0">
-                <div class="wrap-icon mb-3">
-                  <img src="images/svg/004-percentage.svg" alt="Image" width="45">
-                </div>
-                <h3>Web <br> Development</h3>
-                <p>A small river named Duden flows by their place and supplies it with the necessary regelialia. </p>
-              </div>
-            </div>
-            <div class="col-md-6 col-lg-4 mb-4">
-              <div class="feature-v1" data-aos="fade-up" data-aos-delay="100">
-                <div class="wrap-icon mb-3">
-                  <img src="images/svg/006-goal.svg" alt="Image" width="45">
-                </div>
-                <h3>WordPress <br> Solutions</h3>
-                <p>A small river named Duden flows by their place and supplies it with the necessary regelialia. </p>
-              </div>
-            </div>
-            <div class="col-md-6 col-lg-4 mb-4">
-              <div class="feature-v1" data-aos="fade-up" data-aos-delay="200">
-                <div class="wrap-icon mb-3">
-                  <img src="images/svg/005-line-chart.svg" alt="Image" width="45">
-                </div>
-                <h3>Mobile <br> Applications</h3>
-                <p>A small river named Duden flows by their place and supplies it with the necessary regelialia. </p>
-              </div>
-            </div>
-
-          </div>
-        </div>
+    </div>
+    <div class="card-back" style="background-image: url('assets/images/photo-1612673100630-fab20ea995cd.jpeg');">
+      <div class="back-links">
+        <a class="link" href="https://www.sciencedirect.com/science/article/pii/S1746809424008000" target="_blank">🔗 Article (ScienceDirect)</a>
       </div>
+    </div>
+  </div>
+</article>
 
-      <div class="unslate_co--section section-counter" id="skills-section">
-        <div class="container">
-          <div class="section-heading-wrap text-center mb-5">
-            <h2 class="heading-h2 text-center divider"><span class="gsap-reveal">My Skills</span></h2>
-            <span class="gsap-reveal"><img src="images/divider.png" alt="divider" width="76"></span>
-          </div>
-
-
-          <div class="row pt-5">
-            <div class="col-6 col-sm-6 mb-5 mb-lg-0 col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="0">
-              <div class="counter-v1 text-center">
-                <span class="number-wrap">
-                  <span class="number number-counter" data-number="90">0</span>
-                  <span class="append-text">%</span>
-                </span>
-                <span class="counter-label">WordPress</span>
-              </div>
-            </div>
-            <div class="col-6 col-sm-6 mb-5 mb-lg-0 col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="100">
-              <div class="counter-v1 text-center">
-                <span class="number-wrap">
-                  <span class="number number-counter" data-number="99">0</span>
-                  <span class="append-text">%</span>
-                </span>
-                <span class="counter-label">HTML/CSS</span>
-              </div>
-            </div>
-            <div class="col-6 col-sm-6 mb-5 mb-lg-0 col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="200">
-              <div class="counter-v1 text-center">
-                <span class="number-wrap">
-                  <span class="number number-counter" data-number="95">0</span>
-                  <span class="append-text">%</span>
-                </span>
-                <span class="counter-label">jQuery</span>
-              </div>
-            </div>
-            <div class="col-6 col-sm-6 mb-5 mb-lg-0 col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="300">
-              <div class="counter-v1 text-center">
-                <span class="number-wrap">
-                  <span class="number number-counter" data-number="100">0</span>
-                  <span class="append-text">%</span>
-                </span>
-                <span class="counter-label">Design</span>
-              </div>
-            </div>
-          </div>
-        </div>
+<!-- Monkeypox Feasibility Study (arXiv 2022) -->
+<article class="card reveal research">
+  <div class="card-inner">
+    <div class="card-front">
+      <h3 class="title">Monkeypox Skin Lesion Detection Using Deep Learning Models: A Feasibility Study</h3>
+      <p class="summary">arXiv 2022 — Curated the initial MSLD dataset; evaluated pre-trained models (ResNet50), reaching ~82.96% accuracy distinguishing mpox from similar diseases.</p>
+      <div class="badges">
+        <span class="badge">arXiv</span>
+        <span class="badge">Dataset</span>
       </div>
-      <!-- END .counter -->
-
-      <div class="unslate_co--section" id="testimonial-section">
-        <div class="container">
-          <div class="section-heading-wrap text-center mb-5">
-            <h2 class="heading-h2 text-center divider"><span class="gsap-reveal">My Happy Clients</span></h2>
-            <span class="gsap-reveal"><img src="images/divider.png" alt="divider" width="76"></span>
-          </div>
-        </div>
-
-        <div class="owl-carousel testimonial-slider" data-aos="fade-up">
-          <div>
-            <div class="testimonial-v1">
-              <div class="testimonial-inner-bg">
-                <span class="quote">&ldquo;</span>
-                <blockquote>
-                  Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live
-                  the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large
-                  language ocean. A small river named Duden flows by their place and supplies it with the necessary
-                  regelialia. It is a paradisematic country, in which roasted parts of sentences fly into your mouth.
-                </blockquote>
-              </div>
-
-              <div class="testimonial-author-info">
-                <img src="images/person_man_1.jpg" alt="Image">
-                <h3>Eric Ingram</h3>
-                <span class="d-block position">Product Designer @facebook</span>
-              </div>
-
-            </div>
-          </div>
-          <div>
-            <div class="testimonial-v1">
-              <div class="testimonial-inner-bg">
-                <span class="quote">&ldquo;</span>
-                <blockquote>
-                  Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live
-                  the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large
-                  language ocean. A small river named Duden flows by their place and supplies it with the necessary
-                  regelialia. It is a paradisematic country, in which roasted parts of sentences fly into your mouth.
-                </blockquote>
-              </div>
-
-              <div class="testimonial-author-info">
-                <img src="images/person_man_2.jpg" alt="Image">
-                <h3>Ryan Mullins</h3>
-                <span class="d-block position">Product Designer @Shopify</span>
-              </div>
-
-            </div>
-          </div>
-          <div>
-            <div class="testimonial-v1">
-              <div class="testimonial-inner-bg">
-                <span class="quote">&ldquo;</span>
-                <blockquote>
-                  Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live
-                  the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large
-                  language ocean. A small river named Duden flows by their place and supplies it with the necessary
-                  regelialia. It is a paradisematic country, in which roasted parts of sentences fly into your mouth.
-                </blockquote>
-              </div>
-
-              <div class="testimonial-author-info">
-                <img src="images/person_woman_1.jpg" alt="Image">
-                <h3>Erica Miller</h3>
-                <span class="d-block position">Product Designer @Twitter</span>
-              </div>
-
-            </div>
-          </div>
-        </div>
-
+    </div>
+    <div class="card-back" style="background-image: url('assets/images/photo-1612958859485-b6812253f59e.jpeg');">
+      <div class="back-links">
+        <a class="link" href="https://arxiv.org/abs/2207.03342" target="_blank">📄 arXiv (2207.03342)</a>
       </div>
-      <!-- END testimonial -->
+    </div>
+  </div>
+</article>
 
-      <div class="unslate_co--section" id="journal-section">
-        <div class="container">
-          <div class="section-heading-wrap text-center mb-5">
-            <h2 class="heading-h2 text-center divider"><span class="gsap-reveal">My Journal</span></h2>
-            <span class="gsap-reveal"><img src="images/divider.png" alt="divider" width="76"></span>
-          </div>
-
-
-          <div class="row gutter-v4 align-items-stretch">
-            <div class="col-sm-6 col-md-6 col-lg-8 blog-post-entry" data-aos="fade-up" data-aos-delay="0">
-
-              <a href="blog-single.html" class="grid-item blog-item w-100 h-100">
-                <div class="overlay">
-                  <div class="portfolio-item-content">
-                    <h3>A Mounteering Guide For Beginners</h3>
-                    <p class="post-meta">By Joefrey <span class="small">&bullet;</span> 5 mins read</p>
-                  </div>
-                </div>
-                <img src="images/post_1.jpg" class="lazyload" alt="Image" />
-              </a>
-
-
-            </div>
-            <div class="col-sm-6 col-md-6 col-lg-4 blog-post-entry" data-aos="fade-up" data-aos-delay="100">
-              <a href="blog-single.html" class="grid-item blog-item w-100 h-100">
-                <div class="overlay">
-                  <div class="portfolio-item-content">
-                    <h3>A Mounteering Guide For Beginners</h3>
-                    <p class="post-meta">By Joefrey <span class="small">&bullet;</span> 5 mins read</p>
-                  </div>
-                </div>
-                <img src="images/post_2.jpg" class="lazyload" alt="Image" />
-              </a>
-            </div>
-
-
-            <div class="col-sm-6 col-md-6 col-lg-4 blog-post-entry" data-aos="fade-up" data-aos-delay="0">
-
-              <a href="blog-single.html" class="grid-item blog-item w-100 h-100">
-                <div class="overlay">
-                  <div class="portfolio-item-content">
-                    <h3>A Mounteering Guide For Beginners</h3>
-                    <p class="post-meta">By Joefrey <span class="small">&bullet;</span> 5 mins read</p>
-                  </div>
-                </div>
-                <img src="images/post_3.jpg" class="lazyload" alt="Image" />
-              </a>
-
-
-            </div>
-            <div class="col-sm-6 col-md-6 col-lg-4 blog-post-entry" data-aos="fade-up" data-aos-delay="100">
-              <a href="blog-single.html" class="grid-item blog-item w-100 h-100">
-                <div class="overlay">
-                  <div class="portfolio-item-content">
-                    <h3>A Mounteering Guide For Beginners</h3>
-                    <p class="post-meta">By Joefrey <span class="small">&bullet;</span> 5 mins read</p>
-                  </div>
-                </div>
-                <img src="images/post_4.jpg" class="lazyload" alt="Image" />
-              </a>
-            </div>
-
-            <div class="col-sm-6 col-md-6 col-lg-4 blog-post-entry" data-aos="fade-up" data-aos-delay="200">
-              <a href="blog-single.html" class="grid-item blog-item w-100 h-100">
-                <div class="overlay">
-                  <div class="portfolio-item-content">
-                    <h3>A Mounteering Guide For Beginners</h3>
-                    <p class="post-meta">By Joefrey <span class="small">&bullet;</span> 5 mins read</p>
-                  </div>
-                </div>
-                <img src="images/post_5.jpg" class="lazyload" alt="Image" />
-              </a>
-            </div>
-
-
-          </div>
-
-        </div>
+<!-- BUET Multi-Disease Heart Sound Dataset (BMD-HS 2024) -->
+<article class="card reveal research">
+  <div class="card-inner">
+    <div class="card-front">
+      <h3 class="title">BUET Multi-Disease Heart Sound Dataset: A Comprehensive Auscultation Dataset</h3>
+      <p class="summary">arXiv 2024 — Co-developed BMD-HS with 864 multi-label heart sound recordings for complex valvular disease detection, bridging auscultation and AI diagnostics.</p>
+      <div class="badges">
+        <span class="badge">Dataset</span>
+        <span class="badge">Auscultation</span>
       </div>
-      <!-- END blog posts -->
-
-
-      <div class="unslate_co--section" id="contact-section">
-        <div class="container">
-          <div class="section-heading-wrap text-center mb-5">
-            <h2 class="heading-h2 text-center divider"><span class="gsap-reveal">Get In Touch</span></h2>
-            <span class="gsap-reveal"><img src="images/divider.png" alt="divider" width="76"></span>
-          </div>
-
-
-          <div class="row justify-content-between">
-
-            <div class="col-md-6">
-              <form action="https://formspree.io/f/mnqyqdlb" method="POST">
-                <div class="form-group row mb-0">
-
-                  <div class="col-lg-6 form-group gsap-reveal">
-                    <label>Name</label>
-                    <input name="name" type="text" class="form-control">
-                  </div>
-                  <div class="col-lg-6 form-group gsap-reveal">
-                    <label>Email</label>
-                    <input name="email" type="email" class="form-control">
-                  </div>
-                  <div class="col-lg-12 form-group gsap-reveal">
-                    <label>Write your message...</label>
-                    <textarea name="message" cols="30" rows="7" class="form-control"></textarea>
-                  </div>
-                </div>
-                <div class="form-group row gsap-reveal">
-                  <div class="col-md-12 d-flex align-items-center">
-                    <input type="submit" class="btn btn-outline-pill btn-custom-light mr-3" value="Send Message">
-                    <span class="submitting"></span>
-                  </div>
-                </div>
-              </form>
-              <div id="form-message-warning" class="mt-4"></div>
-
-            </div>
-
-            <div class="col-md-4">
-              <div class="contact-info-v1">
-                <div class="gsap-reveal d-block">
-                  <span class="d-block contact-info-label">Email</span>
-                  <a href="#" class="contact-info-val">info@yourdomain.com</a>
-                </div>
-                <div class="gsap-reveal d-block">
-                  <span class="d-block contact-info-label">Phone</span>
-                  <a href="#" class="contact-info-val">+12 345 6789 012</a>
-                </div>
-                <div class="gsap-reveal d-block">
-                  <span class="d-block contact-info-label">Address</span>
-                  <address class="contact-info-val">273 South Riverview Rd. <br> New York, NY 10011</address>
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </div>
+    </div>
+    <div class="card-back" style="background-image: url('assets/images/photo-1613216513114-fd1ba08f64c6.jpeg');">
+      <div class="back-links">
+        <a class="link" href="https://arxiv.org/abs/2409.00724" target="_blank">📄 arXiv (BMD-HS)</a>
       </div>
-    </div> <!-- END .unslate_co-site-inner -->
+    </div>
+  </div>
+</article>
 
-    <footer class="unslate_co--footer unslate_co--section">
-      <div class="container">
-        <div class="row justify-content-center">
-          <div class="col-md-7">
-
-            <div class="footer-site-logo"><a href="#">Unfold<span>.</span></a></div>
-
-            <ul class="footer-site-social">
-              <li><a href="#">Facebook</a></li>
-              <li><a href="#">Twitter</a></li>
-              <li><a href="#">Instagram</a></li>
-              <li><a href="#">Dribbble</a></li>
-              <li><a href="#">Behance</a></li>
-            </ul>
-
-            <p class="site-copyright">
-
-              <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-              Copyright &copy;
-              <script>
-                document.write(new Date().getFullYear());
-              </script> All rights reserved | This template is made with <i class="icon-heart" aria-hidden="true"></i>
-              by <a href="https://colorlib.com" target="_blank">Colorlib</a>
-              <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-
-            </p>
-
-          </div>
-        </div>
+<!-- Awards Header Card -->
+<article class="card reveal static-card awards">
+  <div class="card-inner">
+    <div class="card-front">
+      <h3 class="title">Awards & Achievements</h3>
+      <p class="summary">Recognition for disruptive innovation — global competitions & fellowships that highlight collaborative excellence and real-world impact in healthcare and engineering.</p>
+      <div class="badges">
+        <span class="badge">Awards</span>
+        <span class="badge">Global</span>
       </div>
-    </footer>
+    </div>
+    <div class="card-back" style="background-image: url('assets/images/photo-1614420178365-25632898f27d.jpeg');">
+      <div class="back-links">
+        <!-- Section header card: no links -->
+      </div>
+    </div>
+  </div>
+</article>
 
+<!-- Johns Hopkins Healthcare Design Competition – Global Health Track (2024, 2nd Place) -->
+<article class="card reveal awards">
+  <div class="card-inner">
+    <div class="card-front">
+      <h3 class="title">Johns Hopkins Healthcare Design Competition – Global Health Track (2024) — 2nd Place</h3>
+      <p class="summary">Team FetoSynth (BUET) — Real-time acoustic fetal heart localization & monitoring system to improve prenatal care in low-resource settings.</p>
+      <div class="badges">
+        <span class="badge">Design</span>
+        <span class="badge">Global Health</span>
+      </div>
+    </div>
+    <div class="card-back" style="background-image: url('assets/images/photo-1614424013315-7ca4e36dd90d.jpeg');">
+      <div class="back-links">
+        <a class="link" href="https://cbid.bme.jhu.edu/news-events/design-competition/#:~:text=Sayeed%20Sajjad%20Razin%2C-,S.M.%20Sakeef%20Sani,-3rd%20Place:%20OASIS" target="_blank">🔗 CBID Competition Page</a>
+      </div>
+    </div>
+  </div>
+</article>
+
+<!-- Johns Hopkins Healthcare Design Competition – Digital Health Track (2024) — 2nd Place -->
+<article class="card reveal awards">
+  <div class="card-inner">
+    <div class="card-front">
+      <h3 class="title">Johns Hopkins Healthcare Design Competition – Digital Health Track (2024) — 2nd Place</h3>
+      <p class="summary">Team DengueDrops (BUET) — Smart IV fluid calculator for dengue patients to optimize fluid therapy and hospital management.</p>
+      <div class="badges">
+        <span class="badge">Digital Health</span>
+        <span class="badge">Clinical</span>
+      </div>
+    </div>
+    <div class="card-back" style="background-image: url('assets/images/photo-1618181431503-3abfba6f0e90.jpeg');">
+      <div class="back-links">
+        <a class="link" href="https://cbid.bme.jhu.edu/news-events/design-competition/#:~:text=Sayeed%20Sajjad%20Razin%2C-,S.M.%20Sakeef%20Sani,-3rd%20Place:%20OASIS" target="_blank">🔗 CBID Competition Page</a>
+      </div>
+    </div>
+  </div>
+</article>
+
+<!-- Honda Y-E-S Award 2023 Winner -->
+<article class="card reveal awards">
+  <div class="card-inner">
+    <div class="card-front">
+      <h3 class="title">Honda Y‑E‑S Award 2023 — Winner</h3>
+      <p class="summary">Recognized by the Honda Foundation for excellence in biomedical engineering and sustainable innovation; grant support for international exchange and research.</p>
+      <div class="badges">
+        <span class="badge">Honda Y‑E‑S</span>
+        <span class="badge">Grant</span>
+      </div>
+    </div>
+    <div class="card-back" style="background-image: url('assets/images/photo-1630226708835-f9e06df9a9c7.jpeg');">
+      <div class="back-links">
+        <a class="link" href="https://www.hondafoundation.jp/en/yes_list.html#:~:text=S.%20M.%20Sakeef%20Sani,-Bangladesh%20University%20of" target="_blank">🔗 Honda YES List</a>
+        <a class="link" href="https://www.hondafoundation.jp/yes/index_en/348" target="_blank">🔗 Honda Foundation (Project Page)</a>
+        <a class="link" href="https://bme.buet.ac.bd/2024/03/18/congratulations-to-labiba-islam-salsabil-and-s-m-sakeef-sani-winners-of-the-honda-y-e-s-award-2023-in-bangladesh/" target="_blank">🔗 BUET Announcement</a>
+      </div>
+    </div>
+  </div>
+</article>
+
+<!-- IPAS 2021 Innovation Award -->
+<article class="card reveal awards">
+  <div class="card-inner">
+    <div class="card-front">
+      <h3 class="title">Innovation Award — International Planetary Aerial System Challenge (IPAS) 2021</h3>
+      <p class="summary">Team Interplanetar (BUET) — Designed an innovative gas compression system for Mars aerial systems; 1st in Bangladesh and awarded Innovation Award (8th globally).</p>
+      <div class="badges">
+        <span class="badge">IPAS</span>
+        <span class="badge">Space Tech</span>
+      </div>
+    </div>
+    <div class="card-back" style="background-image: url('assets/images/photo-1663076130444-6d7f9f00d124.jpeg');">
+      <div class="back-links">
+        <a class="link" href="https://www.thedailystar.net/star-youth/news/buets-mars-rover-team-wins-innovation-award-ipas-2021-2099905" target="_blank">🔗 The Daily Star</a>
+        <a class="link" href="https://thefinancialexpress.com.bd/education/buet-team-wins-innovation-award-at-ipas-2021-1622131212" target="_blank">🔗 The Financial Express</a>
+        <a class="link" href="https://www.prothomalo.com/education/higher-education/মঙ্গলের-জন্য-ড্রোন-উদ্ভাবনে-সেরা-বুয়েট" target="_blank">🔗 Prothom Alo</a>
+      </div>
+    </div>
+  </div>
+</article>
+
+<!-- UIHP Winner (PakhiDrone BD) -->
+<article class="card reveal awards">
+  <div class="card-inner">
+    <div class="card-front">
+      <h3 class="title">University Innovation Hub Programme (UIHP) — Winner</h3>
+      <p class="summary">UIHP-funded agro-drone project (PakhiDrone BD) — precision farming & pesticide spraying adapted for Bangladesh's rural terrain; incubated into early-stage startup.</p>
+      <div class="badges">
+        <span class="badge">UIHP</span>
+        <span class="badge">AgriTech</span>
+      </div>
+    </div>
+    <div class="card-back" style="background-image: url('assets/images/photo-1663275162414-64dba99065a2.jpeg');">
+      <div class="back-links">
+        <a class="link" href="https://www.uihp.org/program" target="_blank">🔗 UIHP Program</a>
+        <a class="link" href="https://www.facebook.com/photo/?fbid=527904526858110&set=a.122000730781827" target="_blank">🔗 Facebook Post</a>
+      </div>
+    </div>
+  </div>
+</article>
+
+<!-- Professional Experience Header Card -->
+<article class="card reveal static-card experience">
+  <div class="card-inner">
+    <div class="card-front">
+      <h3 class="title">Professional Experience</h3>
+      <p class="summary">From industry distribution strategy to lab research and founding startups — practical execution and operational impact across domains.</p>
+      <div class="badges">
+        <span class="badge">Industry</span>
+        <span class="badge">Research</span>
+        <span class="badge">Startup</span>
+      </div>
+    </div>
+    <div class="card-back" style="background-image: url('assets/images/photo-1670079302716-d09a46dcfcd8.jpeg');">
+      <div class="back-links"></div>
+    </div>
+  </div>
+</article>
+
+<!-- British American Tobacco – Territory Officer (2025 - Present) -->
+<article class="card reveal experience">
+  <div class="card-inner">
+    <div class="card-front">
+      <h3 class="title">British American Tobacco — Territory Officer (2025 - Present)</h3>
+      <p class="summary">Managing a 420mn BDT annual distribution; developed satellite & geo-data model for rural 'Char' areas and built an automated shipment app for route-to-market efficiency.</p>
+      <div class="badges">
+        <span class="badge">BAT</span>
+        <span class="badge">Logistics</span>
+      </div>
+    </div>
+    <div class="card-back" style="background-image: url('assets/images/photo-1686683010851-2f283bd0ead6.jpeg');">
+      <div class="back-links">
+        <!-- No external links provided -->
+      </div>
+    </div>
+  </div>
+</article>
+
+<!-- mHealth Lab, BUET – Research Assistant -->
+<article class="card reveal experience">
+  <div class="card-inner">
+    <div class="card-front">
+      <h3 class="title">mHealth Lab, BUET — Research Assistant</h3>
+      <p class="summary">Built real-time data collector with Raspberry Pi attachments, contributed to medical LLM for differential diagnosis, and created 3D landmarks from sparse 2D video for low-compute imaging improvements.</p>
+      <div class="badges">
+        <span class="badge">mHealth</span>
+        <span class="badge">Research</span>
+      </div>
+    </div>
+    <div class="card-back" style="background-image: url('assets/images/photo-1747634186572-e9f4ea18c183.jpeg');">
+      <div class="back-links"></div>
+    </div>
+  </div>
+</article>
+
+<!-- PakhiDrone BD — Founder & CMLO -->
+<article class="card reveal experience">
+  <div class="card-inner">
+    <div class="card-front">
+      <h3 class="title">PakhiDrone BD — Founder & CMLO</h3>
+      <p class="summary">UIHP-funded startup building agro-drones for precision farming and pesticide spraying, optimized for Bangladesh's rural terrain and smallholder needs.</p>
+      <div class="badges">
+        <span class="badge">Founder</span>
+        <span class="badge">AgriTech</span>
+      </div>
+    </div>
+    <div class="card-back" style="background-image: url('assets/images/photo-1747673002516-f11a48cb0ce2.jpeg');">
+      <div class="back-links"></div>
+    </div>
+  </div>
+</article>
+
+<!-- Animation & Filmmaking Header Card -->
+<article class="card reveal static-card animation">
+  <div class="card-inner">
+    <div class="card-front">
+      <h3 class="title">Animation & Filmmaking</h3>
+      <p class="summary">Combining technical precision with creative storytelling — award-winning short films, VFX, and NFT work through a dedicated studio.</p>
+      <div class="badges">
+        <span class="badge">Animation</span>
+        <span class="badge">VFX</span>
+      </div>
+    </div>
+    <div class="card-back" style="background-image: url('assets/images/photo-1670079302716-d09a46dcfcd8.jpeg');">
+      <div class="back-links"></div>
+    </div>
+  </div>
+</article>
+
+<!-- Enigmatter Studio — Founder, Animator, Lead VFX -->
+<article class="card reveal animation">
+  <div class="card-inner">
+    <div class="card-front">
+      <h3 class="title">Enigmatter Studio — Founder, Animator & Lead VFX</h3>
+      <p class="summary">Founded studio for 3D animation, NFTs and VFX; produced award-winning short films and immersive visual narratives that blend engineering precision with artistic expression.</p>
+      <div class="badges">
+        <span class="badge">Studio</span>
+        <span class="badge">VFX</span>
+      </div>
+    </div>
+    <div class="card-back" style="background-image: url('assets/images/photo-1670079302716-d09a46dcfcd8.jpeg');">
+      <div class="back-links"></div>
+    </div>
+  </div>
+</article>
+</section>
+
+<section class="image-gallery">
+  <h2 class="gallery-title">Gallery Highlights</h2>
+  <div class="image-grid">
+<!-- PRIORITY ORDERED IMAGE CARDS -->
+<!-- 1️⃣ Pookie -->
+<div class="image-card"><img src="assets/images/Pookie Men.png" alt=""><span>Pookie Men</span></div>
+
+<!-- 2️⃣ Lecture -->
+<div class="image-card"><img src="assets/images/Lectures on LLM.png" alt=""><span>Lectures on LLM</span></div>
+
+<!-- 3️⃣ Rover -->
+<div class="image-card"><img src="assets/images/1st Mars Rover from BUET.png" alt=""><span>1st Mars Rover from BUET</span></div>
+
+<!-- 4️⃣ International -->
+<div class="image-card"><img src="assets/images/Recognition for International Award.png" alt=""><span>Recognition for International Award</span></div>
+
+<!-- 🌏 International & Recognition -->
+<div class="image-card"><img src="assets/images/Director of JICA.png" alt=""><span>Director of JICA</span></div>
+<div class="image-card"><img src="assets/images/Director or Honda Foundation.png" alt=""><span>Director of Honda Foundation</span></div>
+<div class="image-card"><img src="assets/images/Exclusive Visit to Honda Engineering.png" alt=""><span>Exclusive Visit to Honda Engineering</span></div>
+<div class="image-card"><img src="assets/images/Exploring Culture.png" alt=""><span>Exploring Culture</span></div>
+<div class="image-card"><img src="assets/images/Study Tour in Japan.png" alt=""><span>Study Tour in Japan</span></div>
+
+<!-- 🤝 Collaboration & Impact -->
+<div class="image-card"><img src="assets/images/With Health Advisor of BD.png" alt=""><span>With Health Advisor of BD</span></div>
+<div class="image-card"><img src="assets/images/Work with ImpactHub.png" alt=""><span>Work with ImpactHub</span></div>
+
+<!-- 🎤 Events & Speeches -->
+<div class="image-card"><img src="assets/images/Opening Speech in BUET Fest.jpg" alt=""><span>Opening Speech in BUET Fest</span></div>
+
+
+<!-- 5️⃣ YY -->
+<div class="image-card"><img src="assets/images/YY Ventures.png" alt=""><span>YY Ventures</span></div>
+
+<!-- 6️⃣ Competition -->
+<div class="image-card"><img src="assets/images/Case Competition.png" alt=""><span>Case Competition</span></div>
+<div class="image-card"><img src="assets/images/CBID Scene.png" alt=""><span>CBID Scene</span></div>
+<div class="image-card"><img src="assets/images/Young Engineer and Scientist Recognition.png" alt=""><span>Young Engineer and Scientist Recognition</span></div>
+
+<!-- 7️⃣ Projects -->
+<div class="image-card"><img src="assets/images/Skin Cancer Detection Project.png" alt=""><span>Skin Cancer Detection Project</span></div>
+<div class="image-card"><img src="assets/images/Datathon on Heart Sound.png" alt=""><span>Datathon on Heart Sound</span></div>
+<div class="image-card"><img src="assets/images/RTM Tool for BAT.png" alt=""><span>RTM Tool for BAT</span></div>
+<div class="image-card"><img src="assets/images/UIHP Pakhi Drone.png" alt=""><span>UIHP Pakhi Drone</span></div>
+<div class="image-card"><img src="assets/images/DengueDrops Development Team.png" alt=""><span>DengueDrops Development Team</span></div>
+<div class="image-card"><img src="assets/images/IPAS Featuring.png" alt=""><span>IPAS Featuring</span></div>
+<div class="image-card"><img src="assets/images/Recognition for Drone of Mars (IPAS).png" alt=""><span>Recognition for Drone of Mars (IPAS)</span></div>
+<div class="image-card"><img src="assets/images/SciFi Writing.png" alt=""><span>SciFi Writing</span></div>
+<div class="image-card"><img src="assets/images/URC.png" alt=""><span>URC</span></div>
+
+<!-- 8️⃣ Games -->
+<div class="image-card"><img src="assets/images/Game based on Realtime Geo Data.png" alt=""><span>Game based on Realtime Geo Data</span></div>
+<div class="image-card"><img src="assets/images/Game for IOS and Android Platform.png" alt=""><span>Game for IOS and Android Platform</span></div>
+
+<!-- 9️⃣ 3D -->
+<div class="image-card"><img src="assets/images/3D Scene x Game.png" alt=""><span>3D Scene x Game</span></div>
+<div class="image-card"><img src="assets/images/3D Game Development in Unreal Engine.png" alt=""><span>3D Game Development in Unreal Engine</span></div>
+<div class="image-card"><img src="assets/images/Complex 3D Scene Creation in Blender.png" alt=""><span>Complex 3D Scene Creation in Blender</span></div>
+<div class="image-card"><img src="assets/images/Inverse Kinematics in Blender.png" alt=""><span>Inverse Kinematics in Blender</span></div>
 
   </div>
 
-
-  <!-- Loader -->
-  <div id="unslate_co--overlayer"></div>
-  <div class="site-loader-wrap">
-    <div class="site-loader"></div>
+  <!-- Lightbox Modal -->
+  <div id="lightbox" class="lightbox">
+    <span class="lightbox-close">&times;</span>
+    <img id="lightbox-img" src="" alt="">
+    <p id="lightbox-caption"></p>
   </div>
+</section>
 
-  <script src="js/scripts-dist.js"></script>
-  <script src="js/main.js"></script>
+  </main>
+
+  <footer id="contact">
+    <div>
+      <div style="font-weight:300">S. M. Sakeef Sani</div>
+      <div class="muted"></div>
+      <div style="margin-top:8px"></div>
+    </div>
+    <div class="muted"></div>
+  </footer>
+
+  <script>
+    // Parallax movement based on scroll
+    const parallax = document.getElementById('parallax');
+    window.addEventListener('scroll', ()=>{
+      const sc = window.scrollY;
+      parallax.style.transform = `translateY(${sc * -0.25}px) scale(1)`;
+    }, {passive: true});
+
+    // Reveal cards when in view
+    const cards = document.querySelectorAll('.reveal');
+    const io = new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{
+        if(e.isIntersecting) {
+          e.target.classList.add('in');
+        }
+      });
+    }, { threshold: 0.12 });
+    cards.forEach(c => io.observe(c));
+
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(a=>{
+      a.addEventListener('click', (ev)=>{
+        const targ = document.querySelector(a.getAttribute('href'));
+        if(targ) {
+          ev.preventDefault();
+          targ.scrollIntoView({ behavior: 'smooth' });
+        }
+      });
+    });
+
+    // Tap to Flip for Cards (mobile-friendly)
+    document.querySelectorAll('.card').forEach(card => {
+      card.addEventListener('click', () => {
+        // Prevent flip for static cards
+        if (card.classList.contains('static-card')) return;
+        card.classList.toggle('flipped');
+      });
+    });
+
+    // Keyboard shortcut 'w' to jump to work
+    document.addEventListener('keydown', (e)=>{
+      if(e.key.toLowerCase() === 'w') {
+        document.getElementById('work').scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+
+    // LIGHTBOX FUNCTIONALITY for image gallery
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightbox-img');
+    const lightboxCaption = document.getElementById('lightbox-caption');
+    const closeBtn = document.querySelector('.lightbox-close');
+
+    document.querySelectorAll('.image-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const img = card.querySelector('img');
+        const caption = card.querySelector('span').innerText;
+        lightboxImg.src = img.src;
+        lightboxCaption.textContent = caption;
+        lightbox.classList.add('active');
+      });
+    });
+
+    closeBtn.addEventListener('click', () => {
+      lightbox.classList.remove('active');
+    });
+
+    lightbox.addEventListener('click', e => {
+      if (e.target === lightbox) lightbox.classList.remove('active');
+    });
+      </script>
 
 </body>
-
 </html>
