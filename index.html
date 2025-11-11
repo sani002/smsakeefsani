@@ -248,9 +248,10 @@ cursor: pointer;
 touch-action: manipulation; /* prevent some double-tap / gesture issues */
 user-select: none;
     }
-
 .card-more-btn, .card-close-btn {
-  align-self: flex-end;
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
   background: #007bff;
   color: white;
   border: none;
@@ -260,11 +261,9 @@ user-select: none;
   font-size: 0.85rem;
   transition: background 0.2s;
 }
-
 .card-more-btn:hover, .card-close-btn:hover {
   background: #0056b3;
 }
-
 .title { font-weight:700; margin: 0 0 8px; }
 .summary { font-size: 14px; color: #5b5b5b; margin: 0; }
 .badges { margin-top:12px; display:flex; gap:8px; flex-wrap:wrap; }
@@ -654,17 +653,18 @@ font-weight: 500;
 <div class="card-front">
 <h3 class="title">Efficient Antihallucinogenic AI for Tropical Medicine: A Probabilistic Framework for Differential Diagnosis</h3>
 <p class="summary">AAAI 2025 — Led development of mLabLLM (LLaMA 3.2 fine-tuned) for differential diagnosis (Dengue, Malaria, Chikungunya). Integrated Bayesian reasoning + LoRA + pruning to reach 82.8% Top-3 accuracy for low-cost clinical support.</p>
-<button class="card-more-btn" aria-label="Show more">More →</button>
 <div class="badges">
 <span class="badge">AAAI 2025</span>
 <span class="badge">LLM</span>
 <span class="badge">Bayesian</span>
 </div>
+<button class="card-more-btn">More</button>
 </div>
 <div class="card-back" style="background-image: url('assets/images/photo-1612672358701-4253f876ac31.jpeg');">
 <div class="back-links">
 <a class="link" href="https://openreview.net/forum?id=E6J9IFPE0w" target="_blank">📄 Paper (OpenReview)</a>
 </div>
+<button class="card-close-btn">Close</button>
 </div>
 </div>
 </article>
@@ -679,11 +679,13 @@ font-weight: 500;
 <span class="badge">Deep Learning</span>
 <span class="badge">Fairness</span>
 </div>
+<button class="card-more-btn">More</button>
 </div>
 <div class="card-back" style="background-image: url('assets/images/photo-1612673100630-fab20ea995cd.jpeg');">
 <div class="back-links">
 <a class="link" href="https://www.sciencedirect.com/science/article/pii/S1746809424008000" target="_blank">🔗 Article (ScienceDirect)</a>
 </div>
+<button class="card-close-btn">Close</button>
 </div>
 </div>
 </article>
@@ -697,11 +699,13 @@ font-weight: 500;
 <span class="badge">arXiv</span>
 <span class="badge">Dataset</span>
 </div>
+<button class="card-more-btn">More</button>
 </div>
 <div class="card-back" style="background-image: url('assets/images/photo-1612958859485-b6812253f59e.jpeg');">
 <div class="back-links">
 <a class="link" href="https://arxiv.org/abs/2207.03342" target="_blank">📄 arXiv (2207.03342)</a>
 </div>
+<button class="card-close-btn">Close</button>
 </div>
 </div>
 </article>
@@ -715,11 +719,13 @@ font-weight: 500;
 <span class="badge">Dataset</span>
 <span class="badge">Auscultation</span>
 </div>
+<button class="card-more-btn">More</button>
 </div>
 <div class="card-back" style="background-image: url('assets/images/photo-1613216513114-fd1ba08f64c6.jpeg');">
 <div class="back-links">
 <a class="link" href="https://arxiv.org/abs/2409.00724" target="_blank">📄 arXiv (BMD-HS)</a>
 </div>
+<button class="card-close-btn">Close</button>
 </div>
 </div>
 </article>
@@ -751,11 +757,13 @@ font-weight: 500;
 <span class="badge">Design</span>
 <span class="badge">Global Health</span>
 </div>
+<button class="card-more-btn">More</button>
 </div>
 <div class="card-back" style="background-image: url('assets/images/photo-1614424013315-7ca4e36dd90d.jpeg');">
 <div class="back-links">
 <a class="link" href="https://cbid.bme.jhu.edu/news-events/design-competition/#:~:text=Sayeed%20Sajjad%20Razin%2C-,S.M.%20Sakeef%20Sani,-3rd%20Place:%20OASIS" target="_blank">🔗 CBID Competition Page</a>
 </div>
+<button class="card-close-btn">Close</button>
 </div>
 </div>
 </article>
@@ -769,11 +777,13 @@ font-weight: 500;
 <span class="badge">Digital Health</span>
 <span class="badge">Clinical</span>
 </div>
+<button class="card-more-btn">More</button>
 </div>
 <div class="card-back" style="background-image: url('assets/images/photo-1618181431503-3abfba6f0e90.jpeg');">
 <div class="back-links">
 <a class="link" href="https://cbid.bme.jhu.edu/news-events/design-competition/#:~:text=Sayeed%20Sajjad%20Razin%2C-,S.M.%20Sakeef%20Sani,-3rd%20Place:%20OASIS" target="_blank">🔗 CBID Competition Page</a>
 </div>
+<button class="card-close-btn">Close</button>
 </div>
 </div>
 </article>
@@ -787,6 +797,7 @@ font-weight: 500;
 <span class="badge">Honda Y‑E‑S</span>
 <span class="badge">Grant</span>
 </div>
+<button class="card-more-btn">More</button>
 </div>
 <div class="card-back" style="background-image: url('assets/images/photo-1630226708835-f9e06df9a9c7.jpeg');">
 <div class="back-links">
@@ -794,6 +805,7 @@ font-weight: 500;
 <a class="link" href="https://www.hondafoundation.jp/yes/index_en/348" target="_blank">🔗 Honda Foundation (Project Page)</a>
 <a class="link" href="https://bme.buet.ac.bd/2024/03/18/congratulations-to-labiba-islam-salsabil-and-s-m-sakeef-sani-winners-of-the-honda-y-e-s-award-2023-in-bangladesh/" target="_blank">🔗 BUET Announcement</a>
 </div>
+<button class="card-close-btn">Close</button>
 </div>
 </div>
 </article>
@@ -807,6 +819,7 @@ font-weight: 500;
 <span class="badge">IPAS</span>
 <span class="badge">Space Tech</span>
 </div>
+<button class="card-more-btn">More</button>
 </div>
 <div class="card-back" style="background-image: url('assets/images/photo-1663076130444-6d7f9f00d124.jpeg');">
 <div class="back-links">
@@ -814,6 +827,7 @@ font-weight: 500;
 <a class="link" href="https://thefinancialexpress.com.bd/education/buet-team-wins-innovation-award-at-ipas-2021-1622131212" target="_blank">🔗 The Financial Express</a>
 <a class="link" href="https://www.prothomalo.com/education/higher-education/মঙ্গলের-জন্য-ড্রোন-উদ্ভাবনে-সেরা-বুয়েট" target="_blank">🔗 Prothom Alo</a>
 </div>
+<button class="card-close-btn">Close</button>
 </div>
 </div>
 </article>
@@ -827,12 +841,14 @@ font-weight: 500;
 <span class="badge">UIHP</span>
 <span class="badge">AgriTech</span>
 </div>
+<button class="card-more-btn">More</button>
 </div>
 <div class="card-back" style="background-image: url('assets/images/photo-1663275162414-64dba99065a2.jpeg');">
 <div class="back-links">
 <a class="link" href="https://www.uihp.org/program" target="_blank">🔗 UIHP Program</a>
 <a class="link" href="https://www.facebook.com/photo/?fbid=527904526858110&set=a.122000730781827" target="_blank">🔗 Facebook Post</a>
 </div>
+<button class="card-close-btn">Close</button>
 </div>
 </div>
 </article>
@@ -863,11 +879,13 @@ font-weight: 500;
 <span class="badge">BAT</span>
 <span class="badge">Logistics</span>
 </div>
+<button class="card-more-btn">More</button>
 </div>
 <div class="card-back" style="background-image: url('assets/images/photo-1686683010851-2f283bd0ead6.jpeg');">
 <div class="back-links">
 <!-- No external links provided -->
 </div>
+<button class="card-close-btn">Close</button>
 </div>
 </div>
 </article>
@@ -881,9 +899,11 @@ font-weight: 500;
 <span class="badge">mHealth</span>
 <span class="badge">Research</span>
 </div>
+<button class="card-more-btn">More</button>
 </div>
 <div class="card-back" style="background-image: url('assets/images/photo-1747634186572-e9f4ea18c183.jpeg');">
 <div class="back-links"></div>
+<button class="card-close-btn">Close</button>
 </div>
 </div>
 </article>
@@ -897,9 +917,11 @@ font-weight: 500;
 <span class="badge">Founder</span>
 <span class="badge">AgriTech</span>
 </div>
+<button class="card-more-btn">More</button>
 </div>
 <div class="card-back" style="background-image: url('assets/images/photo-1747673002516-f11a48cb0ce2.jpeg');">
 <div class="back-links"></div>
+<button class="card-close-btn">Close</button>
 </div>
 </div>
 </article>
@@ -929,9 +951,11 @@ font-weight: 500;
 <span class="badge">Studio</span>
 <span class="badge">VFX</span>
 </div>
+<button class="card-more-btn">More</button>
 </div>
 <div class="card-back" style="background-image: url('assets/images/photo-1670079302716-d09a46dcfcd8.jpeg');">
 <div class="back-links"></div>
+<button class="card-close-btn">Close</button>
 </div>
 </div>
 </article>
@@ -1027,30 +1051,54 @@ targ.scrollIntoView({ behavior: 'smooth' });
         }
       });
     });
-
 (function(){
-  document.addEventListener('click', (ev) => {
-    // Handle "More" button
-    if (ev.target.matches('.card-more-btn')) {
-      const card = ev.target.closest('.card');
-      if (card) card.classList.add('flipped');
-    }
-
-    // Handle "Back" button
-    if (ev.target.matches('.card-close-btn')) {
-      const card = ev.target.closest('.card');
-      if (card) card.classList.remove('flipped');
-    }
+// For accessibility
+document.querySelectorAll('.card').forEach(card => {
+if (!card.hasAttribute('tabindex')) card.setAttribute('tabindex', '0');
   });
-})();
+function toggleFlip(card) {
+if (!card || card.classList.contains('static-card')) return;
+card.classList.toggle('flipped');
+  }
+// Detect touch device
+const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
-document.addEventListener('click', (ev) => {
-  if (!ev.target.closest('.card')) {
-    document.querySelectorAll('.card.flipped')
-      .forEach(c => c.classList.remove('flipped'));
+// Conditional general card click for non-touch devices
+if (!isTouch) {
+  document.addEventListener('click', (ev) => {
+    const card = ev.target.closest('.card');
+    if (!card) return;
+    // skip if interactive element was clicked
+    if (ev.target.closest('a, button, summary, input, select, textarea, label')) return;
+    toggleFlip(card);
+  });
+}
+
+// Always add click listeners to buttons for flipping
+document.querySelectorAll('.card-more-btn, .card-close-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const card = btn.closest('.card');
+    toggleFlip(card);
+  });
+});
+
+// Allow Enter/Space keyboard flip
+document.addEventListener('keydown', (ev) => {
+  const active = document.activeElement;
+  if (!active || !active.classList.contains('card')) return;
+  if (ev.key === 'Enter' || ev.key === ' ') {
+    ev.preventDefault();
+    toggleFlip(active);
   }
 });
 
+// Reset flipped cards when clicking outside
+document.addEventListener('click', (ev) => {
+  const card = ev.target.closest('.card');
+  if (card) return; // inside card, do nothing
+  document.querySelectorAll('.card.flipped').forEach(c => c.classList.remove('flipped'));
+});
+})();
 </script>
 </body>
 </html>
