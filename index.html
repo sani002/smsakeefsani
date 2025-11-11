@@ -267,6 +267,13 @@
       transform: rotateY(180deg);
     }
 
+    .card {
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent; /* remove highlight on tap */
+      touch-action: manipulation; /* prevent some double-tap / gesture issues */
+      user-select: none;
+    }
+
     .title { font-weight:700; margin: 0 0 8px; }
     .summary { font-size: 14px; color: #5b5b5b; margin: 0; }
     .badges { margin-top:12px; display:flex; gap:8px; flex-wrap:wrap; }
@@ -1133,13 +1140,61 @@ h2 {
     });
 
     // Tap to Flip for Cards (mobile-friendly)
-    document.querySelectorAll('.card').forEach(card => {
-      card.addEventListener('click', () => {
-        // Prevent flip for static cards
-        if (card.classList.contains('static-card')) return;
-        card.classList.toggle('flipped');
+    (function(){
+      // Make cards focusable for keyboard users
+      document.querySelectorAll('.card').forEach(c => {
+        if (!c.hasAttribute('tabindex')) c.setAttribute('tabindex', '0');
       });
-    });
+
+      // Utility: toggle flip but ignore static cards
+      function toggleFlip(card) {
+        if (!card || card.classList.contains('static-card')) return;
+        card.classList.toggle('flipped');
+      }
+
+      // Debounce so double events (touch + click) don't double-toggle
+      let lastToggleAt = 0;
+      const TOGGLE_DEBOUNCE_MS = 350;
+
+      // Pointerup is reliable for both mouse and touch devices.
+      document.addEventListener('pointerup', (ev) => {
+        const now = Date.now();
+        // debounce
+        if (now - lastToggleAt < TOGGLE_DEBOUNCE_MS) return;
+
+        const card = ev.target.closest('.card');
+        if (!card) return;
+
+        // If user tapped an interactive element inside the card, don't flip.
+        // This allows links / buttons / summary to behave normally.
+        const interactive = ev.target.closest('a, button, summary, input, label, select, textarea');
+        if (interactive) {
+          return;
+        }
+
+        toggleFlip(card);
+        lastToggleAt = now;
+      }, {passive: true});
+
+      // Also support keyboard toggling (Enter / Space)
+      document.addEventListener('keydown', (ev) => {
+        const card = document.activeElement && document.activeElement.classList.contains('card') ? document.activeElement : null;
+        if (!card) return;
+        if (ev.key === 'Enter' || ev.key === ' ') {
+          ev.preventDefault();
+          toggleFlip(card);
+        }
+      });
+
+      // Prevent accidental toggles when user is scrolling (touchmove)
+      let touchMoved = false;
+      document.addEventListener('touchstart', () => { touchMoved = false; }, {passive: true});
+      document.addEventListener('touchmove', () => { touchMoved = true; }, {passive: true});
+      document.addEventListener('touchend', (ev) => {
+        if (touchMoved) return; // skip if it was a scroll
+        // pointerup handler will already handle taps, so nothing to do here.
+      }, {passive: true});
+    })();
 
     // Keyboard shortcut 'w' to jump to work
     document.addEventListener('keydown', (e)=>{
