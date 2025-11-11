@@ -1139,93 +1139,53 @@ h2 {
       });
     });
 
-    // Tap to Flip for Cards (mobile-friendly)
-    (function(){
-      // Make cards focusable for keyboard users
-      document.querySelectorAll('.card').forEach(c => {
-        if (!c.hasAttribute('tabindex')) c.setAttribute('tabindex', '0');
-      });
+(function(){
+  // For accessibility
+  document.querySelectorAll('.card').forEach(card => {
+    if (!card.hasAttribute('tabindex')) card.setAttribute('tabindex', '0');
+  });
 
-      // Utility: toggle flip but ignore static cards
-      function toggleFlip(card) {
-        if (!card || card.classList.contains('static-card')) return;
-        card.classList.toggle('flipped');
-      }
+  let lastToggleAt = 0;
+  const TOGGLE_DEBOUNCE_MS = 350;
 
-      // Debounce so double events (touch + click) don't double-toggle
-      let lastToggleAt = 0;
-      const TOGGLE_DEBOUNCE_MS = 350;
+  function toggleFlip(card) {
+    if (!card || card.classList.contains('static-card')) return;
+    card.classList.toggle('flipped');
+  }
 
-      // Pointerup is reliable for both mouse and touch devices.
-      document.addEventListener('pointerup', (ev) => {
-        const now = Date.now();
-        // debounce
-        if (now - lastToggleAt < TOGGLE_DEBOUNCE_MS) return;
+  // Handle pointer (mouse, touch, pen)
+  document.addEventListener('pointerup', (ev) => {
+    const now = Date.now();
+    if (now - lastToggleAt < TOGGLE_DEBOUNCE_MS) return;
 
-        const card = ev.target.closest('.card');
-        if (!card) return;
+    const card = ev.target.closest('.card');
+    if (!card) return;
 
-        // If user tapped an interactive element inside the card, don't flip.
-        // This allows links / buttons / summary to behave normally.
-        const interactive = ev.target.closest('a, button, summary, input, label, select, textarea');
-        if (interactive) {
-          return;
-        }
+    // skip if interactive element was tapped
+    if (ev.target.closest('a, button, summary, input, select, textarea, label')) return;
 
-        toggleFlip(card);
-        lastToggleAt = now;
-      }, {passive: true});
+    // toggle flip state (simulates hover)
+    toggleFlip(card);
+    lastToggleAt = now;
+  }, {passive: true});
 
-      // Also support keyboard toggling (Enter / Space)
-      document.addEventListener('keydown', (ev) => {
-        const card = document.activeElement && document.activeElement.classList.contains('card') ? document.activeElement : null;
-        if (!card) return;
-        if (ev.key === 'Enter' || ev.key === ' ') {
-          ev.preventDefault();
-          toggleFlip(card);
-        }
-      });
+  // Allow Enter/Space keyboard flip
+  document.addEventListener('keydown', (ev) => {
+    const active = document.activeElement;
+    if (!active || !active.classList.contains('card')) return;
+    if (ev.key === 'Enter' || ev.key === ' ') {
+      ev.preventDefault();
+      toggleFlip(active);
+    }
+  });
 
-      // Prevent accidental toggles when user is scrolling (touchmove)
-      let touchMoved = false;
-      document.addEventListener('touchstart', () => { touchMoved = false; }, {passive: true});
-      document.addEventListener('touchmove', () => { touchMoved = true; }, {passive: true});
-      document.addEventListener('touchend', (ev) => {
-        if (touchMoved) return; // skip if it was a scroll
-        // pointerup handler will already handle taps, so nothing to do here.
-      }, {passive: true});
-    })();
-
-    // Keyboard shortcut 'w' to jump to work
-    document.addEventListener('keydown', (e)=>{
-      if(e.key.toLowerCase() === 'w') {
-        document.getElementById('work').scrollIntoView({ behavior: 'smooth' });
-      }
-    });
-
-    // LIGHTBOX FUNCTIONALITY for image gallery
-    const lightbox = document.getElementById('lightbox');
-    const lightboxImg = document.getElementById('lightbox-img');
-    const lightboxCaption = document.getElementById('lightbox-caption');
-    const closeBtn = document.querySelector('.lightbox-close');
-
-    document.querySelectorAll('.image-card').forEach(card => {
-      card.addEventListener('click', () => {
-        const img = card.querySelector('img');
-        const caption = card.querySelector('span').innerText;
-        lightboxImg.src = img.src;
-        lightboxCaption.textContent = caption;
-        lightbox.classList.add('active');
-      });
-    });
-
-    closeBtn.addEventListener('click', () => {
-      lightbox.classList.remove('active');
-    });
-
-    lightbox.addEventListener('click', e => {
-      if (e.target === lightbox) lightbox.classList.remove('active');
-    });
+  // Reset flipped cards when tapping outside (optional)
+  document.addEventListener('pointerdown', (ev) => {
+    const card = ev.target.closest('.card');
+    if (card) return; // inside card, do nothing
+    document.querySelectorAll('.card.flipped').forEach(c => c.classList.remove('flipped'));
+  }, {passive: true});
+})();
       </script>
 
 </body>
