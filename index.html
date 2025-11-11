@@ -1002,54 +1002,51 @@ e.target.classList.add('in');
 cards.forEach(c => io.observe(c));
 // Smooth scroll for anchor links
 (function() {
-  // Make all cards focusable for accessibility
+  // Make cards focusable for keyboard
   document.querySelectorAll('.card').forEach(card => {
     if (!card.hasAttribute('tabindex')) card.setAttribute('tabindex', '0');
   });
 
-  function flipCard(card) {
+  function toggleFlip(card) {
     if (!card || card.classList.contains('static-card')) return;
-
-    // Unflip all other cards first
-    document.querySelectorAll('.card.flipped').forEach(c => {
-      if (c !== card) c.classList.remove('flipped');
-    });
-
-    // Toggle this card
     card.classList.toggle('flipped');
   }
 
-  // Handle both click & touch to ensure immediate response on mobile
-  function handleInteraction(ev) {
+  document.addEventListener('click', (ev) => {
     const card = ev.target.closest('.card');
 
-    if (!card) {
-      // Clicked outside → unflip all
+    // Ignore clicks on interactive elements inside the card
+    if (card && ev.target.closest('a, button, summary, input, select, textarea, label')) return;
+
+    if (card) {
+      // Unflip all other cards
+      document.querySelectorAll('.card.flipped').forEach(c => {
+        if (c !== card) c.classList.remove('flipped');
+      });
+
+      // Flip the clicked card
+      toggleFlip(card);
+    } else {
+      // Clicked outside any card → unflip all
       document.querySelectorAll('.card.flipped').forEach(c => c.classList.remove('flipped'));
-      return;
     }
+  });
 
-    // Ignore if tapping interactive element inside a card
-    if (ev.target.closest('a, button, summary, input, select, textarea, label')) return;
-
-    ev.preventDefault(); // prevent ghost click on mobile
-    flipCard(card);
-  }
-
-  // Use both pointer and touch events for immediate tap response
-  document.addEventListener('pointerup', handleInteraction);
-  document.addEventListener('touchend', handleInteraction);
-
-  // Keyboard support: Enter or Space flips focused card
+  // Keyboard flip (Enter/Space)
   document.addEventListener('keydown', (ev) => {
     const active = document.activeElement;
     if (!active || !active.classList.contains('card')) return;
     if (ev.key === 'Enter' || ev.key === ' ') {
       ev.preventDefault();
-      flipCard(active);
+      // Unflip all other cards
+      document.querySelectorAll('.card.flipped').forEach(c => {
+        if (c !== active) c.classList.remove('flipped');
+      });
+      toggleFlip(active);
     }
   });
 })();
+
 
 </script>
 </body>
