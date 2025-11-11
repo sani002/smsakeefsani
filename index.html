@@ -6,20 +6,27 @@
   <title>S. M. Sakeef Sani</title>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --bg: #0f0f10;
-      --card: #f7f3ef;
-      --muted: #bdb7b0;
-      --accent: #e76f51;
-      --glass: rgba(255,255,255,0.06);
-      --maxw: 1200px;
-      --gutter: 18px;
-    }
-    * { box-sizing: border-box; }
-    html, body { height: 100%; margin: 0; font-family: Montserrat, system-ui, Segoe UI, Roboto, 'Helvetica Neue', Arial; }
-    body { background: linear-gradient(180deg, #0b0b0b 0%, #101214 100%); color: #fff; -webkit-font-smoothing: antialiased; }
+ /* === ROOT VARIABLES === */
+:root {
+  --bg: #0f0f10;
+  --card: #f7f3ef;
+  --muted: #bdb7b0;
+  --accent: #e76f51;
+  --glass: rgba(255,255,255,0.06);
+  --maxw: 1200px;
+  --gutter: 18px;
+}
 
-    /* HERO */
+/* === GLOBAL RESETS === */
+* { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; font-family: Montserrat, system-ui, Segoe UI, Roboto, 'Helvetica Neue', Arial; }
+body {
+  background: linear-gradient(180deg, #0b0b0b 0%, #101214 100%);
+  color: #fff;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* === HERO SECTION === */
 .hero {
   position: relative;
   height: 100vh;
@@ -29,31 +36,26 @@
   justify-content: center;
   overflow: hidden;
   isolation: isolate;
-  /* Add this to ensure hero takes full width */
   width: 100%;
 }
 
-/* FIX: Make background cover full area + extend downward */
 .parallax-bg {
   position: absolute;
   inset: 0;
   z-index: 0;
   background-image: url('bg-2.jpg');
-  background-size: cover;           /* CHANGE: cover instead of contain */
+  background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   background-color: #0b0b0b;
   transform: translateZ(0);
   will-change: transform;
   filter: contrast(1.05) saturate(1.5);
-  
-  /* EXTEND BACKGROUND DOWNWARD to cover content gap */
-  top: -50vh;           /* Start higher */
-  height: 200vh;        /* Extend 100vh below hero */
-  background-attachment: fixed; /* Optional: stronger parallax feel */
+  top: -50vh;
+  height: 200vh;
+  background-attachment: fixed;
 }
 
-/* Optional: Fine-tune parallax speed */
 .parallax-bg::before {
   content: '';
   position: absolute;
@@ -66,60 +68,61 @@
   z-index: -1;
 }
 
-/* Gradient overlay as pseudo-element to avoid stretching issue */
 .parallax-bg::after {
   content: '';
   position: absolute;
   inset: 0;
   background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 100%);
-  pointer-events: none; /* so overlay doesn’t block clicks */
+  pointer-events: none;
 }
 
-    .hero-content {
-      position: relative;
-      z-index: 2;
-      max-width: var(--maxw);
-      width: 100%;
-      padding: 48px;
-      display: grid;
-      grid-template-columns: 1fr 420px;
-      gap: 28px;
-      align-items: center;
-    }
-    .intro {
-      padding: 48px 36px;
-      border-radius: 18px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-      backdrop-filter: blur(6px);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
-    }
-    .eyebrow {
-      font-weight: 600; letter-spacing: 2px; color: var(--muted);
-      font-size: 12px; text-transform: uppercase;
-    }
-    h1 {
-      font-size: 48px; margin: 8px 0 6px; line-height: 1.02; font-weight: 800;
-    }
-    h2 {
-      font-size: 18px; color: var(--muted); font-weight: 400; margin: 0 0 12px;
-    }
-    p.lead {
-      margin: 12px 0 0; color: #e6dfd9; font-weight: 300;
-    }
-
-    .hero-card {
-      padding: 22px; border-radius: 14px; background: var(--glass);
-      border: 1px solid rgba(255,255,255,0.03);
-    }
-    .meta {
-      font-size: 14px; color: var(--muted); margin-top: 12px;
-    }
-.cta {
-  display: flex;
-  gap: 12px;
-  margin-top: 18px;
+.hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: var(--maxw);
+  width: 100%;
+  padding: 48px;
+  display: grid;
+  grid-template-columns: 1fr 420px;
+  gap: 28px;
+  align-items: center;
 }
 
+/* === HERO TEXT === */
+.intro {
+  padding: 48px 36px;
+  border-radius: 18px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  backdrop-filter: blur(6px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+}
+.eyebrow {
+  font-weight: 600;
+  letter-spacing: 2px;
+  color: var(--muted);
+  font-size: 12px;
+  text-transform: uppercase;
+}
+h1 {
+  font-size: 48px;
+  margin: 8px 0 6px;
+  line-height: 1.02;
+  font-weight: 800;
+}
+h2 {
+  font-size: 18px;
+  color: var(--muted);
+  font-weight: 400;
+  margin: 0 0 12px;
+}
+p.lead {
+  margin: 12px 0 0;
+  color: #e6dfd9;
+  font-weight: 300;
+}
+
+/* === BUTTONS === */
+.cta { display: flex; gap: 12px; margin-top: 18px; }
 .btn {
   padding: 10px 14px;
   border-radius: 10px;
@@ -132,13 +135,11 @@
   transition: all 0.3s ease;
   transform: translateY(0);
 }
-
 .btn:hover {
   transform: translateY(-4px);
   border-color: rgba(255, 255, 255, 0.2);
   box-shadow: 0 8px 18px rgba(255, 255, 255, 0.08);
 }
-
 .btn.primary {
   background: linear-gradient(90deg, var(--accent), #ff9d76);
   color: #0b0b0b;
@@ -147,277 +148,208 @@
   background-size: 200%;
   background-position: left;
 }
-
 .btn.primary:hover {
   background-position: right;
   box-shadow: 0 8px 20px rgba(255, 157, 118, 0.4);
   transform: translateY(-4px);
 }
 
+.scroll-hint {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 20px;
+  font-size: 12px;
+  color: var(--muted);
+  z-index: 3;
+}
 
-    .scroll-hint {
-      position: absolute; left: 50%; transform: translateX(-50%);
-      bottom: 20px; font-size: 12px; color: var(--muted); z-index: 3;
-    }
+/* === MAIN GRID === */
+main {
+  max-width: var(--maxw);
+  margin: 0 auto 120px;
+  padding: 60px var(--gutter) 0;
+  position: relative;
+  z-index: 6;
+  overflow: visible;
+}
+.masonry {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: var(--gutter);
+  position: relative;
+  z-index: 5;
+  overflow: visible;
+  margin-top: 40px;
+}
 
-    /* MAIN / CARDS */
-    main {
-      max-width: var(--maxw);
-      margin: 0 auto 120px;
-      padding: 60px var(--gutter) 0;
-      position: relative;
-      z-index: 6;
-      overflow: visible;
-    }
+/* === FLIP CARD SYSTEM (fixed for touch) === */
+.card {
+  perspective: 1200px;
+  transform-origin: center center;
+  transition: transform .6s cubic-bezier(.2,.9,.2,1), opacity .45s;
+  display: block;
+  width: 100%;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  user-select: none;
+}
 
-    .masonry {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-      gap: var(--gutter);
-      position: relative;
-      z-index: 5;
-      overflow: visible;
-      margin-top: 40px;
-    }
+.card-inner {
+  position: relative;
+  width: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.8s cubic-bezier(.2,.9,.2,1);
+  min-height: 180px;
+  will-change: transform;
+}
 
-    .card {
-      perspective: 1200px;
-      transform-origin: center center;
-      transition: transform .6s cubic-bezier(.2,.9,.2,1), opacity .45s;
-      display: block;
-      width: 100%;
-    }
+/* Front & Back base styles */
+.card-front, .card-back {
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  padding: 18px;
+  backface-visibility: hidden;
+  box-shadow: 0 10px 20px rgba(2,6,23,0.6);
+}
 
-    .card-inner {
-      position: relative;
-      width: 100%;
-      transform-style: preserve-3d;
-      transition: transform 0.8s cubic-bezier(.2,.9,.2,1);
-      min-height: 180px;
-      will-change: transform;
-    }
+/* FRONT FACE */
+.card-front {
+  background: linear-gradient(180deg, #ffffff 0%, #f4efe9 100%);
+  color: #111;
+  z-index: 2;
+  pointer-events: auto;
+}
 
-    .card-front, .card-back {
-      position: absolute;
-      inset: 0;
-      border-radius: 12px;
-      padding: 18px;
-      backface-visibility: hidden;
-      box-shadow: 0 10px 20px rgba(2,6,23,0.6);
-    }
+/* BACK FACE */
+.card-back {
+  transform: rotateY(180deg);
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 20px;
+  color: #fff;
+  text-align: center;
+  pointer-events: none;
+  z-index: 1;
+}
 
-    .card-front {
-      background: linear-gradient(180deg, #ffffff 0%, #f4efe9 100%);
-      color: #111;
-      position: relative;
-    }
+/* When flipped → back is active */
+.card.flipped .card-front {
+  pointer-events: none;
+  z-index: 1;
+}
+.card.flipped .card-back {
+  pointer-events: auto;
+  z-index: 3;
+}
 
-    .card-back {
-      position: absolute;
-      inset: 0;
-      border-radius: 12px;
-      overflow: hidden;
-      backface-visibility: hidden;
-      transform: rotateY(180deg);
-      background-size: cover;
-      background-position: center;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
-      align-items: center;
-      padding: 20px;
-      color: #fff;
-      text-align: center;
-    }
-
-    .card-back::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: rgba(0,0,0,0);
-      z-index: 0;
-    }
-
-    .card-back .back-links {
-      position: relative;
-      z-index: 1;
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-
-    .card-back .link {
-      background: rgba(255,255,255,.6);
-      border: 1px solid rgba(255,255,255,1);
-      color: #0b0b0b;
-      font-weight: 600;
-      padding: 10px 14px;
-      border-radius: 10px;
-      text-decoration: none;
-      transition: all 0.3s ease;
-    }
-
-    .card-back .link:hover {
-      background: rgba(255,255,255,1);
-      transform: translateY(-2px);
-    }
-
+/* Flip animation */
 .card:hover .card-inner,
 .card.flipped .card-inner {
   transform: rotateY(180deg);
 }
 
+/* Disable hover on touch devices to prevent double-flip */
+@media (hover: none) {
+  .card:hover .card-inner { transform: none; }
+}
 
-    .card {
-      cursor: pointer;
-      -webkit-tap-highlight-color: transparent; /* remove highlight on tap */
-      touch-action: manipulation; /* prevent some double-tap / gesture issues */
-      user-select: none;
-    }
+/* === CARD CONTENT === */
+.title { font-weight:700; margin: 0 0 8px; }
+.summary { font-size: 14px; color: #5b5b5b; margin: 0; }
+.badges { margin-top:12px; display:flex; gap:8px; flex-wrap:wrap; }
+.badge { background: rgba(11,11,11,0.06); color: #222; padding:6px 10px; border-radius:999px; font-size:12px; }
 
-    .title { font-weight:700; margin: 0 0 8px; }
-    .summary { font-size: 14px; color: #5b5b5b; margin: 0; }
-    .badges { margin-top:12px; display:flex; gap:8px; flex-wrap:wrap; }
-    .badge { background: rgba(11,11,11,0.06); color: #222; padding:6px 10px; border-radius:999px; font-size:12px; }
+/* BACK FACE LINKS */
+.card-back::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0);
+  z-index: 0;
+}
+.card-back .back-links {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.card-back .link {
+  background: rgba(255,255,255,.6);
+  border: 1px solid rgba(255,255,255,1);
+  color: #0b0b0b;
+  font-weight: 600;
+  padding: 10px 14px;
+  border-radius: 10px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+.card-back .link:hover {
+  background: rgba(255,255,255,1);
+  transform: translateY(-2px);
+}
 
-    footer {
-      position: relative;
-      clear: both;
-      max-width: var(--maxw);
-      margin: 100px auto;
-      padding: 0 var(--gutter);
-      color: var(--muted);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      z-index: 10;
-    }
+/* === SECTION VARIANTS === */
+.research .card-front { background: #ed1c22; color: #fff; }
+.research .summary, .awards .summary, .experience .summary, .animation .summary { color: rgba(255,255,255,0.85); }
+.research .badge, .awards .badge, .experience .badge, .animation .badge {
+  background: rgba(255,255,255,0.15);
+  color: #fff;
+}
+.awards .card-front { background: #b21b46; color: #fff; }
+.experience .card-front { background: #761a65; color: #fff; }
+.animation .card-front { background: #3b1989; color: #fff; }
 
-    .reveal { opacity: 0; transform: translateY(28px) scale(.995); }
-    .reveal.in { opacity:1; transform:none; transition: all 700ms cubic-bezier(.2,.9,.2,1); }
+/* === STATIC CARDS === */
+.static-card .card-inner {
+  transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.2, 1), box-shadow 0.3s cubic-bezier(0.2, 0.9, 0.2, 1);
+}
+.static-card:hover .card-inner {
+  transform: scale(1.05) translateY(-10px);
+  box-shadow: 0 20px 40px rgba(2,6,23,0.8);
+}
+.static-card .card-back { display: none; }
 
-    .retro-line { height:2px; width:100px; background: linear-gradient(90deg, var(--accent), transparent); border-radius:4px; margin:10px 0; }
+/* === FOOTER === */
+footer {
+  position: relative;
+  clear: both;
+  max-width: var(--maxw);
+  margin: 100px auto;
+  padding: 0 var(--gutter);
+  color: var(--muted);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 10;
+}
 
-    .muted { color: var(--muted); }
-    a { color: inherit; text-decoration: none; }
+/* === ANIMATIONS === */
+.reveal { opacity: 0; transform: translateY(28px) scale(.995); }
+.reveal.in { opacity:1; transform:none; transition: all 700ms cubic-bezier(.2,.9,.2,1); }
 
-    @media (max-width: 1000px) {
-      .hero-content { grid-template-columns: 1fr; }
-    }
-    @media (max-width: 640px) {
-      .masonry {
-        grid-template-columns: 1fr; /* Two columns instead of one */
-      }
-    }
+.retro-line { height:2px; width:100px; background: linear-gradient(90deg, var(--accent), transparent); border-radius:4px; margin:10px 0; }
 
-    .research .card-front {
-        background: #ed1c22;
-        color: #fff;
-    }
+.muted { color: var(--muted); }
+a { color: inherit; text-decoration: none; }
 
-    .research .card-front .title {
-        color: #fff;
-    }
+/* === RESPONSIVE === */
+@media (max-width: 1000px) {
+  .hero-content { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+  .masonry { grid-template-columns: 1fr; }
+}
 
-    .research .card-front .summary {
-        color: rgba(255, 255, 255, 0.85);
-    }
-
-    .research .card-front .badge {
-        background: rgba(255, 255, 255, 0.15);
-        color: #fff;
-    }
-
-    .awards .card-front {
-        background: #b21b46;
-        color: #fff;
-    }
-
-    .awards .card-front .title {
-        color: #fff;
-    }
-
-    .awards .card-front .summary {
-        color: rgba(255, 255, 255, 0.85);
-    }
-
-    .awards .card-front .badge {
-        background: rgba(255, 255, 255, 0.15);
-        color: #fff;
-    }
-
-    .experience .card-front {
-        background: #761a65;
-        color: #fff;
-    }
-
-    .experience .card-front .title {
-        color: #fff;
-    }
-
-    .experience .card-front .summary {
-        color: rgba(255, 255, 255, 0.85);
-    }
-
-    .experience .card-front .badge {
-        background: rgba(255, 255, 255, 0.15);
-        color: #fff;
-    }
-
-    .animation .card-front {
-        background: #3b1989;
-        color: #fff;
-    }
-
-    .animation .card-front .title {
-        color: #fff;
-    }
-
-    .animation .card-front .summary {
-        color: rgba(255, 255, 255, 0.85);
-    }
-
-    .animation .card-front .badge {
-        background: rgba(255, 255, 255, 0.15);
-        color: #fff;
-    }
-
-    /* Disable flip and add slide-zoom for static cards */
-    .static-card .card-inner {
-        transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.2, 1), box-shadow 0.3s cubic-bezier(0.2, 0.9, 0.2, 1);
-    }
-
-    .static-card:hover .card-inner {
-        transform: scale(1.05) translateY(-10px); /* Zoom in + slide up */
-        box-shadow: 0 20px 40px rgba(2, 6, 23, 0.8); /* Increased shadow for lift effect */
-    }
-
-    /* Ensure back stays hidden (optional but good for consistency) */
-    .static-card .card-back {
-        display: none; /* Hide empty back since no flip */
-    }
-
-    .card:hover .card-inner,
-    .card.flipped .card-inner {
-      transform: rotateY(180deg);
-    }
-
-    /* For static cards (if you have them), keep hover but add tap toggle if needed */
-    .static-card:hover .card-inner,
-    .static-card.flipped .card-inner {
-      transform: scale(1.05) translateY(-10px); /* Or your custom effect */
-      box-shadow: 0 20px 40px rgba(2, 6, 23, 0.8);
-    }
-
-    /* Prevent double-flip on hover+tap */
-    @media (hover: none) {
-      .card:hover .card-inner {
-        transform: none; /* Disable hover on touch devices */
-      }
-    }
-    
-/* GALLERY SECTION */
+/* === GALLERY === */
 .image-gallery {
   max-width: var(--maxw);
   margin: 120px auto;
@@ -425,7 +357,6 @@
   position: relative;
   z-index: 10;
 }
-
 .gallery-title {
   font-size: 28px;
   font-weight: 700;
@@ -433,13 +364,11 @@
   text-align: center;
   color: #fff;
 }
-
 .image-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: 18px;
 }
-
 .image-card {
   position: relative;
   overflow: hidden;
@@ -450,7 +379,6 @@
   cursor: pointer;
   transition: transform 0.4s cubic-bezier(.2,.9,.2,1), box-shadow 0.4s cubic-bezier(.2,.9,.2,1);
 }
-
 .image-card img {
   width: 100%;
   height: 100%;
@@ -458,7 +386,6 @@
   display: block;
   transition: transform 0.4s ease, filter 0.4s ease;
 }
-
 .image-card span {
   position: absolute;
   bottom: 0;
@@ -472,31 +399,25 @@
   text-align: center;
   transition: all 0.3s ease;
 }
-
-/* Hover effect */
 .image-card:hover {
   transform: scale(1.05) translateY(-6px);
   box-shadow: 0 20px 40px rgba(0,0,0,0.6);
 }
-
 .image-card:hover img {
   transform: scale(1.08);
   filter: brightness(1.15);
 }
-
 .image-card:hover span {
   background: linear-gradient(180deg, rgba(0,0,0,0.2), rgba(0,0,0,0.85));
 }
 
-/* LIGHTBOX STYLES */
+/* === LIGHTBOX === */
 .lightbox {
   display: none;
   position: fixed;
   z-index: 9999;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
+  left: 0; top: 0;
+  width: 100%; height: 100%;
   background: rgba(0,0,0,0.9);
   justify-content: center;
   align-items: center;
@@ -504,17 +425,11 @@
   backdrop-filter: blur(4px);
   transition: opacity 0.3s ease;
 }
-
 .lightbox.active {
   display: flex;
   animation: fadeIn 0.3s ease forwards;
 }
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 .lightbox img {
   max-width: 90%;
   max-height: 80vh;
@@ -522,145 +437,19 @@
   box-shadow: 0 0 40px rgba(255,255,255,0.2);
   animation: zoomIn 0.3s ease;
 }
-
-@keyframes zoomIn {
-  from { transform: scale(0.8); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
-}
-
-.lightbox p {
-  color: #fff;
-  margin-top: 20px;
-  font-size: 16px;
-  text-align: center;
-}
-
+@keyframes zoomIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.lightbox p { color: #fff; margin-top: 20px; font-size: 16px; text-align: center; }
 .lightbox-close {
   position: absolute;
-  top: 30px;
-  right: 40px;
+  top: 30px; right: 40px;
   color: #fff;
   font-size: 40px;
   font-weight: bold;
   cursor: pointer;
   transition: 0.3s;
 }
+.lightbox-close:hover { color: #ff5555; }
 
-.lightbox-close:hover {
-  color: #ff5555;
-}
-
-/* === MOBILE-FIRST HERO FIXES === */
-.hero-content {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  padding: 32px 20px;
-  max-width: 100%;
-  text-align: center;
-}
-
-.intro {
-  padding: 28px 20px;
-  border-radius: 16px;
-  background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
-  backdrop-filter: blur(8px);
-  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-}
-
-.eyebrow {
-  font-size: 11px;
-  letter-spacing: 2.5px;
-}
-
-h1 {
-  font-size: 32px;
-  line-height: 1.1;
-  margin: 8px 0;
-  font-weight: 800;
-}
-
-h2 {
-  font-size: 16px;
-  line-height: 1.4;
-  margin: 12px 0;
-  color: var(--muted);
-}
-
-.cta {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-top: 20px;
-  align-items: center;
-}
-
-.social-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  justify-content: center;
-}
-
-.btn {
-  padding: 10px 16px;
-  font-size: 14px;
-  min-width: 100px;
-}
-
-.btn.primary {
-  width: 100%;
-  max-width: 280px;
-}
-
-/* Hero Card → <details> collapsible */
-.hero-card {
-  padding: 20px;
-  border-radius: 14px;
-  background: var(--glass);
-  border: 1px solid rgba(255,255,255,0.03);
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.hero-card[open] {
-  padding-bottom: 24px;
-}
-
-.hero-card summary {
-  list-style: none;
-  font-weight: 600;
-  margin-bottom: 12px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.hero-card summary::after {
-  content: '▼';
-  font-size: 12px;
-  transition: transform 0.3s ease;
-}
-
-.hero-card[open] summary::after {
-  transform: rotate(180deg);
-}
-
-.hero-card ul {
-  margin: 0;
-  padding-left: 18px;
-  text-align: left;
-  font-size: 14px;
-  line-height: 1.5;
-  color: #e6dfd9;
-}
-
-.meta-badge {
-  margin-top: 14px;
-  font-size: 12px;
-  color: var(--muted);
-  font-weight: 500;
-}
 
   </style>
 </head>
@@ -1113,65 +902,81 @@ h2 {
 
   <script>
     // Parallax movement based on scroll
-    const parallax = document.getElementById('parallax');
-    window.addEventListener('scroll', ()=>{
-      const sc = window.scrollY;
-      parallax.style.transform = `translateY(${sc * -0.25}px) scale(1)`;
-    }, {passive: true});
+// === PARALLAX EFFECT ===
+const parallax = document.getElementById('parallax');
+if (parallax) {
+  window.addEventListener('scroll', () => {
+    const sc = window.scrollY;
+    parallax.style.transform = `translateY(${sc * -0.25}px) scale(1)`;
+  }, { passive: true });
+}
 
-    // Reveal cards when in view
-    const cards = document.querySelectorAll('.reveal');
-    const io = new IntersectionObserver((entries)=>{
-      entries.forEach(e=>{
-        if(e.isIntersecting) {
-          e.target.classList.add('in');
-        }
-      });
-    }, { threshold: 0.12 });
-    cards.forEach(c => io.observe(c));
-
-    // Smooth scroll for anchor links
-    document.querySelectorAll('a[href^="#"]').forEach(a=>{
-      a.addEventListener('click', (ev)=>{
-        const targ = document.querySelector(a.getAttribute('href'));
-        if(targ) {
-          ev.preventDefault();
-          targ.scrollIntoView({ behavior: 'smooth' });
-        }
-      });
+// === REVEAL ELEMENTS ON SCROLL ===
+const revealEls = document.querySelectorAll('.reveal');
+if (revealEls.length) {
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) entry.target.classList.add('in');
     });
+  }, { threshold: 0.12 });
+  revealEls.forEach(el => io.observe(el));
+}
 
-(function(){
-  // For accessibility
+// === SMOOTH SCROLL FOR ANCHOR LINKS ===
+document.querySelectorAll('a[href^="#"]').forEach(link => {
+  link.addEventListener('click', (ev) => {
+    const target = document.querySelector(link.getAttribute('href'));
+    if (target) {
+      ev.preventDefault();
+      target.scrollIntoView({ behavior: 'smooth' });
+    }
+  });
+});
+
+// === INTERACTIVE CARD FLIPPING (Desktop + Touch) ===
+(function () {
+  // Make cards focusable for accessibility
   document.querySelectorAll('.card').forEach(card => {
     if (!card.hasAttribute('tabindex')) card.setAttribute('tabindex', '0');
   });
 
-  let lastToggleAt = 0;
   const TOGGLE_DEBOUNCE_MS = 350;
+  let lastToggleAt = 0;
 
   function toggleFlip(card) {
     if (!card || card.classList.contains('static-card')) return;
+
+    // Flip card
     card.classList.toggle('flipped');
+
+    // Control pointer-events for visible face
+    const front = card.querySelector('.card-front');
+    const back = card.querySelector('.card-back');
+    if (card.classList.contains('flipped')) {
+      if (front) front.style.pointerEvents = 'none';
+      if (back) back.style.pointerEvents = 'auto';
+    } else {
+      if (front) front.style.pointerEvents = 'auto';
+      if (back) back.style.pointerEvents = 'none';
+    }
   }
 
-  // Handle pointer (mouse, touch, pen)
+  // === TOUCH / POINTER FLIP ===
   document.addEventListener('pointerup', (ev) => {
     const now = Date.now();
     if (now - lastToggleAt < TOGGLE_DEBOUNCE_MS) return;
 
+    // Ignore taps on buttons/links/etc.
+    if (ev.target.closest('a, button, summary, input, select, textarea, label')) return;
+
     const card = ev.target.closest('.card');
     if (!card) return;
 
-    // skip if interactive element was tapped
-    if (ev.target.closest('a, button, summary, input, select, textarea, label')) return;
-
-    // toggle flip state (simulates hover)
     toggleFlip(card);
     lastToggleAt = now;
-  }, {passive: true});
+  }, { passive: true });
 
-  // Allow Enter/Space keyboard flip
+  // === KEYBOARD ACCESS (Enter / Space) ===
   document.addEventListener('keydown', (ev) => {
     const active = document.activeElement;
     if (!active || !active.classList.contains('card')) return;
@@ -1181,13 +986,21 @@ h2 {
     }
   });
 
-  // Reset flipped cards when tapping outside (optional)
+  // === RESET FLIPPED CARDS WHEN TAPPING OUTSIDE ===
   document.addEventListener('pointerdown', (ev) => {
-    const card = ev.target.closest('.card');
-    if (card) return; // inside card, do nothing
-    document.querySelectorAll('.card.flipped').forEach(c => c.classList.remove('flipped'));
-  }, {passive: true});
+    const insideCard = ev.target.closest('.card');
+    if (insideCard) return;
+
+    document.querySelectorAll('.card.flipped').forEach(c => {
+      c.classList.remove('flipped');
+      const front = c.querySelector('.card-front');
+      const back = c.querySelector('.card-back');
+      if (front) front.style.pointerEvents = 'auto';
+      if (back) back.style.pointerEvents = 'none';
+    });
+  }, { passive: true });
 })();
+
       </script>
 
 </body>
