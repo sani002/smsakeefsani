@@ -583,7 +583,7 @@ font-weight: 500;
 <!-- Intro Text -->
 <div class="intro">
 <div class="eyebrow">Portfolio</div>
-<h1>S. M. Sakeef Sani</h1>
+<h1>S. M. y. Sakeef Sani</h1>
 <h2>ML for Medical Imaging · Clinical Decision Systems · Animation & VFX · Business Analytics</h2>
 <div class="cta">
 <button class="btn primary" onclick="document.getElementById('work').scrollIntoView({behavior:'smooth'})">
@@ -1010,40 +1010,45 @@ targ.scrollIntoView({ behavior: 'smooth' });
         }
       });
     });
-(function(){
-// For accessibility
-document.querySelectorAll('.card').forEach(card => {
-if (!card.hasAttribute('tabindex')) card.setAttribute('tabindex', '0');
+(function() {
+  // Accessibility: make cards focusable
+  document.querySelectorAll('.card').forEach(card => {
+    if (!card.hasAttribute('tabindex')) card.setAttribute('tabindex', '0');
   });
-function toggleFlip(card) {
-if (!card || card.classList.contains('static-card')) return;
-card.classList.toggle('flipped');
+
+  function toggleFlip(card) {
+    if (!card || card.classList.contains('static-card')) return;
+    card.classList.toggle('flipped');
   }
-// Handle click for flip
-document.addEventListener('click', (ev) => {
-const card = ev.target.closest('.card');
-if (!card) return;
-// skip if interactive element was clicked
-if (ev.target.closest('a, button, summary, input, select, textarea, label')) return;
-// toggle flip state
-toggleFlip(card);
+
+  // Handle click for flip & outside-click reset
+  document.addEventListener('click', (ev) => {
+    const card = ev.target.closest('.card');
+
+    // If clicking outside any card → reset all flips
+    if (!card) {
+      document.querySelectorAll('.card.flipped').forEach(c => c.classList.remove('flipped'));
+      return;
+    }
+
+    // Ignore clicks on interactive elements inside the card
+    if (ev.target.closest('a, button, summary, input, select, textarea, label')) return;
+
+    // Flip this card
+    toggleFlip(card);
   });
-// Allow Enter/Space keyboard flip
-document.addEventListener('keydown', (ev) => {
-const active = document.activeElement;
-if (!active || !active.classList.contains('card')) return;
-if (ev.key === 'Enter' || ev.key === ' ') {
-ev.preventDefault();
-toggleFlip(active);
+
+  // Allow Enter/Space keyboard flip
+  document.addEventListener('keydown', (ev) => {
+    const active = document.activeElement;
+    if (!active || !active.classList.contains('card')) return;
+    if (ev.key === 'Enter' || ev.key === ' ') {
+      ev.preventDefault();
+      toggleFlip(active);
     }
   });
-// Reset flipped cards when clicking outside
-document.addEventListener('click', (ev) => {
-const card = ev.target.closest('.card');
-if (card) return; // inside card, do nothing
-document.querySelectorAll('.card.flipped').forEach(c => c.classList.remove('flipped'));
-  });
 })();
+
 </script>
 </body>
 </html>
