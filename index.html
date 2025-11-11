@@ -263,9 +263,11 @@
       transform: translateY(-2px);
     }
 
-    .card:hover .card-inner {
-      transform: rotateY(180deg);
-    }
+.card:hover .card-inner,
+.card.flipped .card-inner {
+  transform: rotateY(180deg);
+}
+
 
     .card {
       cursor: pointer;
