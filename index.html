@@ -289,7 +289,7 @@ body.no-flip .card .card-links {
   font-weight: 500;
   border-radius: 999px; /* full pill shape */
   text-decoration: none;
-  border: 2px solid var(--accent-color, #ffffff);
+  border: 1px solid var(--accent-color, #ffffff);
   transition: all 0.25s ease;
   background: rgba(115, 0, 182, 0.429);
   color: #fff;
@@ -670,6 +670,7 @@ font-size: 12px;
 color: var(--muted);
 font-weight: 500;
 }
+
 </style>
 </head>
 <body>
@@ -678,9 +679,9 @@ font-weight: 500;
 <div class="hero-content">
 <!-- Intro Text -->
 <div class="intro">
-<div class="eyebrow">Portfolio</div>
-<h1>S. M. Sakeef Sani</h1>
-<h2>ML for Medical Imaging · Clinical Decision Systems · Animation & VFX · Business Analytics</h2>
+<div class="eyebrow">Hi, this is S.M. Sakeef Sani</div>
+<h1 id="first-default">I am <span id="first-words"></span></h1>
+<h2>Published Researcher | Award Winner | Startup Founder | Industry Professional | Creative Storyteller</h2>
 <div class="cta">
 <button class="btn primary" onclick="document.getElementById('work').scrollIntoView({behavior:'smooth'})">
           View Work
@@ -1107,6 +1108,7 @@ font-weight: 500;
 </div>
 <div class="muted"></div>
 </footer>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 <script>
 // Parallax movement based on scroll
 const parallax = document.getElementById('parallax');
@@ -1191,6 +1193,50 @@ if (isMobile) {
   });
 })();
 
+$(document).ready(function(){
+            initAutoType();
+        });
+        var initAutoType = function(){
+            var types = ["a Biomedical Engineer.", "an AI Researcher.", "a Serial Entrepreneur.", "an Animator & VFX Artist.", "an Innovator."];
+            var words = $("#first-words");
+            var stopType = false; //用于停止自动打字的
+            var index = 0;
+            var tempWords = "";
+            var isNext = false;
+            var time = 80; // Adjusted initial time for typing speed
+            var startType = setInterval(function(){
+                if(stopType){
+                    //如果需要停止打字
+                    clearInterval(startType);
+                }
+                if(tempWords.length === 0){
+                    //如果删完了，就开始下一个
+                    if(isNext){
+                        index++;
+                        index = index % types.length;
+                        isNext = false;
+                    }
+                    tempWords = types[index].substring(0, tempWords.length + 1);
+                    time = 200; // Typing speed
+                } else if(tempWords.length === types[index].length && isNext === false){
+                    //如果已经到头了，暂停然后开始删除
+                    isNext = true;
+                    time = 2000; // Pause at full text
+                } else {
+                    //如果既没删完也没显示完
+                    if(isNext){
+                        //如果是在减少
+                        tempWords = tempWords.substring(0, tempWords.length - 1);
+                        time = 1000; // Backspace speed
+                    } else {
+                        //如果在增多
+                        time = 200; // Typing speed
+                        tempWords = types[index].substring(0, tempWords.length + 1);
+                    }
+                }
+                words.html(tempWords);
+            }, time);
+        };
 
 </script>
 </body>
