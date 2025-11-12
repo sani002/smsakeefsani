@@ -242,12 +242,13 @@ transform: translateY(-2px);
 .card.flipped .card-inner {
 transform: rotateY(180deg);
 }
+/* Add to your stylesheet */
 .card {
-cursor: pointer;
--webkit-tap-highlight-color: transparent; /* remove highlight on tap */
-touch-action: manipulation; /* prevent some double-tap / gesture issues */
-user-select: none;
-    }
+  touch-action: manipulation;          /* helps iOS/Chrome treat single taps as interactions (prevents double-tap zoom) */
+  -webkit-tap-highlight-color: transparent; /* remove tap highlight */
+  -webkit-touch-callout: none;         /* optional: disables long-press menu on iOS */
+}
+
     
 .title { font-weight:700; margin: 0 0 8px; }
 .summary { font-size: 14px; color: #5b5b5b; margin: 0; }
@@ -583,7 +584,7 @@ font-weight: 500;
 <!-- Intro Text -->
 <div class="intro">
 <div class="eyebrow">Portfolio</div>
-<h1>S. M. y. Sakeef Sani</h1>
+<h1>S. M. Sakeef Sani</h1>
 <h2>ML for Medical Imaging · Clinical Decision Systems · Animation & VFX · Business Analytics</h2>
 <div class="cta">
 <button class="btn primary" onclick="document.getElementById('work').scrollIntoView({behavior:'smooth'})">
@@ -1002,7 +1003,7 @@ e.target.classList.add('in');
 cards.forEach(c => io.observe(c));
 // Smooth scroll for anchor links
 (function() {
-  // Make cards focusable for keyboard
+  // make cards focusable
   document.querySelectorAll('.card').forEach(card => {
     if (!card.hasAttribute('tabindex')) card.setAttribute('tabindex', '0');
   });
@@ -1012,36 +1013,58 @@ cards.forEach(c => io.observe(c));
     card.classList.toggle('flipped');
   }
 
-  document.addEventListener('click', (ev) => {
+  // Helper to unflip other cards
+  function unflipOthers(active) {
+    document.querySelectorAll('.card.flipped').forEach(c => {
+      if (c !== active) c.classList.remove('flipped');
+    });
+  }
+
+  // Use pointerup for immediate response on touch and mouse
+  let ignoreNextClick = false;
+  document.addEventListener('pointerup', (ev) => {
     const card = ev.target.closest('.card');
 
-    // Ignore clicks on interactive elements inside the card
+    // If clicked on interactive control inside card, ignore
     if (card && ev.target.closest('a, button, summary, input, select, textarea, label')) return;
 
-    if (card) {
-      // Unflip all other cards
-      document.querySelectorAll('.card.flipped').forEach(c => {
-        if (c !== card) c.classList.remove('flipped');
-      });
-
-      // Flip the clicked card
-      toggleFlip(card);
-    } else {
-      // Clicked outside any card → unflip all
+    if (!card) {
+      // clicked outside: unflip all
       document.querySelectorAll('.card.flipped').forEach(c => c.classList.remove('flipped'));
+      return;
     }
-  });
 
-  // Keyboard flip (Enter/Space)
+    // Flip immediately, unflip others
+    unflipOthers(card);
+    toggleFlip(card);
+
+    // Touch devices often fire a 'click' after pointerup; suppress that click
+    if (ev.pointerType === 'touch') {
+      ignoreNextClick = true;
+      // clear flag after short delay to allow normal clicks later
+      setTimeout(() => { ignoreNextClick = false; }, 300);
+    }
+  }, { passive: false });
+
+  // Prevent the subsequent click (from touch) from toggling again / interfering
+  document.addEventListener('click', (ev) => {
+    if (ignoreNextClick) {
+      ev.stopImmediatePropagation();
+      ev.preventDefault();
+      return;
+    }
+    // For non-pointer (keyboard activation that triggers click), we still rely on key handlers below
+    // If you want mouse click support as well, you can optionally keep logic here (not required)
+  }, true); // capture to block early
+
+  // Keyboard flip (Enter/Space) for accessibility
   document.addEventListener('keydown', (ev) => {
     const active = document.activeElement;
     if (!active || !active.classList.contains('card')) return;
     if (ev.key === 'Enter' || ev.key === ' ') {
       ev.preventDefault();
-      // Unflip all other cards
-      document.querySelectorAll('.card.flipped').forEach(c => {
-        if (c !== active) c.classList.remove('flipped');
-      });
+      // Unflip others, then toggle active
+      unflipOthers(active);
       toggleFlip(active);
     }
   });
