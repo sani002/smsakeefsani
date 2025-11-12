@@ -263,51 +263,53 @@ body.no-flip .card .card-links {
 
 /* Card link buttons */
 .card-links {
-  position: absolute;
-  bottom: 1rem;
-  left: 1rem;
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
-  z-index: 2;
+  margin-top: 0.75rem;
 }
 
-.card {
-  position: relative;
-  overflow: hidden;
-}
-
-/* Buttons styling */
 .card-links a {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.45rem 0.9rem;
-  font-size: 0.85rem;
+  padding: 0.4rem 0.9rem;
+  font-size: 0.9rem;
   font-weight: 500;
+  border-radius: 9999px; /* full pill shape */
   text-decoration: none;
-  border-radius: 9999px; /* perfect circle edges */
-  border: none;
-  background: linear-gradient(135deg, var(--accent-color, #6a5cff), var(--accent-alt, #00aaff));
-  color: #fff;
+  border: 1px solid transparent;
   transition: all 0.25s ease;
+  background: linear-gradient(135deg, var(--accent-color, #5121c0), var(--accent-alt, #ff1a72));
+  color: #fff;
   box-shadow: 0 2px 6px rgba(0,0,0,0.15);
 }
 
+/* Slight color variation per theme or link type */
+.card-links a[href*="github"],
+.card-links a.github {
+  --accent-color: #24292e;
+  --accent-alt: #444c56;
+}
 
-/* Hover and focus */
+.card-links a[href*="demo"],
+.card-links a.demo {
+  --accent-color: #0099ff;
+  --accent-alt: #00d4ff;
+}
+
+.card-links a[href*="live"],
+.card-links a.live {
+  --accent-color: #4caf50;
+  --accent-alt: #6dd56d;
+}
+
+/* Hover and focus effects */
 .card-links a:hover,
 .card-links a:focus-visible {
   transform: translateY(-2px);
   box-shadow: 0 4px 10px rgba(0,0,0,0.2);
   filter: brightness(1.05);
-}
-
-/* Optional: on mobile, align to bottom-left but keep readable */
-body.no-flip .card .card-links {
-  position: static;
-  margin-top: 0.75rem;
-  justify-content: flex-start;
 }
 
 /* Dark theme refinement if you have a dark mode body class */
@@ -333,8 +335,7 @@ body.no-flip .card .card-inner {
     
 .title { font-weight:700; margin: 0 0 8px; }
 .summary { font-size: 14px; color: #5b5b5b; margin: 0; }
-.badges { margin-top:12px; display:flex; gap:8px; flex-wrap:wrap; margin-right: 0.4rem;
-  margin-bottom: 0.5rem;}
+.badges { margin-top:12px; display:flex; gap:8px; flex-wrap:wrap; }
 .badge { background: rgba(11,11,11,0.06); color: #222; padding:6px 10px; border-radius:999px; font-size:12px; }
 footer {
 position: relative;
