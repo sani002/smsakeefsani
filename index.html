@@ -871,8 +871,8 @@
     }
 
     #first-default {
-      font-size: 3em;
-      margin: 5px 0 5px 0;
+      font-size: 20px;
+      margin: 10px 0 5px 0;
       white-space: nowrap;
       /* Prevent wrapping */
       display: inline-block;
@@ -904,7 +904,7 @@
       <div class="intro">
         <div class="eyebrow">Hi, this is S.M. Sakeef Sani</div>
         <div>
-          <h1 id="first-default">I am <span id="first-words"></span></h1>
+          <p id="first-default"><b>I am <span id="first-words"></span></b></p>
         </div>
         <h2>Published Researcher | Award Winner | Startup Founder | Industry Professional | Creative Storyteller</h2>
         <div class="cta">
@@ -1515,9 +1515,9 @@
       var index = 0;
       var tempWords = "";
       var isNext = false;
-      var typingSpeed = 400; // Speed for typing
-      var backspaceSpeed = 1000; // Speed for backspacing
-      var pauseTime = 2000; // Pause when fully typed
+      var typingSpeed = 80; // Speed for typing
+      var backspaceSpeed = 50; // Speed for backspacing
+      var pauseTime = 1000; // Pause when fully typed
 
       function typeNext() {
         var currentTime;
