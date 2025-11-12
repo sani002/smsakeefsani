@@ -263,53 +263,51 @@ body.no-flip .card .card-links {
 
 /* Card link buttons */
 .card-links {
+  position: absolute;
+  bottom: 1rem;
+  left: 1rem;
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
-  margin-top: 0.75rem;
+  z-index: 2;
 }
 
+.card {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Buttons styling */
 .card-links a {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.4rem 0.9rem;
-  font-size: 0.9rem;
+  padding: 0.45rem 0.9rem;
+  font-size: 0.85rem;
   font-weight: 500;
-  border-radius: 9999px; /* full pill shape */
   text-decoration: none;
-  border: 1px solid transparent;
-  transition: all 0.25s ease;
-  background: linear-gradient(135deg, var(--accent-color, #5121c0), var(--accent-alt, #ff1a72));
+  border-radius: 9999px; /* perfect circle edges */
+  border: none;
+  background: linear-gradient(135deg, var(--accent-color, #6a5cff), var(--accent-alt, #00aaff));
   color: #fff;
+  transition: all 0.25s ease;
   box-shadow: 0 2px 6px rgba(0,0,0,0.15);
 }
 
-/* Slight color variation per theme or link type */
-.card-links a[href*="github"],
-.card-links a.github {
-  --accent-color: #24292e;
-  --accent-alt: #444c56;
-}
 
-.card-links a[href*="demo"],
-.card-links a.demo {
-  --accent-color: #0099ff;
-  --accent-alt: #00d4ff;
-}
-
-.card-links a[href*="live"],
-.card-links a.live {
-  --accent-color: #4caf50;
-  --accent-alt: #6dd56d;
-}
-
-/* Hover and focus effects */
+/* Hover and focus */
 .card-links a:hover,
 .card-links a:focus-visible {
   transform: translateY(-2px);
   box-shadow: 0 4px 10px rgba(0,0,0,0.2);
   filter: brightness(1.05);
+}
+
+/* Optional: on mobile, align to bottom-left but keep readable */
+body.no-flip .card .card-links {
+  position: static;
+  margin-top: 0.75rem;
+  justify-content: flex-start;
 }
 
 /* Dark theme refinement if you have a dark mode body class */
@@ -892,13 +890,18 @@ font-weight: 500;
 <div class="badges">
 <span class="badge">IPAS</span>
 <span class="badge">Space Tech</span>
+<div class="card-links">
+<a class="link" href="https://www.thedailystar.net/star-youth/news/buets-mars-rover-team-wins-innovation-award-ipas-2021-2099905" target="_blank">The Daily Star</a>
+<a class="link" href="https://thefinancialexpress.com.bd/education/buet-team-wins-innovation-award-at-ipas-2021-1622131212" target="_blank">The Financial Express</a>
+<a class="link" href="https://www.prothomalo.com/education/higher-education/মঙ্গলের-জন্য-ড্রোন-উদ্ভাবনে-সেরা-বুয়েট" target="_blank">Prothom Alo</a>
+</div>
 </div>
 </div>
 <div class="card-back" style="background-image: url('assets/images/photo-1663076130444-6d7f9f00d124.jpeg');">
 <div class="back-links">
-<a class="link" href="https://www.thedailystar.net/star-youth/news/buets-mars-rover-team-wins-innovation-award-ipas-2021-2099905" target="_blank">🔗 The Daily Star</a>
-<a class="link" href="https://thefinancialexpress.com.bd/education/buet-team-wins-innovation-award-at-ipas-2021-1622131212" target="_blank">🔗 The Financial Express</a>
-<a class="link" href="https://www.prothomalo.com/education/higher-education/মঙ্গলের-জন্য-ড্রোন-উদ্ভাবনে-সেরা-বুয়েট" target="_blank">🔗 Prothom Alo</a>
+<a class="link" href="https://www.thedailystar.net/star-youth/news/buets-mars-rover-team-wins-innovation-award-ipas-2021-2099905" target="_blank">The Daily Star</a>
+<a class="link" href="https://thefinancialexpress.com.bd/education/buet-team-wins-innovation-award-at-ipas-2021-1622131212" target="_blank">The Financial Express</a>
+<a class="link" href="https://www.prothomalo.com/education/higher-education/মঙ্গলের-জন্য-ড্রোন-উদ্ভাবনে-সেরা-বুয়েট" target="_blank">Prothom Alo</a>
 </div>
 </div>
 </div>
@@ -912,12 +915,16 @@ font-weight: 500;
 <div class="badges">
 <span class="badge">UIHP</span>
 <span class="badge">AgriTech</span>
+<div class="card-links">
+<a class="link" href="https://www.uihp.org/program" target="_blank">UIHP Program</a>
+<a class="link" href="https://www.facebook.com/photo/?fbid=527904526858110&set=a.122000730781827" target="_blank">Facebook Post</a>
+</div>
 </div>
 </div>
 <div class="card-back" style="background-image: url('assets/images/photo-1663275162414-64dba99065a2.jpeg');">
 <div class="back-links">
-<a class="link" href="https://www.uihp.org/program" target="_blank">🔗 UIHP Program</a>
-<a class="link" href="https://www.facebook.com/photo/?fbid=527904526858110&set=a.122000730781827" target="_blank">🔗 Facebook Post</a>
+<a class="link" href="https://www.uihp.org/program" target="_blank">UIHP Program</a>
+<a class="link" href="https://www.facebook.com/photo/?fbid=527904526858110&set=a.122000730781827" target="_blank">Facebook Post</a>
 </div>
 </div>
 </div>
@@ -966,10 +973,15 @@ font-weight: 500;
 <div class="badges">
 <span class="badge">mHealth</span>
 <span class="badge">Research</span>
+<div class="card-links">
+  <a class="link" href="https://mhealth.buet.ac.bd/#:~:text=S.M.%20Sakeef%20Sani,-Undergraduate%20Research%20Student" target="_blank">mHealth Lab</a>
+</div>
 </div>
 </div>
 <div class="card-back" style="background-image: url('assets/images/photo-1747634186572-e9f4ea18c183.jpeg');">
-<div class="back-links"></div>
+<div class="back-links">
+  <a class="link" href="https://mhealth.buet.ac.bd/#:~:text=S.M.%20Sakeef%20Sani,-Undergraduate%20Research%20Student" target="_blank">mHealth Lab</a>
+</div>
 </div>
 </div>
 </article>
