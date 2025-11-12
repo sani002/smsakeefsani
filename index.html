@@ -671,6 +671,25 @@ color: var(--muted);
 font-weight: 500;
 }
 
+#first-default {
+            font-size: 3em;
+            margin: 0 0 10px 0;
+            white-space: nowrap; /* Prevent wrapping */
+            display: inline-block; /* To contain the span properly */
+}
+        #first-words {
+            display: inline-block;
+            border-right: 0.08em solid #ccc;
+            position: relative;
+            top: 0;
+            left: 0;
+        }
+        /* Optional: Make font responsive for mobile */
+        @media (max-width: 768px) {
+            #first-default {
+                font-size: 2em;
+            }
+          }
 </style>
 </head>
 <body>
@@ -680,7 +699,9 @@ font-weight: 500;
 <!-- Intro Text -->
 <div class="intro">
 <div class="eyebrow">Hi, this is S.M. Sakeef Sani</div>
+<div>
 <h1 id="first-default">I am <span id="first-words"></span></h1>
+</div>
 <h2>Published Researcher | Award Winner | Startup Founder | Industry Professional | Creative Storyteller</h2>
 <div class="cta">
 <button class="btn primary" onclick="document.getElementById('work').scrollIntoView({behavior:'smooth'})">
@@ -1201,47 +1222,51 @@ if (isMobile) {
 $(document).ready(function(){
             initAutoType();
         });
-        var initAutoType = function(){
-            var types = ["a Biomedical Engineer.", "an AI Researcher.", "a Serial Entrepreneur.", "an Animator & VFX Artist.", "an Innovator."];
+
+        function initAutoType() {
+            var types = ["Biomedical Engineer.", "AI Researcher.", "Serial Entrepreneur.", "Animator & VFX Artist.", "Innovator."];
             var words = $("#first-words");
-            var stopType = false; //用于停止自动打字的
             var index = 0;
             var tempWords = "";
             var isNext = false;
-            var time = 80; // Adjusted initial time for typing speed
-            var startType = setInterval(function(){
-                if(stopType){
-                    //如果需要停止打字
-                    clearInterval(startType);
-                }
-                if(tempWords.length === 0){
-                    //如果删完了，就开始下一个
-                    if(isNext){
-                        index++;
-                        index = index % types.length;
+            var typingSpeed = 200; // Speed for typing
+            var backspaceSpeed = 100; // Speed for backspacing
+            var pauseTime = 2000; // Pause when fully typed
+
+            function typeNext() {
+                var currentTime;
+
+                if (tempWords.length === 0) {
+                    // Start next phrase
+                    if (isNext) {
+                        index = (index + 1) % types.length;
                         isNext = false;
                     }
                     tempWords = types[index].substring(0, tempWords.length + 1);
-                    time = 200; // Typing speed
-                } else if(tempWords.length === types[index].length && isNext === false){
-                    //如果已经到头了，暂停然后开始删除
+                    currentTime = typingSpeed;
+                } else if (tempWords.length === types[index].length && !isNext) {
+                    // Pause before backspacing
                     isNext = true;
-                    time = 2000; // Pause at full text
+                    currentTime = pauseTime;
                 } else {
-                    //如果既没删完也没显示完
-                    if(isNext){
-                        //如果是在减少
+                    if (isNext) {
+                        // Backspacing
                         tempWords = tempWords.substring(0, tempWords.length - 1);
-                        time = 1000; // Backspace speed
+                        currentTime = backspaceSpeed;
                     } else {
-                        //如果在增多
-                        time = 200; // Typing speed
+                        // Typing
                         tempWords = types[index].substring(0, tempWords.length + 1);
+                        currentTime = typingSpeed;
                     }
                 }
+
                 words.html(tempWords);
-            }, time);
-        };
+
+                setTimeout(typeNext, currentTime);
+            }
+
+            typeNext(); // Start the animation
+        }
 
 </script>
 </body>
