@@ -249,6 +249,27 @@ transform: rotateY(180deg);
   -webkit-touch-callout: none;         /* optional: disables long-press menu on iOS */
 }
 
+/* Hide links on desktop inside the card front (they show on back) */
+.card .card-links {
+  display: none;
+}
+
+/* On mobile: show links on front, hide flipping behavior */
+body.no-flip .card .card-links {
+  display: flex; /* or block if you prefer vertical stack */
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+body.no-flip .card {
+  transform: none !important;
+  cursor: default;
+}
+
+/* Prevent flipping visuals on mobile */
+body.no-flip .card .card-inner {
+  transform: none !important;
+}
     
 .title { font-weight:700; margin: 0 0 8px; }
 .summary { font-size: 14px; color: #5b5b5b; margin: 0; }
@@ -584,7 +605,7 @@ font-weight: 500;
 <!-- Intro Text -->
 <div class="intro">
 <div class="eyebrow">Portfolio</div>
-<h1>S. M. Sakeef Sani</h1>
+<h1>S. M.y.Sakeef Sani</h1>
 <h2>ML for Medical Imaging · Clinical Decision Systems · Animation & VFX · Business Analytics</h2>
 <div class="cta">
 <button class="btn primary" onclick="document.getElementById('work').scrollIntoView({behavior:'smooth'})">
@@ -643,6 +664,9 @@ font-weight: 500;
 <span class="badge">AAAI 2025</span>
 <span class="badge">LLM</span>
 <span class="badge">Bayesian</span>
+<div class="card-links">
+<a class="link" href="https://openreview.net/forum?id=E6J9IFPE0w" target="_blank">📄 Paper (OpenReview)</a>
+</div>
 </div>
 </div>
 <div class="card-back" style="background-image: url('assets/images/photo-1612672358701-4253f876ac31.jpeg');">
@@ -1001,8 +1025,22 @@ e.target.classList.add('in');
       });
     }, { threshold: 0.12 });
 cards.forEach(c => io.observe(c));
-// Smooth scroll for anchor links
+
+// Detect mobile devices
+const isMobile = /Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+// If mobile, disable flipping
+if (isMobile) {
+  document.body.classList.add('no-flip');
+} else {
+  document.body.classList.remove('no-flip');
+}
+
+
 (function() {
+  // Skip flipping setup on mobile
+  if (document.body.classList.contains('no-flip')) return;
+
   // make cards focusable
   document.querySelectorAll('.card').forEach(card => {
     if (!card.hasAttribute('tabindex')) card.setAttribute('tabindex', '0');
@@ -1013,57 +1051,41 @@ cards.forEach(c => io.observe(c));
     card.classList.toggle('flipped');
   }
 
-  // Helper to unflip other cards
   function unflipOthers(active) {
     document.querySelectorAll('.card.flipped').forEach(c => {
       if (c !== active) c.classList.remove('flipped');
     });
   }
 
-  // Use pointerup for immediate response on touch and mouse
   let ignoreNextClick = false;
   document.addEventListener('pointerup', (ev) => {
     const card = ev.target.closest('.card');
-
-    // If clicked on interactive control inside card, ignore
     if (card && ev.target.closest('a, button, summary, input, select, textarea, label')) return;
-
     if (!card) {
-      // clicked outside: unflip all
       document.querySelectorAll('.card.flipped').forEach(c => c.classList.remove('flipped'));
       return;
     }
-
-    // Flip immediately, unflip others
     unflipOthers(card);
     toggleFlip(card);
-
-    // Touch devices often fire a 'click' after pointerup; suppress that click
     if (ev.pointerType === 'touch') {
       ignoreNextClick = true;
-      // clear flag after short delay to allow normal clicks later
       setTimeout(() => { ignoreNextClick = false; }, 300);
     }
   }, { passive: false });
 
-  // Prevent the subsequent click (from touch) from toggling again / interfering
   document.addEventListener('click', (ev) => {
     if (ignoreNextClick) {
       ev.stopImmediatePropagation();
       ev.preventDefault();
       return;
     }
-    // For non-pointer (keyboard activation that triggers click), we still rely on key handlers below
-    // If you want mouse click support as well, you can optionally keep logic here (not required)
-  }, true); // capture to block early
+  }, true);
 
-  // Keyboard flip (Enter/Space) for accessibility
   document.addEventListener('keydown', (ev) => {
     const active = document.activeElement;
     if (!active || !active.classList.contains('card')) return;
     if (ev.key === 'Enter' || ev.key === ' ') {
       ev.preventDefault();
-      // Unflip others, then toggle active
       unflipOthers(active);
       toggleFlip(active);
     }
