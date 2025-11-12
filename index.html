@@ -261,6 +261,68 @@ body.no-flip .card .card-links {
   margin-top: 0.5rem;
 }
 
+/* Card link buttons */
+.card-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.card-links a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.4rem 0.9rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  border-radius: 9999px; /* full pill shape */
+  text-decoration: none;
+  border: 1px solid transparent;
+  transition: all 0.25s ease;
+  background: linear-gradient(135deg, var(--accent-color, #5a4fff), var(--accent-alt, #0099ff));
+  color: #fff;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+/* Slight color variation per theme or link type */
+.card-links a[href*="github"],
+.card-links a.github {
+  --accent-color: #24292e;
+  --accent-alt: #444c56;
+}
+
+.card-links a[href*="demo"],
+.card-links a.demo {
+  --accent-color: #0099ff;
+  --accent-alt: #00d4ff;
+}
+
+.card-links a[href*="live"],
+.card-links a.live {
+  --accent-color: #4caf50;
+  --accent-alt: #6dd56d;
+}
+
+/* Hover and focus effects */
+.card-links a:hover,
+.card-links a:focus-visible {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  filter: brightness(1.05);
+}
+
+/* Dark theme refinement if you have a dark mode body class */
+body.dark .card-links a {
+  color: #eaeaea;
+  box-shadow: 0 1px 3px rgba(255,255,255,0.05);
+}
+
+body.dark .card-links a:hover {
+  filter: brightness(1.2);
+}
+
+
 body.no-flip .card {
   transform: none !important;
   cursor: default;
@@ -605,7 +667,7 @@ font-weight: 500;
 <!-- Intro Text -->
 <div class="intro">
 <div class="eyebrow">Portfolio</div>
-<h1>S. M.y.Sakeef Sani</h1>
+<h1>S. M. Sakeef Sani</h1>
 <h2>ML for Medical Imaging · Clinical Decision Systems · Animation & VFX · Business Analytics</h2>
 <div class="cta">
 <button class="btn primary" onclick="document.getElementById('work').scrollIntoView({behavior:'smooth'})">
@@ -647,10 +709,6 @@ font-weight: 500;
 <span class="badge">Tropical Diseases</span>
 </div>
 </div>
-<div class="card-back" style="background-image: url('assets/images/photo-portfolio-research.jpeg');">
-<div class="back-links">
-<!-- No external links for the section summary -->
-</div>
 </div>
 </div>
 </article>
@@ -665,7 +723,7 @@ font-weight: 500;
 <span class="badge">LLM</span>
 <span class="badge">Bayesian</span>
 <div class="card-links">
-<a class="link" href="https://openreview.net/forum?id=E6J9IFPE0w" target="_blank">📄 Paper (OpenReview)</a>
+<a class="link" href="https://openreview.net/forum?id=E6J9IFPE0w" target="_blank">Paper (OpenReview)</a>
 </div>
 </div>
 </div>
