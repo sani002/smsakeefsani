@@ -61,25 +61,26 @@
 
     /* FIX: Make background cover full area + extend downward */
     .parallax-bg {
-      position: absolute;
-      inset: 0;
-      z-index: 0;
+      position: fixed;
+      /* Change from absolute to fixed */
+      top: 0;
+      /* Already suggested, but confirm */
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      /* Already suggested, but confirm */
+      z-index: -1;
+      /* Set to -1 to ensure it's behind all content */
       background-image: url('bg-2.jpg');
       background-size: cover;
-      /* CHANGE: cover instead of contain */
       background-position: center;
       background-repeat: no-repeat;
       background-color: #0b0b0b;
-      transform: translateZ(0);
-      will-change: transform;
       filter: contrast(1.05) saturate(1.5);
-      /* EXTEND BACKGROUND DOWNWARD to cover content gap */
-      top: -50vh;
-      /* Start higher */
-      height: 200vh;
-      /* Extend 100vh below hero */
-      background-attachment: fixed;
-      /* Optional: stronger parallax feel */
+      transform: scale(1.3);
+      /* Remove or comment out: transform: translateZ(0); will-change: transform; (not needed for fixed) */
+      /* Remove background-attachment: fixed; (not needed since the div itself is fixed) */
+      /* Keep the ::after for gradient overlay if desired */
     }
 
     /* Optional: Fine-tune parallax speed */
@@ -684,7 +685,6 @@
       background: linear-gradient(180deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.85));
     }
 
-    /* LIGHTBOX STYLES */
     .lightbox {
       display: none;
       position: fixed;
@@ -697,14 +697,23 @@
       justify-content: center;
       align-items: center;
       flex-direction: column;
-      backdrop-filter: blur(4px);
-      transition: opacity 0.3s ease;
+      /* Removed: backdrop-filter: blur(4px); transition: opacity 0.3s ease; (to test for black screen cause) */
+      /* Removed @keyframes fadeIn and zoomIn for testing */
     }
 
     .lightbox.active {
       display: flex;
-      animation: fadeIn 0.3s ease forwards;
+      /* Removed animation: fadeIn 0.3s ease forwards; */
     }
+
+    .lightbox img {
+      max-width: 90%;
+      max-height: 80vh;
+      border-radius: 12px;
+      box-shadow: 0 0 40px rgba(255, 255, 255, 0.2);
+      /* Removed animation: zoomIn 0.3s ease; */
+    }
+
 
     @keyframes fadeIn {
       from {
@@ -716,12 +725,25 @@
       }
     }
 
+    .image-grid img {
+      transition: opacity 0.3s ease;
+      /* Fade-in effect */
+      opacity: 0;
+    }
+
+    .image-grid img[loading="lazy"]:not([src=""]) {
+      opacity: 1;
+      /* Show once loaded */
+    }
+
     .lightbox img {
-      max-width: 90%;
+      max-width: 90vw;
+      /* Ensure full-res fits screen */
       max-height: 80vh;
       border-radius: 12px;
       box-shadow: 0 0 40px rgba(255, 255, 255, 0.2);
       animation: zoomIn 0.3s ease;
+      animation-fill-mode: forwards;
     }
 
     @keyframes zoomIn {
@@ -886,13 +908,13 @@
       top: 0;
       left: 0;
     }
-  
+
     @media (max-width: 768px) {
       #first-default {
-        font-size: 15px; /* Smaller size for mobile */
+        font-size: 15px;
+        /* Smaller size for mobile */
       }
     }
-
   </style>
 </head>
 
@@ -906,7 +928,8 @@
         <div>
           <p id="first-default"><b>I am <span id="first-words"></span></b></p>
         </div>
-        <div class="eyebrow">Published Researcher • Award Winner • Startup Founder • Industry Professional • Creative Storyteller</div>
+        <div class="eyebrow">Published Researcher • Award Winner • Startup Founder • Industry Professional • Creative
+          Storyteller</div>
         <div class="cta">
           <button class="btn primary" onclick="document.getElementById('work').scrollIntoView({behavior:'smooth'})">
             View Work
@@ -1342,74 +1365,136 @@
       <div class="image-grid">
         <!-- PRIORITY ORDERED IMAGE CARDS -->
         <!-- 1️⃣ Pookie -->
-        <div class="image-card"><img src="assets/images/Pookie Men.png" alt=""><span>Pookie Men</span></div>
+        <div class="image-card"><img loading="lazy" src="assets/thumbnails/Pookie Men_low.webp"
+            data-full-src="assets/images/Pookie Men.png" alt=""><span>Pookie Men</span></div>
+
         <!-- 2️⃣ Lecture -->
-        <div class="image-card"><img src="assets/images/Lectures on LLM.png" alt=""><span>Lectures on LLM</span></div>
+        <div class="image-card"><img loading="lazy" src="assets/thumbnails/Lectures on LLM_low.webp"
+            data-full-src="assets/images/Lectures on LLM.png" alt=""><span>Lectures on LLM</span></div>
+
         <!-- 3️⃣ Rover -->
-        <div class="image-card"><img src="assets/images/1st Mars Rover from BUET.png" alt=""><span>1st Mars Rover from
-            BUET</span></div>
+        <div class="image-card"><img loading="lazy" src="assets/thumbnails/1st Mars Rover from BUET_low.webp"
+            data-full-src="assets/images/1st Mars Rover from BUET.png" alt=""><span>1st Mars Rover from BUET</span>
+        </div>
+
         <!-- 4️⃣ International -->
-        <div class="image-card"><img src="assets/images/Recognition for International Award.png"
-            alt=""><span>Recognition for International Award</span></div>
+        <div class="image-card"><img loading="lazy" src="assets/thumbnails/Recognition for International Award_low.webp"
+            data-full-src="assets/images/Recognition for International Award.png" alt=""><span>Recognition for
+            International Award</span></div>
+
         <!-- 🌏 International & Recognition -->
-        <div class="image-card"><img src="assets/images/Director of JICA.png" alt=""><span>Director of JICA</span></div>
-        <div class="image-card"><img src="assets/images/Director or Honda Foundation.png" alt=""><span>Director of Honda
+        <div class="image-card"><img loading="lazy" src="assets/thumbnails/Director of JICA_low.webp"
+            data-full-src="assets/images/Director of JICA.png" alt=""><span>Director of JICA</span></div>
+
+        <div class="image-card"><img loading="lazy" src="assets/thumbnails/Director or Honda Foundation_low.webp"
+            data-full-src="assets/images/Director or Honda Foundation.png" alt=""><span>Director of Honda
             Foundation</span></div>
-        <div class="image-card"><img src="assets/images/Exclusive Visit to Honda Engineering.png" alt=""><span>Exclusive
-            Visit to Honda Engineering</span></div>
-        <div class="image-card"><img src="assets/images/Exploring Culture.png" alt=""><span>Exploring Culture</span>
-        </div>
-        <div class="image-card"><img src="assets/images/Study Tour in Japan.png" alt=""><span>Study Tour in Japan</span>
-        </div>
+
+        <div class="image-card"><img loading="lazy"
+            src="assets/thumbnails/Exclusive Visit to Honda Engineering_low.webp"
+            data-full-src="assets/images/Exclusive Visit to Honda Engineering.png" alt=""><span>Exclusive Visit to Honda
+            Engineering</span></div>
+
+        <div class="image-card"><img loading="lazy" src="assets/thumbnails/Exploring Culture_low.webp"
+            data-full-src="assets/images/Exploring Culture.png" alt=""><span>Exploring Culture</span></div>
+
+        <div class="image-card"><img loading="lazy" src="assets/thumbnails/Study Tour in Japan_low.webp"
+            data-full-src="assets/images/Study Tour in Japan.png" alt=""><span>Study Tour in Japan</span></div>
+
         <!-- 🤝 Collaboration & Impact -->
-        <div class="image-card"><img src="assets/images/With Health Advisor of BD.png" alt=""><span>With Health Advisor
-            of BD</span></div>
-        <div class="image-card"><img src="assets/images/Work with ImpactHub.png" alt=""><span>Work with ImpactHub</span>
+        <div class="image-card"><img loading="lazy" src="assets/thumbnails/With Health Advisor of BD_low.webp"
+            data-full-src="assets/images/With Health Advisor of BD.png" alt=""><span>With Health Advisor of BD</span>
         </div>
+
+        <div class="image-card"><img loading="lazy" src="assets/thumbnails/Work with ImpactHub_low.webp"
+            data-full-src="assets/images/Work with ImpactHub.png" alt=""><span>Work with ImpactHub</span></div>
+
         <!-- 🎤 Events & Speeches -->
-        <div class="image-card"><img src="assets/images/Opening Speech in BUET Fest.jpg" alt=""><span>Opening Speech in
-            BUET Fest</span></div>
+        <div class="image-card"><img loading="lazy" src="assets/thumbnails/Opening Speech in BUET Fest_low.webp"
+            data-full-src="assets/images/Opening Speech in BUET Fest.png" alt=""><span>Opening Speech in BUET
+            Fest</span></div>
+
         <!-- 5️⃣ YY -->
-        <div class="image-card"><img src="assets/images/YY Ventures.png" alt=""><span>YY Ventures</span></div>
+        <div class="image-card"><img loading="lazy" src="assets/thumbnails/YY Ventures_low.webp"
+            data-full-src="assets/images/YY Ventures.png" alt=""><span>YY Ventures</span></div>
+
         <!-- 6️⃣ Competition -->
-        <div class="image-card"><img src="assets/images/Case Competition.png" alt=""><span>Case Competition</span></div>
-        <div class="image-card"><img src="assets/images/CBID Scene.png" alt=""><span>CBID Scene</span></div>
-        <div class="image-card"><img src="assets/images/Young Engineer and Scientist Recognition.png" alt=""><span>Young
-            Engineer and Scientist Recognition</span></div>
+        <div class="image-card"><img loading="lazy" src="assets/thumbnails/Case Competition_low.webp"
+            data-full-src="assets/images/Case Competition.png" alt=""><span>Case Competition</span></div>
+
+        <div class="image-card"><img loading="lazy" src="assets/thumbnails/CBID Scene_low.webp"
+            data-full-src="assets/images/CBID Scene.png" alt=""><span>CBID Scene</span></div>
+
+        <div class="image-card"><img loading="lazy"
+            src="assets/thumbnails/Young Engineer and Scientist Recognition_low.webp"
+            data-full-src="assets/images/Young Engineer and Scientist Recognition.png" alt=""><span>Young Engineer and
+            Scientist Recognition</span></div>
+
         <!-- 7️⃣ Projects -->
-        <div class="image-card"><img src="assets/images/Skin Cancer Detection Project.png" alt=""><span>Skin Cancer
-            Detection Project</span></div>
-        <div class="image-card"><img src="assets/images/Datathon on Heart Sound.png" alt=""><span>Datathon on Heart
-            Sound</span></div>
-        <div class="image-card"><img src="assets/images/RTM Tool for BAT.png" alt=""><span>RTM Tool for BAT</span></div>
-        <div class="image-card"><img src="assets/images/UIHP Pakhi Drone.png" alt=""><span>UIHP Pakhi Drone</span></div>
-        <div class="image-card"><img src="assets/images/DengueDrops Development Team.png" alt=""><span>DengueDrops
-            Development Team</span></div>
-        <div class="image-card"><img src="assets/images/IPAS Featuring.png" alt=""><span>IPAS Featuring</span></div>
-        <div class="image-card"><img src="assets/images/Recognition for Drone of Mars (IPAS).png"
-            alt=""><span>Recognition for Drone of Mars (IPAS)</span></div>
-        <div class="image-card"><img src="assets/images/SciFi Writing.png" alt=""><span>SciFi Writing</span></div>
-        <div class="image-card"><img src="assets/images/URC.png" alt=""><span>URC</span></div>
+        <div class="image-card"><img loading="lazy" src="assets/thumbnails/Skin Cancer Detection Project_low.webp"
+            data-full-src="assets/images/Skin Cancer Detection Project.png" alt=""><span>Skin Cancer Detection
+            Project</span></div>
+
+        <div class="image-card"><img loading="lazy" src="assets/thumbnails/Datathon on Heart Sound_low.webp"
+            data-full-src="assets/images/Datathon on Heart Sound.png" alt=""><span>Datathon on Heart Sound</span></div>
+
+        <div class="image-card"><img loading="lazy" src="assets/thumbnails/RTM Tool for BAT_low.webp"
+            data-full-src="assets/images/RTM Tool for BAT.png" alt=""><span>RTM Tool for BAT</span></div>
+
+        <div class="image-card"><img loading="lazy" src="assets/thumbnails/UIHP Pakhi Drone_low.webp"
+            data-full-src="assets/images/UIHP Pakhi Drone.png" alt=""><span>UIHP Pakhi Drone</span></div>
+
+        <div class="image-card"><img loading="lazy" src="assets/thumbnails/DengueDrops Development Team_low.webp"
+            data-full-src="assets/images/DengueDrops Development Team.png" alt=""><span>DengueDrops Development
+            Team</span></div>
+
+        <div class="image-card"><img loading="lazy" src="assets/thumbnails/IPAS Featuring_low.webp"
+            data-full-src="assets/images/IPAS Featuring.png" alt=""><span>IPAS Featuring</span></div>
+
+        <div class="image-card"><img loading="lazy"
+            src="assets/thumbnails/Recognition for Drone of Mars (IPAS)_low.webp"
+            data-full-src="assets/images/Recognition for Drone of Mars (IPAS).png" alt=""><span>Recognition for Drone of
+            Mars (IPAS)</span></div>
+
+        <div class="image-card"><img loading="lazy" src="assets/thumbnails/SciFi Writing_low.webp"
+            data-full-src="assets/images/SciFi Writing.png" alt=""><span>SciFi Writing</span></div>
+
+        <div class="image-card"><img loading="lazy" src="assets/thumbnails/URC_low.webp"
+            data-full-src="assets/images/URC.png" alt=""><span>URC</span></div>
+
         <!-- 8️⃣ Games -->
-        <div class="image-card"><img src="assets/images/Game based on Realtime Geo Data.png" alt=""><span>Game based on
-            Realtime Geo Data</span></div>
-        <div class="image-card"><img src="assets/images/Game for IOS and Android Platform.png" alt=""><span>Game for IOS
-            and Android Platform</span></div>
+        <div class="image-card"><img loading="lazy" src="assets/thumbnails/Game based on Realtime Geo Data_low.webp"
+            data-full-src="assets/images/Game based on Realtime Geo Data.png" alt=""><span>Game based on Realtime Geo
+            Data</span></div>
+
+        <div class="image-card"><img loading="lazy" src="assets/thumbnails/Game for IOS and Android Platform_low.webp"
+            data-full-src="assets/images/Game for IOS and Android Platform.png" alt=""><span>Game for IOS and Android
+            Platform</span></div>
+
         <!-- 9️⃣ 3D -->
-        <div class="image-card"><img src="assets/images/3D Scene x Game.png" alt=""><span>3D Scene x Game</span></div>
-        <div class="image-card"><img src="assets/images/3D Game Development in Unreal Engine.png" alt=""><span>3D Game
-            Development in Unreal Engine</span></div>
-        <div class="image-card"><img src="assets/images/Complex 3D Scene Creation in Blender.png" alt=""><span>Complex
-            3D Scene Creation in Blender</span></div>
-        <div class="image-card"><img src="assets/images/Inverse Kinematics in Blender.png" alt=""><span>Inverse
-            Kinematics in Blender</span></div>
-      </div>
-      <!-- Lightbox Modal -->
-      <div id="lightbox" class="lightbox">
-        <span class="lightbox-close">&times;</span>
-        <img id="lightbox-img" src="" alt="">
-        <p id="lightbox-caption"></p>
-      </div>
+        <div class="image-card"><img loading="lazy" src="assets/thumbnails/3D Scene x Game_low.webp"
+            data-full-src="assets/images/3D Scene x Game.png" alt=""><span>3D Scene x Game</span></div>
+
+        <div class="image-card"><img loading="lazy"
+            src="assets/thumbnails/3D Game Development in Unreal Engine_low.webp"
+            data-full-src="assets/images/3D Game Development in Unreal Engine.png" alt=""><span>3D Game Development in
+            Unreal Engine</span></div>
+
+        <div class="image-card"><img loading="lazy"
+            src="assets/thumbnails/Complex 3D Scene Creation in Blender_low.webp"
+            data-full-src="assets/images/Complex 3D Scene Creation in Blender.png" alt=""><span>Complex 3D Scene
+            Creation in Blender</span></div>
+
+        <div class="image-card"><img loading="lazy" src="assets/thumbnails/Inverse Kinematics in Blender_low.webp"
+            data-full-src="assets/images/Inverse Kinematics in Blender.png" alt=""><span>Inverse Kinematics in
+            Blender</span></div>
+
+        <!-- Lightbox Modal -->
+        <div id="lightbox" class="lightbox">
+          <span class="lightbox-close">&times;</span>
+          <img id="lightbox-img" src="" alt="">
+          <p id="lightbox-caption"></p>
+        </div>
     </section>
   </main>
   <footer id="contact">
@@ -1422,11 +1507,12 @@
   </footer>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
   <script>
+
     // Parallax movement based on scroll
     const parallax = document.getElementById('parallax');
     window.addEventListener('scroll', () => {
       const sc = window.scrollY;
-      parallax.style.transform = `translateY(${sc * -0.25}px) scale(1)`;
+      parallax.style.transform = `translateY(${sc * -0.25}px) scale(1.3)`;
     }, { passive: true });
     // Reveal cards when in view
     const cards = document.querySelectorAll('.reveal');
@@ -1553,6 +1639,48 @@
 
       typeNext(); // Start the animation
     }
+
+    // Lightbox functionality
+    const galleryCards = document.querySelectorAll('.image-card');
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightbox-img');
+    const lightboxCaption = document.getElementById('lightbox-caption');
+    const closeBtn = document.querySelector('.lightbox-close');
+
+    galleryCards.forEach(card => {
+      card.addEventListener('click', (e) => {
+        e.stopPropagation(); // Prevent any potential event bubbling issues
+        const img = card.querySelector('img');
+        const fullSrc = img.dataset.fullSrc;
+        console.log('Attempting to load full image: ' + fullSrc);
+
+        lightboxCaption.textContent = card.querySelector('span').textContent;
+        lightboxImg.src = ''; // Reset src first
+        lightboxImg.src = fullSrc; // Set to full-res
+
+        lightboxImg.onload = () => {
+          console.log('Image loaded successfully');
+          lightbox.classList.add('active');
+        };
+
+        lightboxImg.onerror = () => {
+          console.error('Failed to load image: ' + fullSrc);
+          // Optional: You could add a fallback message here, e.g., lightboxCaption.textContent = 'Image failed to load';
+        };
+      });
+    });
+
+    closeBtn.addEventListener('click', () => {
+      lightbox.classList.remove('active');
+      lightboxImg.src = ''; // Clear src to free memory
+    });
+
+    lightbox.addEventListener('click', (e) => {
+      if (e.target === lightbox) {
+        lightbox.classList.remove('active');
+        lightboxImg.src = ''; // Clear src to free memory
+      }
+    });
 
   </script>
 </body>
