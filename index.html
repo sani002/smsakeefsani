@@ -77,7 +77,7 @@
       background-repeat: no-repeat;
       background-color: #0b0b0b;
       filter: contrast(1.05) saturate(1.5);
-      transform: scale(1.4);
+      transform: scale(1);
       /* Remove or comment out: transform: translateZ(0); will-change: transform; (not needed for fixed) */
       /* Remove background-attachment: fixed; (not needed since the div itself is fixed) */
       /* Keep the ::after for gradient overlay if desired */
@@ -924,7 +924,7 @@
   object-fit: cover;
   z-index: -1;
   background: #000;
-  transform: scale(1.4);
+  transform: scale(1);
   filter: contrast(1.05) saturate(1.5);
 }
   </style>
@@ -1696,7 +1696,7 @@
 const canvas = document.getElementById('scroll-video');
 const ctx = canvas.getContext('2d');
 
-let frameCount = 130; // Change to your total frames
+let frameCount = 75; // Change to your total frames
 let currentFrame = 0;
 let isScrolling = false;
 
