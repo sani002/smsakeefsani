@@ -1696,7 +1696,7 @@
 const canvas = document.getElementById('scroll-video');
 const ctx = canvas.getContext('2d');
 
-let frameCount = 75; // Change to your total frames
+let frameCount = 74; // Must match the number of frame_NNNN.webp files in assets/frames (0-indexed)
 let currentFrame = 0;
 let isScrolling = false;
 
@@ -1705,7 +1705,7 @@ const images = [];
 const framePath = 'assets/frames/frame_';
 const frameExt = '.webp';
 
-for (let i = 1; i <= frameCount; i++) {
+for (let i = 0; i < frameCount; i++) {
   const img = new Image();
   img.src = `${framePath}${String(i).padStart(4, '0')}${frameExt}`;
   images[i] = img;
@@ -1759,14 +1759,14 @@ window.addEventListener('scroll', () => {
   }
 }, { passive: true });
 
-// === FIX: DRAW FRAME 1 ON LOAD ===
+// === FIX: DRAW FIRST FRAME ON LOAD ===
 function initFirstFrame() {
-  currentFrame = 1; // Start at frame 1
-  if (images[1]) {
-    if (images[1].complete) {
+  currentFrame = 0; // Frames are 0-indexed; frame_0000 is the first
+  if (images[0]) {
+    if (images[0].complete) {
       render();
     } else {
-      images[1].onload = render;
+      images[0].onload = render;
     }
   }
 }
@@ -1777,7 +1777,7 @@ window.addEventListener('load', () => {
 });
 
 // Fallback: draw as soon as first image loads
-images[1].onload = () => {
+images[0].onload = () => {
   if (currentFrame === 0) {
     initFirstFrame();
   }
