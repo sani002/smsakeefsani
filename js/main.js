@@ -242,6 +242,37 @@
 }());
 
 
+/* ── HAMBURGER MENU ──────────────────────────────────────── */
+(function initHamburger() {
+  const btn   = document.getElementById('nav-hamburger');
+  const links = document.getElementById('nav-links');
+  if (!btn || !links) return;
+
+  function close() {
+    btn.classList.remove('open');
+    links.classList.remove('open');
+    btn.setAttribute('aria-expanded', 'false');
+  }
+
+  btn.addEventListener('click', () => {
+    const isOpen = links.classList.toggle('open');
+    btn.classList.toggle('open', isOpen);
+    btn.setAttribute('aria-expanded', String(isOpen));
+  });
+
+  /* Close when a nav link is clicked */
+  links.querySelectorAll('a').forEach((a) => a.addEventListener('click', close));
+
+  /* Close when clicking outside */
+  document.addEventListener('click', (e) => {
+    if (!btn.contains(e.target) && !links.contains(e.target)) close();
+  });
+
+  /* Close on Escape */
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
+}());
+
+
 /* ── NAV ACTIVE SECTION HIGHLIGHT ───────────────────────── */
 (function initNavHighlight() {
   const navLinks = document.querySelectorAll('.nav-links a');

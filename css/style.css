@@ -1097,6 +1097,44 @@ footer {
 .rv.d5   { transition-delay: 0.40s; }
 
 /* ─────────────────────────────────────────────────────────────
+   HAMBURGER BUTTON
+───────────────────────────────────────────────────────────── */
+.nav-hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  width: 36px;
+  height: 36px;
+  background: var(--glass);
+  border: 1px solid var(--gb);
+  border-radius: 8px;
+  cursor: pointer;
+  padding: 0;
+  flex-shrink: 0;
+  transition: border-color 0.25s, background 0.25s;
+}
+
+.nav-hamburger:hover {
+  border-color: rgba(255,255,255,0.22);
+  background: rgba(255,255,255,0.07);
+}
+
+.nav-hamburger span {
+  display: block;
+  width: 16px;
+  height: 1.5px;
+  background: var(--t2);
+  border-radius: 2px;
+  transition: transform 0.3s ease, opacity 0.3s ease, width 0.3s ease;
+}
+
+.nav-hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+.nav-hamburger.open span:nth-child(2) { opacity: 0; width: 0; }
+.nav-hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+/* ─────────────────────────────────────────────────────────────
    RESPONSIVE
 ───────────────────────────────────────────────────────────── */
 @media (max-width: 1100px) {
@@ -1109,23 +1147,131 @@ footer {
     grid-template-columns: 1fr;
   }
   .gal-cols { columns: 3; }
+  .studio-card { padding: 32px 28px; }
 }
 
 @media (max-width: 768px) {
-  nav .nav-links { display: none; }
-  .hero-stats { gap: 20px; }
-  .stat-n { font-size: 30px; }
+  /* Nav — pill stretches full width with hamburger */
+  nav {
+    top: 12px;
+    left: 12px;
+    right: 12px;
+    transform: none;
+    padding: 8px 14px;
+    gap: 0;
+    justify-content: space-between;
+    position: fixed;
+  }
+
+  .nav-logo { font-size: 12px; }
+
+  .nav-links {
+    display: none;
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    right: 0;
+    background: rgba(4, 4, 20, 0.97);
+    -webkit-backdrop-filter: blur(24px);
+    backdrop-filter: blur(24px);
+    border: 1px solid var(--gb);
+    border-radius: 14px;
+    padding: 8px;
+    flex-direction: column;
+    gap: 2px;
+    z-index: 99;
+  }
+
+  .nav-links.open { display: flex; }
+
+  .nav-links a {
+    font-size: 14px;
+    padding: 11px 14px;
+    border-radius: 8px;
+  }
+
+  .nav-links a:hover,
+  .nav-links a.active {
+    background: rgba(0,212,255,0.07);
+  }
+
+  .nav-contact { display: none; }
+  .nav-hamburger { display: flex; }
+
+  /* Hero */
+  .hero { padding: 100px 20px 80px; }
+  .hero-eyebrow { font-size: 10px; letter-spacing: 2.5px; }
+  .hero-desc { font-size: 15px; }
+
+  /* Stats — keep in row but shrink */
+  .hero-stats { gap: 16px; margin-top: 48px; }
+  .stat-n { font-size: 28px; }
+  .stat-l { font-size: 10px; letter-spacing: 0.8px; }
+  .stat-sep { height: 36px; }
+
+  /* Sections */
+  .si { padding: 80px 20px; }
+  .sec-title { letter-spacing: -1px; }
+  .sec-desc { font-size: 15px; margin-bottom: 52px; }
+
+  /* Awards grid */
+  .awards-grid { grid-template-columns: 1fr; }
+
+  /* Gallery */
   .gal-cols { columns: 2; }
   .about-pillars { grid-template-columns: 1fr 1fr; }
-  .si { padding: 80px 20px; }
+
+  /* Timeline */
+  .t-role { font-size: 18px; }
+}
+
+@media (max-width: 540px) {
+  /* Hero stats → 2×2 grid so text doesn't crush */
+  .hero-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px 20px;
+    margin-top: 48px;
+  }
+  .stat-sep { display: none; }
+  .stat-n { font-size: 32px; }
+  .stat-l { font-size: 10px; }
+  .stat-block { text-align: center; }
 }
 
 @media (max-width: 480px) {
-  .gal-cols { columns: 2; }
+  /* Nav */
+  nav { left: 8px; right: 8px; top: 10px; }
+
+  /* Hero */
+  .hero { padding: 90px 16px 72px; }
+  .hero-name { letter-spacing: -1.5px; }
+  .hero-eyebrow { margin-bottom: 18px; }
+
+  /* Sections */
+  .si { padding: 64px 16px; }
+  .sec-title { letter-spacing: -0.5px; }
+
+  /* About pillars */
   .about-pillars { grid-template-columns: 1fr; }
+
+  /* Creative mini skills */
   .mini-skills { grid-template-columns: 1fr 1fr; }
-  .si { padding: 72px 16px; }
-  .hero-name { letter-spacing: -2px; }
+
+  /* Gallery */
+  .gal-cols { columns: 2; column-gap: 8px; }
+  .gal-item { margin-bottom: 8px; }
+
+  /* Papers grid single column */
+  .papers-grid { grid-template-columns: 1fr; }
+
+  /* Timeline */
+  .t-role { font-size: 17px; }
+  .t-body { font-size: 13px; }
+
+  /* Footer */
+  footer { padding: 60px 16px 48px; }
+  .footer-name { font-size: 22px; }
 }
 
 /* ─────────────────────────────────────────────────────────────
