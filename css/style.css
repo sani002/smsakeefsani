@@ -506,6 +506,17 @@ nav {
 .accent-magenta { color: var(--magenta); }
 .accent-green   { color: var(--green); }
 
+/* Prevent line-break inside short abbreviations like "S.M." */
+.nowrap { white-space: nowrap; }
+
+/* Multiple links side-by-side in award/paper cards */
+.award-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+  align-items: center;
+}
+
 /* About — heading subtitle line */
 .about-subtitle {
   color: var(--t2);
@@ -542,8 +553,8 @@ nav {
   background: var(--glass);
   border: 1px solid var(--gb);
   border-radius: var(--r);
-  backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(18px);
   transition:
     transform 0.35s cubic-bezier(.2,.9,.2,1),
     box-shadow 0.35s ease,
@@ -987,8 +998,8 @@ nav {
   inset: 0;
   z-index: 9999;
   background: rgba(0, 0, 0, 0.94);
-  backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
   align-items: center;
   justify-content: center;
   flex-direction: column;
