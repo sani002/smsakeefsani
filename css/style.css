@@ -43,6 +43,7 @@
 html {
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
+  overflow-x: hidden;
 }
 
 body {
@@ -259,6 +260,7 @@ nav {
 ───────────────────────────────────────────────────────────── */
 .hero {
   min-height: 100vh;
+  min-height: 100svh; /* accounts for mobile browser chrome (address bar, etc.) */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -509,12 +511,31 @@ nav {
 /* Prevent line-break inside short abbreviations like "S.M." */
 .nowrap { white-space: nowrap; }
 
-/* Multiple links side-by-side in award/paper cards */
+/* Multiple source-links as pill badges inside award/paper cards */
 .award-links {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px 18px;
-  align-items: center;
+  gap: 7px;
+}
+
+.award-links .read-link {
+  padding: 5px 13px;
+  background: rgba(0, 212, 255, 0.05);
+  border: 1px solid rgba(0, 212, 255, 0.18);
+  border-radius: 100px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+  gap: 4px;
+  transition: background 0.2s, border-color 0.2s, transform 0.2s;
+}
+
+.award-links .read-link:hover {
+  background: rgba(0, 212, 255, 0.11);
+  border-color: rgba(0, 212, 255, 0.4);
+  transform: translateY(-1px);
+  gap: 4px; /* prevent the parent read-link:hover gap expansion */
 }
 
 /* About — heading subtitle line */
@@ -1124,6 +1145,8 @@ footer {
   cursor: pointer;
   padding: 0;
   flex-shrink: 0;
+  -webkit-appearance: none;
+  appearance: none;
   transition: border-color 0.25s, background 0.25s;
 }
 
@@ -1132,18 +1155,19 @@ footer {
   background: rgba(255,255,255,0.07);
 }
 
+/* 3 bars: 3×2px + 2×5px gap = 16px total, centered in 36px → each bar center offset = ±7px from button center */
 .nav-hamburger span {
   display: block;
-  width: 16px;
-  height: 1.5px;
+  width: 18px;
+  height: 2px;
   background: var(--t2);
   border-radius: 2px;
   transition: transform 0.3s ease, opacity 0.3s ease, width 0.3s ease;
 }
 
-.nav-hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+.nav-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
 .nav-hamburger.open span:nth-child(2) { opacity: 0; width: 0; }
-.nav-hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+.nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
 /* ─────────────────────────────────────────────────────────────
    RESPONSIVE
@@ -1209,13 +1233,16 @@ footer {
   .nav-contact { display: none; }
   .nav-hamburger { display: flex; }
 
-  /* Hero */
-  .hero { padding: 100px 20px 80px; }
-  .hero-eyebrow { font-size: 10px; letter-spacing: 2.5px; }
-  .hero-desc { font-size: 15px; }
+  /* Hero — compact spacing so all content sits within one screen */
+  .hero { padding: 88px 20px 48px; }
+  .hero-eyebrow { font-size: 10px; letter-spacing: 2.5px; margin-bottom: 16px; }
+  .hero-type-row { margin-top: 12px; }
+  .hero-desc { font-size: 15px; margin-top: 16px; }
+  .hero-cta { margin-top: 26px; gap: 8px; }
+  .scroll-hint { display: none; }
 
   /* Stats — keep in row but shrink */
-  .hero-stats { gap: 16px; margin-top: 48px; }
+  .hero-stats { gap: 16px; margin-top: 32px; }
   .stat-n { font-size: 28px; }
   .stat-l { font-size: 10px; letter-spacing: 0.8px; }
   .stat-sep { height: 36px; }
@@ -1241,8 +1268,8 @@ footer {
   .hero-stats {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 24px 20px;
-    margin-top: 48px;
+    gap: 20px 16px;
+    margin-top: 28px;
   }
   .stat-sep { display: none; }
   .stat-n { font-size: 32px; }
@@ -1255,9 +1282,9 @@ footer {
   nav { left: 8px; right: 8px; top: 10px; }
 
   /* Hero */
-  .hero { padding: 90px 16px 72px; }
+  .hero { padding: 76px 16px 40px; }
   .hero-name { letter-spacing: -1.5px; }
-  .hero-eyebrow { margin-bottom: 18px; }
+  .hero-eyebrow { margin-bottom: 14px; }
 
   /* Sections */
   .si { padding: 64px 16px; }
