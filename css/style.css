@@ -54,6 +54,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
   line-height: 1.6;
+  touch-action: pan-y; /* prevent horizontal pan on touch devices */
 }
 
 a { color: inherit; text-decoration: none; }
@@ -101,8 +102,10 @@ img { display: block; max-width: 100%; height: auto; }
   position: fixed;
   inset: 0;
   z-index: 1;
-  background: rgba(1, 1, 10, 0.62);
+  background: rgba(1, 1, 10, 1);
+  opacity: 0; /* JS drives this from 0 → 0.6 as user scrolls */
   pointer-events: none;
+  will-change: opacity;
 }
 
 /* Ambient colour orbs */
@@ -200,11 +203,22 @@ nav {
   align-items: center;
   gap: 28px;
   padding: 10px 22px;
-  background: rgba(4, 4, 20, 0.72);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid var(--gb);
+  /* ── Apple Liquid Glass ── */
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.13) 0%,
+    rgba(255, 255, 255, 0.05) 100%
+  );
+  -webkit-backdrop-filter: blur(32px) saturate(2) brightness(1.1);
+  backdrop-filter: blur(32px) saturate(2) brightness(1.1);
+  border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: 100px;
+  box-shadow:
+    0 8px 40px rgba(0, 0, 0, 0.35),
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.28),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.05),
+    inset 1px 0 0 rgba(255, 255, 255, 0.06),
+    inset -1px 0 0 rgba(255, 255, 255, 0.06);
 }
 
 .nav-logo {
@@ -253,7 +267,7 @@ nav {
 /* ─────────────────────────────────────────────────────────────
    PAGE WRAPPER
 ───────────────────────────────────────────────────────────── */
-.page { position: relative; z-index: 10; }
+.page { position: relative; z-index: 10; overflow-x: hidden; }
 
 /* ─────────────────────────────────────────────────────────────
    HERO SECTION
@@ -279,6 +293,8 @@ nav {
   margin-bottom: 26px;
   opacity: 0;
   animation: fadeUp 0.9s ease forwards 0.2s;
+  max-width: 100%;
+  word-break: break-word;
 }
 
 .hero-name {
@@ -341,6 +357,7 @@ nav {
 .btn-p {
   display: inline-flex;
   align-items: center;
+  gap: 8px;
   padding: 14px 34px;
   background: linear-gradient(135deg, var(--cyan), var(--violet));
   color: #000814;
@@ -361,6 +378,7 @@ nav {
 .btn-g {
   display: inline-flex;
   align-items: center;
+  gap: 7px;
   padding: 13px 20px;
   background: var(--glass);
   border: 1px solid var(--gb);
@@ -371,6 +389,11 @@ nav {
   cursor: pointer;
   backdrop-filter: blur(10px);
   transition: border-color 0.25s, color 0.25s, transform 0.25s;
+}
+
+.btn-icon {
+  font-size: 18px;
+  flex-shrink: 0;
 }
 
 .btn-g:hover {
@@ -511,31 +534,11 @@ nav {
 /* Prevent line-break inside short abbreviations like "S.M." */
 .nowrap { white-space: nowrap; }
 
-/* Multiple source-links as pill badges inside award/paper cards */
+/* Multiple source-links as pill badges (single links use .read-link directly) */
 .award-links {
   display: flex;
   flex-wrap: wrap;
   gap: 7px;
-}
-
-.award-links .read-link {
-  padding: 5px 13px;
-  background: rgba(0, 212, 255, 0.05);
-  border: 1px solid rgba(0, 212, 255, 0.18);
-  border-radius: 100px;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 10px;
-  font-weight: 500;
-  letter-spacing: 0.2px;
-  gap: 4px;
-  transition: background 0.2s, border-color 0.2s, transform 0.2s;
-}
-
-.award-links .read-link:hover {
-  background: rgba(0, 212, 255, 0.11);
-  border-color: rgba(0, 212, 255, 0.4);
-  transform: translateY(-1px);
-  gap: 4px; /* prevent the parent read-link:hover gap expansion */
 }
 
 /* About — heading subtitle line */
@@ -606,7 +609,37 @@ nav {
   gap: 16px;
 }
 
-.pillar { padding: 26px 22px; }
+.pillar {
+  padding: 26px 22px;
+  /* ── Apple Liquid Glass card ── */
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.10) 0%,
+    rgba(255, 255, 255, 0.03) 55%,
+    rgba(255, 255, 255, 0.07) 100%
+  );
+  -webkit-backdrop-filter: blur(28px) saturate(1.8) brightness(1.08);
+  backdrop-filter: blur(28px) saturate(1.8) brightness(1.08);
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  box-shadow:
+    0 4px 24px rgba(0, 0, 0, 0.28),
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.22),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.pillar:hover {
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.15) 0%,
+    rgba(255, 255, 255, 0.05) 55%,
+    rgba(255, 255, 255, 0.10) 100%
+  );
+  border-color: rgba(255, 255, 255, 0.22);
+  box-shadow:
+    0 16px 48px rgba(0, 0, 0, 0.38),
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.30),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.06);
+}
 
 .pillar-icon {
   width: 40px; height: 40px;
@@ -692,6 +725,7 @@ nav {
 }
 
 .ptags {
+  list-style: none;
   display: flex;
   flex-wrap: wrap;
   gap: 7px;
@@ -708,17 +742,26 @@ nav {
 }
 
 .read-link {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--cyan);
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  transition: gap 0.2s;
-  font-family: 'Space Grotesk', sans-serif;
+  gap: 4px;
+  padding: 5px 13px;
+  background: rgba(0, 212, 255, 0.05);
+  border: 1px solid rgba(0, 212, 255, 0.18);
+  border-radius: 100px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+  color: var(--cyan);
+  transition: background 0.2s, border-color 0.2s, transform 0.2s;
 }
 
-.read-link:hover { gap: 10px; }
+.read-link:hover {
+  background: rgba(0, 212, 255, 0.11);
+  border-color: rgba(0, 212, 255, 0.42);
+  transform: translateY(-1px);
+}
 
 /* ─────────────────────────────────────────────────────────────
    AWARDS
@@ -902,6 +945,7 @@ nav {
 }
 
 .skill-chips {
+  list-style: none;
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
@@ -1139,20 +1183,23 @@ footer {
   gap: 5px;
   width: 36px;
   height: 36px;
-  background: var(--glass);
-  border: 1px solid var(--gb);
-  border-radius: 8px;
+  /* ── Glass-within-glass ── */
+  background: linear-gradient(180deg, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0.04) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 10px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.20);
   cursor: pointer;
   padding: 0;
   flex-shrink: 0;
   -webkit-appearance: none;
   appearance: none;
-  transition: border-color 0.25s, background 0.25s;
+  transition: border-color 0.25s, background 0.25s, box-shadow 0.25s;
 }
 
 .nav-hamburger:hover {
-  border-color: rgba(255,255,255,0.22);
-  background: rgba(255,255,255,0.07);
+  background: linear-gradient(180deg, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0.07) 100%);
+  border-color: rgba(255, 255, 255, 0.26);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.28);
 }
 
 /* 3 bars: 3×2px + 2×5px gap = 16px total, centered in 36px → each bar center offset = ±7px from button center */
@@ -1206,11 +1253,20 @@ footer {
     top: calc(100% + 8px);
     left: 0;
     right: 0;
-    background: rgba(4, 4, 20, 0.97);
-    -webkit-backdrop-filter: blur(24px);
-    backdrop-filter: blur(24px);
-    border: 1px solid var(--gb);
-    border-radius: 14px;
+    /* ── Apple Liquid Glass dropdown ── */
+    background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.12) 0%,
+      rgba(255, 255, 255, 0.04) 100%
+    );
+    -webkit-backdrop-filter: blur(36px) saturate(2) brightness(1.08);
+    backdrop-filter: blur(36px) saturate(2) brightness(1.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 18px;
+    box-shadow:
+      0 16px 48px rgba(0, 0, 0, 0.45),
+      inset 0 1.5px 0 rgba(255, 255, 255, 0.24),
+      inset 0 -1px 0 rgba(255, 255, 255, 0.04);
     padding: 8px;
     flex-direction: column;
     gap: 2px;
@@ -1275,6 +1331,32 @@ footer {
   .stat-n { font-size: 32px; }
   .stat-l { font-size: 10px; }
   .stat-block { text-align: center; }
+
+  /* Hero name — fluid at small widths */
+  .hero-name {
+    font-size: clamp(30px, 9vw, 52px);
+    letter-spacing: -1.5px;
+  }
+
+  /* Hero CTA — icon-only circular buttons */
+  .hero-cta { gap: 10px; justify-content: center; }
+  .btn-label { display: none; }
+
+  .btn-p {
+    width: 46px; height: 46px;
+    border-radius: 50%;
+    padding: 0;
+    justify-content: center;
+    gap: 0;
+  }
+  .btn-g {
+    width: 46px; height: 46px;
+    border-radius: 50%;
+    padding: 0;
+    justify-content: center;
+    gap: 0;
+  }
+  .btn-icon { font-size: 20px; }
 }
 
 @media (max-width: 480px) {
@@ -1310,6 +1392,17 @@ footer {
   /* Footer */
   footer { padding: 60px 16px 48px; }
   .footer-name { font-size: 22px; }
+}
+
+@media (max-width: 380px) {
+  .hero-name {
+    font-size: clamp(26px, 8vw, 36px);
+    letter-spacing: -1px;
+  }
+  .hero-eyebrow { font-size: 8.5px; letter-spacing: 1.5px; }
+  /* Smaller circles so 6 buttons still fit in one row */
+  .btn-p, .btn-g { width: 40px; height: 40px; }
+  .btn-icon { font-size: 18px; }
 }
 
 /* ─────────────────────────────────────────────────────────────

@@ -42,6 +42,8 @@
     ctx.drawImage(img, dx, dy, img.naturalWidth * scale, img.naturalHeight * scale);
   }
 
+  const overlay = document.getElementById('canvas-overlay');
+
   function onScroll() {
     if (rafPending) return;
     rafPending = true;
@@ -58,6 +60,9 @@
       /* Scroll progress bar */
       const prog = document.getElementById('prog');
       if (prog) prog.style.width = (frac * 100) + '%';
+
+      /* Scroll-driven background overlay: 0 at top → 0.6 at bottom */
+      if (overlay) overlay.style.opacity = (frac * 0.6).toFixed(3);
 
       rafPending = false;
     });
