@@ -48,10 +48,24 @@
     }, { once: true });
   }
 
+  let lastResizeW = 0;
+  let resizeTimer;
+
   function resizeCanvas() {
     canvas.width  = window.innerWidth;
     canvas.height = window.innerHeight;
+    lastResizeW   = window.innerWidth;
     drawFrame(currentFrame);
+  }
+
+  function onResize() {
+    /* Ignore height-only changes (iOS address bar appearing/hiding)
+       — those cause the image scale to shift, making content look like
+       it jumps horizontally. Only resize when WIDTH actually changes. */
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      if (window.innerWidth !== lastResizeW) resizeCanvas();
+    }, 100);
   }
 
   function drawFrame(idx) {
@@ -98,7 +112,7 @@
   }
 
   window.addEventListener('scroll', onScroll, { passive: true });
-  window.addEventListener('resize', resizeCanvas, { passive: true });
+  window.addEventListener('resize', onResize, { passive: true });
 
   resizeCanvas();
 
@@ -389,12 +403,29 @@
     }
   }
 
-  window.__scrollAudio = { update };
+  window.__scrollAudio = { update, actx };
 
-  /* Resume the pre-built graph on the very first user interaction */
-  function tryResume() { if (actx.state === 'suspended') actx.resume(); }
+}());
 
-  ['click','touchstart','touchmove','wheel','keydown','scroll'].forEach((ev) => {
-    document.addEventListener(ev, tryResume, { passive: true, once: true });
-  });
+
+/* ── SITE ENTRY OVERLAY ──────────────────────────────────── */
+(function initEntry() {
+  const el = document.getElementById('site-entry');
+  if (!el) return;
+
+  function enter() {
+    /* This click IS the user gesture — resume audio immediately */
+    const audio = window.__scrollAudio;
+    if (audio && audio.actx && audio.actx.state !== 'running') {
+      audio.actx.resume();
+    }
+    el.classList.add('out');
+    setTimeout(() => el.remove(), 950);
+  }
+
+  el.addEventListener('click', enter, { once: true });
+  el.addEventListener('touchend', (e) => {
+    e.preventDefault();
+    enter();
+  }, { once: true, passive: false });
 }());
