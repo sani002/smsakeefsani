@@ -195,14 +195,15 @@ img { display: block; max-width: 100%; height: auto; }
 ───────────────────────────────────────────────────────────── */
 nav {
   position: fixed;
-  top: 18px;
+  bottom: 20px;
+  top: unset;
   left: 50%;
   transform: translateX(-50%);
   z-index: 100;
   display: flex;
   align-items: center;
-  gap: 28px;
-  padding: 10px 22px;
+  gap: 20px;
+  padding: 8px 18px;
   /* ── Apple Liquid Glass ── */
   background: linear-gradient(
     180deg,
@@ -221,6 +222,10 @@ nav {
     inset -1px 0 0 rgba(255, 255, 255, 0.06);
 }
 
+/* Desktop nav link icon tokens */
+.nav-link-icon  { display: block; font-size: 15px; line-height: 1; flex-shrink: 0; }
+.nav-link-label { display: block; }
+
 .nav-logo {
   font-family: 'Montserrat', sans-serif;
   font-weight: 700;
@@ -236,6 +241,9 @@ nav {
 }
 
 .nav-links a {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
   font-size: 13px;
   color: var(--t2);
   font-weight: 500;
@@ -280,7 +288,7 @@ nav {
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 120px 24px 100px;
+  padding: 60px 24px 100px;
   position: relative;
 }
 
@@ -442,11 +450,11 @@ nav {
 
 /* Scroll hint */
 .scroll-hint {
+  display: none; /* hidden on all screen sizes */
   position: absolute;
   bottom: 28px;
   left: 50%;
   transform: translateX(-50%);
-  display: flex;
   flex-direction: column;
   align-items: center;
   gap: 10px;
@@ -1206,12 +1214,9 @@ footer {
   height: 2px;
   background: var(--t2);
   border-radius: 2px;
-  transition: transform 0.3s ease, opacity 0.3s ease, width 0.3s ease;
+  transition: background 0.25s;
 }
 
-.nav-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
-.nav-hamburger.open span:nth-child(2) { opacity: 0; width: 0; }
-.nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
 /* ─────────────────────────────────────────────────────────────
    RESPONSIVE
@@ -1230,63 +1235,94 @@ footer {
 }
 
 @media (max-width: 768px) {
-  /* Nav — fixed pill, stays on screen while scrolling */
+  /* ── Bottom dock — replaces hamburger entirely ── */
   nav {
     position: fixed;
-    top: 10px;
-    left: 12px;
-    right: 12px;
-    transform: none;
-    padding: 8px 14px;
+    bottom: 16px;
+    top: unset;
+    left: 50%;
+    right: unset;
+    transform: translateX(-50%);
+    width: calc(100% - 40px);
+    max-width: 420px;
+    padding: 10px 12px;
+    /* iOS safe-area clearance for home indicator */
+    padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px));
     gap: 0;
-    justify-content: space-between;
-    flex-wrap: wrap;     /* dropdown row wraps inside the pill */
-    align-items: center;
-    border-radius: 18px;
+    justify-content: space-around;
+    border-radius: 28px;
   }
 
-  .nav-logo { font-size: 13px; }
+  /* Hide elements that belong to the desktop pill */
+  .nav-logo      { display: none; }
+  .nav-contact   { display: none; }
+  .nav-hamburger { display: none; }
 
-  /* Dropdown lives inside the fixed pill — expands it, JS syncs hero offset */
+  /* Nav links — always visible, laid out as dock icons */
   .nav-links {
-    display: none;
+    display: flex;
     position: static;
     width: 100%;
-    flex-direction: column;
-    gap: 2px;
-    padding: 8px 0 4px;
-    margin-top: 8px;
-    border-top: 1px solid rgba(255, 255, 255, 0.10);
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    gap: 0;
+    padding: 0;
+    margin: 0;
+    border: none;
     background: transparent;
-    border-radius: 0;
-    box-shadow: none;
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
+    box-shadow: none;
+    border-radius: 0;
   }
 
-  .nav-links.open { display: flex; }
-
+  /* Each dock item: icon stacked above tiny label */
   .nav-links a {
-    font-size: 14px;
-    padding: 10px 12px;
-    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    padding: 5px 10px;
+    border-radius: 14px;
+    font-size: 8px;
+    font-weight: 600;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    color: var(--t2);
+    transition: color 0.2s, background 0.2s, transform 0.2s;
   }
 
   .nav-links a:hover,
   .nav-links a.active {
+    color: var(--cyan);
     background: rgba(0, 212, 255, 0.08);
+    transform: translateY(-3px);  /* subtle dock-lift */
   }
 
-  .nav-contact { display: none; }
-  .nav-hamburger { display: flex; }
+  /* Icons: visible and large on mobile */
+  .nav-link-icon  { display: block; font-size: 22px; line-height: 1; }
+  .nav-link-label { display: block; }
 
-  /* Hero base offset — JS increases this when the dropdown is open */
-  .hero { padding: 84px 20px 48px; }
+  /* Hero — no top-nav offset; add bottom clearance for the dock */
+  .hero { padding: 40px 20px 100px; }
   .hero-eyebrow { font-size: 10px; letter-spacing: 2.5px; margin-bottom: 16px; }
   .hero-type-row { margin-top: 12px; }
   .hero-desc { font-size: 15px; margin-top: 16px; }
-  .hero-cta { margin-top: 26px; gap: 8px; }
   .scroll-hint { display: none; }
+
+  /* Hero CTA — icon-only circles at all mobile widths */
+  .hero-cta { margin-top: 26px; gap: 10px; justify-content: center; }
+  .hero-cta .btn-label { display: none; }
+  .hero-cta .btn-p,
+  .hero-cta .btn-g {
+    width: 46px; height: 46px;
+    border-radius: 50%;
+    padding: 0;
+    justify-content: center;
+    gap: 0;
+  }
+  .hero-cta .btn-icon { font-size: 20px; }
 
   /* Stats — keep in row but shrink */
   .hero-stats { gap: 16px; margin-top: 32px; }
@@ -1331,34 +1367,14 @@ footer {
     font-size: clamp(30px, 9vw, 52px);
     letter-spacing: -1.5px;
   }
-
-  /* Hero CTA — icon-only circular buttons (hero only) */
-  .hero-cta { gap: 10px; justify-content: center; }
-  .hero-cta .btn-label { display: none; }
-
-  .hero-cta .btn-p {
-    width: 46px; height: 46px;
-    border-radius: 50%;
-    padding: 0;
-    justify-content: center;
-    gap: 0;
-  }
-  .hero-cta .btn-g {
-    width: 46px; height: 46px;
-    border-radius: 50%;
-    padding: 0;
-    justify-content: center;
-    gap: 0;
-  }
-  .hero-cta .btn-icon { font-size: 20px; }
 }
 
 @media (max-width: 480px) {
-  /* Nav */
-  nav { left: 8px; right: 8px; top: 10px; }
+  /* Nav — dock stays at bottom, just slightly narrower margins */
+  nav { width: calc(100% - 28px); }
 
   /* Hero */
-  .hero { padding: 76px 16px 40px; }
+  .hero { padding: 36px 16px 100px; }
   .hero-name { letter-spacing: -1.5px; }
   .hero-eyebrow { margin-bottom: 14px; }
 

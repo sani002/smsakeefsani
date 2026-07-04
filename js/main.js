@@ -64,6 +64,9 @@
       /* Scroll-driven background overlay: 0.7 at top → 0.9 at bottom */
       if (overlay) overlay.style.opacity = (0.7 + frac * 0.2).toFixed(3);
 
+      /* Feed scroll fraction to ambient audio engine */
+      if (window.__scrollAudio) window.__scrollAudio.update(frac);
+
       rafPending = false;
     });
   }
@@ -125,18 +128,10 @@
     }(performance.now()));
   }
 
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        const el     = entry.target;
-        const target = parseInt(el.dataset.count, 10);
-        animateCount(el, target, 1400);
-        observer.unobserve(el);
-      }
-    });
-  }, { threshold: 0.5 });
-
-  document.querySelectorAll('[data-count]').forEach((el) => observer.observe(el));
+  /* Start all counters immediately on page load — 3 s to reach final value */
+  document.querySelectorAll('[data-count]').forEach((el) => {
+    animateCount(el, parseInt(el.dataset.count, 10), 3000);
+  });
 }());
 
 
@@ -247,50 +242,29 @@
 }());
 
 
-/* ── HAMBURGER MENU ──────────────────────────────────────── */
+/* ── HAMBURGER (desktop only — mobile uses dock, button is hidden) ── */
 (function initHamburger() {
   const btn   = document.getElementById('nav-hamburger');
   const links = document.getElementById('nav-links');
-  const nav   = document.querySelector('nav');
-  const hero  = document.querySelector('.hero');
   if (!btn || !links) return;
-
-  /* Sync hero padding-top so the fixed nav (which grows when open) never overlaps content */
-  function syncHeroOffset() {
-    if (!hero || !nav || window.innerWidth > 768) return;
-    hero.style.paddingTop = (nav.offsetHeight + 14) + 'px';
-  }
 
   function close() {
     btn.classList.remove('open');
     links.classList.remove('open');
     btn.setAttribute('aria-expanded', 'false');
-    syncHeroOffset();
   }
 
   btn.addEventListener('click', () => {
     const isOpen = links.classList.toggle('open');
     btn.classList.toggle('open', isOpen);
     btn.setAttribute('aria-expanded', String(isOpen));
-    syncHeroOffset();
   });
 
-  /* Close when a nav link is clicked */
   links.querySelectorAll('a').forEach((a) => a.addEventListener('click', close));
-
-  /* Close when clicking outside */
   document.addEventListener('click', (e) => {
     if (!btn.contains(e.target) && !links.contains(e.target)) close();
   });
-
-  /* Close on Escape */
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
-
-  /* Keep offset correct on resize (e.g. phone rotation) */
-  window.addEventListener('resize', syncHeroOffset, { passive: true });
-
-  /* Set initial offset on page load */
-  syncHeroOffset();
 }());
 
 
@@ -313,4 +287,117 @@
     const el = document.getElementById(id);
     if (el) observer.observe(el);
   });
+}());
+
+
+/* ── SCROLL AMBIENT AUDIO ────────────────────────────────── */
+(function initScrollAudio() {
+  if (typeof AudioContext === 'undefined' && typeof webkitAudioContext === 'undefined') return;
+
+  let ctx, masterGain, filterNode, fadeTimer;
+  let prevFrac = 0;
+  let built = false;
+
+  /* Drone pitches: low pentatonic minor gives that mysterious, hovering quality */
+  const DRONES = [
+    { hz: 41.2,  amp: 0.13 },  /* E1  — deep sub bass rumble  */
+    { hz: 55.0,  amp: 0.11 },  /* A1  — root drone             */
+    { hz: 65.4,  amp: 0.08 },  /* C2  — minor third            */
+    { hz: 82.4,  amp: 0.07 },  /* E2  — fifth                  */
+    { hz: 98.0,  amp: 0.05 },  /* G2  — flatted seventh        */
+    { hz: 110.0, amp: 0.04 },  /* A2  — upper root             */
+    { hz: 130.8, amp: 0.03 },  /* C3  — breathy upper third    */
+    { hz: 220.0, amp: 0.015 }, /* A3  — airy shimmer           */
+  ];
+
+  function build() {
+    if (built) return;
+    built = true;
+
+    ctx = new (window.AudioContext || window.webkitAudioContext)();
+
+    /* Master output — starts silent */
+    masterGain = ctx.createGain();
+    masterGain.gain.value = 0;
+    masterGain.connect(ctx.destination);
+
+    /* Long hall reverb: two cascaded comb delays */
+    function makeReverb(wet) {
+      const pre  = ctx.createDelay(0.08); pre.delayTime.value  = 0.07;
+      const d1   = ctx.createDelay(3.0);  d1.delayTime.value   = 1.4;
+      const d2   = ctx.createDelay(3.0);  d2.delayTime.value   = 1.9;
+      const fb1  = ctx.createGain();      fb1.gain.value       = 0.42;
+      const fb2  = ctx.createGain();      fb2.gain.value       = 0.36;
+      const wetG = ctx.createGain();      wetG.gain.value      = wet;
+      pre.connect(d1); d1.connect(fb1); fb1.connect(d1); fb1.connect(wetG);
+      pre.connect(d2); d2.connect(fb2); fb2.connect(d2); fb2.connect(wetG);
+      wetG.connect(masterGain);
+      return pre; /* return input node */
+    }
+    const reverbIn = makeReverb(0.55);
+
+    /* Scroll-swept low-pass filter — dark & muffled at top, opens up while scrolling */
+    filterNode = ctx.createBiquadFilter();
+    filterNode.type = 'lowpass';
+    filterNode.frequency.value = 160;
+    filterNode.Q.value = 2.2;
+    filterNode.connect(masterGain);  /* dry path */
+    filterNode.connect(reverbIn);   /* wet path  */
+
+    /* Oscillator bank */
+    DRONES.forEach(({ hz, amp }, i) => {
+      const osc  = ctx.createOscillator();
+      const gain = ctx.createGain();
+      /* Alternate sine / triangle for texture */
+      osc.type = i % 3 === 0 ? 'triangle' : 'sine';
+      osc.frequency.value = hz;
+      /* Tiny random detune so beats form between layers */
+      osc.detune.value = (Math.random() - 0.5) * 10;
+      gain.gain.value = amp;
+      osc.connect(gain);
+      gain.connect(filterNode);
+      osc.start();
+    });
+  }
+
+  function update(frac) {
+    if (!built) return;
+
+    const delta = frac - prevFrac;          /* positive = down, negative = up */
+    const speed = Math.abs(delta);
+    prevFrac = frac;
+
+    /* Filter frequency tracks scroll position — going back up reverses it */
+    const targetHz = 160 + frac * 1100;    /* 160 Hz (muffled) → 1260 Hz (bright) */
+    filterNode.frequency.setTargetAtTime(targetHz, ctx.currentTime, 0.7);
+
+    /* Volume: rises when scrolling, fades to a quiet hum when still */
+    if (speed > 0.0004) {
+      clearTimeout(fadeTimer);
+      const vol = Math.min(0.38, speed * 120 + 0.08);
+      masterGain.gain.setTargetAtTime(vol, ctx.currentTime, 0.12);
+      fadeTimer = setTimeout(() => {
+        masterGain.gain.setTargetAtTime(0.05, ctx.currentTime, 1.6);
+      }, 280);
+    }
+  }
+
+  /* Expose to the scroll RAF (already wired above) */
+  window.__scrollAudio = { update };
+
+  /* Web Audio requires a user gesture before the context can run */
+  function onGesture() {
+    build();
+    /* Resume context if browser suspended it */
+    if (ctx && ctx.state === 'suspended') ctx.resume();
+    document.removeEventListener('click',      onGesture);
+    document.removeEventListener('touchstart', onGesture);
+    document.removeEventListener('keydown',    onGesture);
+    document.removeEventListener('scroll',     onGesture);
+  }
+
+  document.addEventListener('click',      onGesture, { passive: true, once: true });
+  document.addEventListener('touchstart', onGesture, { passive: true, once: true });
+  document.addEventListener('keydown',    onGesture, { passive: true, once: true });
+  document.addEventListener('scroll',     onGesture, { passive: true, once: true });
 }());
