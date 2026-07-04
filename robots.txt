@@ -2,3 +2,7 @@ User-agent: *
 Allow: /
 
 Sitemap: https://www.smsakeefsani.work.gd/sitemap.xml
+
+# Keep raw animation frames and low-res thumbnails out of image search
+Disallow: /assets/frames/
+Disallow: /assets/thumbnails/

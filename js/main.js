@@ -14,13 +14,39 @@
   let currentFrame = 0;
   let rafPending = false;
 
-  /* Pre-load all frames */
-  const frames = Array.from({ length: TOTAL_FRAMES }, (_, i) => {
-    const img = new Image();
-    img.decoding = 'async';
-    img.src = `assets/frames/frame_${String(i).padStart(4, '0')}.webp`;
-    return img;
-  });
+  /* Frame pool — only frame 0 loads immediately; rest load on idle */
+  const frames = new Array(TOTAL_FRAMES).fill(null);
+
+  function frameUrl(i) {
+    return `assets/frames/frame_${String(i).padStart(4, '0')}.webp`;
+  }
+
+  /* Load frame 0 right away so the canvas is never blank */
+  frames[0] = new Image();
+  frames[0].decoding = 'async';
+  frames[0].src = frameUrl(0);
+
+  function loadRemainingFrames() {
+    for (let i = 1; i < TOTAL_FRAMES; i++) {
+      const img = new Image();
+      img.decoding = 'async';
+      img.src = frameUrl(i);
+      frames[i] = img;
+    }
+  }
+
+  /* Kick off background frame loading after first frame is ready */
+  if (frames[0].complete) {
+    'requestIdleCallback' in window
+      ? requestIdleCallback(loadRemainingFrames, { timeout: 2000 })
+      : setTimeout(loadRemainingFrames, 200);
+  } else {
+    frames[0].addEventListener('load', () => {
+      'requestIdleCallback' in window
+        ? requestIdleCallback(loadRemainingFrames, { timeout: 2000 })
+        : setTimeout(loadRemainingFrames, 200);
+    }, { once: true });
+  }
 
   function resizeCanvas() {
     canvas.width  = window.innerWidth;
@@ -292,112 +318,83 @@
 
 /* ── SCROLL AMBIENT AUDIO ────────────────────────────────── */
 (function initScrollAudio() {
-  if (typeof AudioContext === 'undefined' && typeof webkitAudioContext === 'undefined') return;
+  const AC = window.AudioContext || window.webkitAudioContext;
+  if (!AC) return;
 
-  let ctx, masterGain, filterNode, fadeTimer;
+  /* Build the audio graph immediately — context may start suspended (browser policy) */
+  const actx       = new AC();
+  let masterGain, filterNode, fadeTimer;
   let prevFrac = 0;
-  let built = false;
 
-  /* Drone pitches: low pentatonic minor gives that mysterious, hovering quality */
-  const DRONES = [
-    { hz: 41.2,  amp: 0.13 },  /* E1  — deep sub bass rumble  */
-    { hz: 55.0,  amp: 0.11 },  /* A1  — root drone             */
-    { hz: 65.4,  amp: 0.08 },  /* C2  — minor third            */
-    { hz: 82.4,  amp: 0.07 },  /* E2  — fifth                  */
-    { hz: 98.0,  amp: 0.05 },  /* G2  — flatted seventh        */
-    { hz: 110.0, amp: 0.04 },  /* A2  — upper root             */
-    { hz: 130.8, amp: 0.03 },  /* C3  — breathy upper third    */
-    { hz: 220.0, amp: 0.015 }, /* A3  — airy shimmer           */
-  ];
+  masterGain = actx.createGain();
+  masterGain.gain.value = 0;
+  masterGain.connect(actx.destination);
 
-  function build() {
-    if (built) return;
-    built = true;
-
-    ctx = new (window.AudioContext || window.webkitAudioContext)();
-
-    /* Master output — starts silent */
-    masterGain = ctx.createGain();
-    masterGain.gain.value = 0;
-    masterGain.connect(ctx.destination);
-
-    /* Long hall reverb: two cascaded comb delays */
-    function makeReverb(wet) {
-      const pre  = ctx.createDelay(0.08); pre.delayTime.value  = 0.07;
-      const d1   = ctx.createDelay(3.0);  d1.delayTime.value   = 1.4;
-      const d2   = ctx.createDelay(3.0);  d2.delayTime.value   = 1.9;
-      const fb1  = ctx.createGain();      fb1.gain.value       = 0.42;
-      const fb2  = ctx.createGain();      fb2.gain.value       = 0.36;
-      const wetG = ctx.createGain();      wetG.gain.value      = wet;
-      pre.connect(d1); d1.connect(fb1); fb1.connect(d1); fb1.connect(wetG);
-      pre.connect(d2); d2.connect(fb2); fb2.connect(d2); fb2.connect(wetG);
-      wetG.connect(masterGain);
-      return pre; /* return input node */
-    }
-    const reverbIn = makeReverb(0.55);
-
-    /* Scroll-swept low-pass filter — dark & muffled at top, opens up while scrolling */
-    filterNode = ctx.createBiquadFilter();
-    filterNode.type = 'lowpass';
-    filterNode.frequency.value = 160;
-    filterNode.Q.value = 2.2;
-    filterNode.connect(masterGain);  /* dry path */
-    filterNode.connect(reverbIn);   /* wet path  */
-
-    /* Oscillator bank */
-    DRONES.forEach(({ hz, amp }, i) => {
-      const osc  = ctx.createOscillator();
-      const gain = ctx.createGain();
-      /* Alternate sine / triangle for texture */
-      osc.type = i % 3 === 0 ? 'triangle' : 'sine';
-      osc.frequency.value = hz;
-      /* Tiny random detune so beats form between layers */
-      osc.detune.value = (Math.random() - 0.5) * 10;
-      gain.gain.value = amp;
-      osc.connect(gain);
-      gain.connect(filterNode);
-      osc.start();
+  /* Hall reverb — two comb delays in parallel */
+  (function buildReverb() {
+    const wetG = actx.createGain(); wetG.gain.value = 0.55;
+    wetG.connect(masterGain);
+    [[1.4, 0.42], [1.9, 0.36]].forEach(([dt, fb]) => {
+      const d = actx.createDelay(3.0); d.delayTime.value = dt;
+      const g = actx.createGain();     g.gain.value = fb;
+      d.connect(g); g.connect(d); g.connect(wetG);
+      /* connect filter → comb delay below */
+      window.__reverbInputs = window.__reverbInputs || [];
+      window.__reverbInputs.push(d);
     });
-  }
+  }());
+
+  filterNode = actx.createBiquadFilter();
+  filterNode.type = 'lowpass';
+  filterNode.frequency.value = 160;
+  filterNode.Q.value = 2.2;
+  filterNode.connect(masterGain);
+  (window.__reverbInputs || []).forEach((d) => filterNode.connect(d));
+  delete window.__reverbInputs;
+
+  /* Drone oscillator bank — pentatonic minor, slightly detuned for beating */
+  [
+    [41.2, 0.13], [55.0, 0.11], [65.4, 0.08], [82.4, 0.07],
+    [98.0, 0.05], [110.0, 0.04], [130.8, 0.03], [220.0, 0.015],
+  ].forEach(([hz, amp], i) => {
+    const osc = actx.createOscillator();
+    const g   = actx.createGain();
+    osc.type = i % 3 === 0 ? 'triangle' : 'sine';
+    osc.frequency.value = hz;
+    osc.detune.value    = (Math.random() - 0.5) * 10;
+    g.gain.value = amp;
+    osc.connect(g);
+    g.connect(filterNode);
+    osc.start();
+  });
 
   function update(frac) {
-    if (!built) return;
+    if (actx.state !== 'running') return; /* still suspended — wait for gesture */
 
-    const delta = frac - prevFrac;          /* positive = down, negative = up */
-    const speed = Math.abs(delta);
+    const speed = Math.abs(frac - prevFrac);
     prevFrac = frac;
 
-    /* Filter frequency tracks scroll position — going back up reverses it */
-    const targetHz = 160 + frac * 1100;    /* 160 Hz (muffled) → 1260 Hz (bright) */
-    filterNode.frequency.setTargetAtTime(targetHz, ctx.currentTime, 0.7);
+    /* Filter sweeps with scroll position (reverses when scrolling back up) */
+    filterNode.frequency.setTargetAtTime(160 + frac * 1100, actx.currentTime, 0.7);
 
-    /* Volume: rises when scrolling, fades to a quiet hum when still */
+    /* Volume tracks scroll speed, fades to quiet hum when still */
     if (speed > 0.0004) {
       clearTimeout(fadeTimer);
-      const vol = Math.min(0.38, speed * 120 + 0.08);
-      masterGain.gain.setTargetAtTime(vol, ctx.currentTime, 0.12);
+      masterGain.gain.setTargetAtTime(
+        Math.min(0.38, speed * 120 + 0.08), actx.currentTime, 0.12
+      );
       fadeTimer = setTimeout(() => {
-        masterGain.gain.setTargetAtTime(0.05, ctx.currentTime, 1.6);
+        masterGain.gain.setTargetAtTime(0.05, actx.currentTime, 1.6);
       }, 280);
     }
   }
 
-  /* Expose to the scroll RAF (already wired above) */
   window.__scrollAudio = { update };
 
-  /* Web Audio requires a user gesture before the context can run */
-  function onGesture() {
-    build();
-    /* Resume context if browser suspended it */
-    if (ctx && ctx.state === 'suspended') ctx.resume();
-    document.removeEventListener('click',      onGesture);
-    document.removeEventListener('touchstart', onGesture);
-    document.removeEventListener('keydown',    onGesture);
-    document.removeEventListener('scroll',     onGesture);
-  }
+  /* Resume the pre-built graph on the very first user interaction */
+  function tryResume() { if (actx.state === 'suspended') actx.resume(); }
 
-  document.addEventListener('click',      onGesture, { passive: true, once: true });
-  document.addEventListener('touchstart', onGesture, { passive: true, once: true });
-  document.addEventListener('keydown',    onGesture, { passive: true, once: true });
-  document.addEventListener('scroll',     onGesture, { passive: true, once: true });
+  ['click','touchstart','touchmove','wheel','keydown','scroll'].forEach((ev) => {
+    document.addEventListener(ev, tryResume, { passive: true, once: true });
+  });
 }());
