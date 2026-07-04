@@ -1299,15 +1299,15 @@ footer {
   .sec-title { letter-spacing: -1px; }
   .sec-desc { font-size: 15px; margin-bottom: 52px; }
 
-  /* Awards + research grids — 2 columns minimum */
-  .awards-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
-  .papers-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+  /* Awards + research grids — single column on mobile */
+  .awards-grid { grid-template-columns: 1fr; gap: 12px; }
+  .papers-grid { grid-template-columns: 1fr; gap: 12px; }
   .award { padding: 18px 14px; }
   .paper { padding: 18px 14px; }
 
   /* Gallery */
   .gal-cols { columns: 2; }
-  .about-pillars { grid-template-columns: 1fr 1fr; }
+  .about-pillars { grid-template-columns: 1fr; }
 
   /* Timeline */
   .t-role { font-size: 18px; }
@@ -1376,8 +1376,8 @@ footer {
   .gal-cols { columns: 2; column-gap: 8px; }
   .gal-item { margin-bottom: 8px; }
 
-  /* Papers grid — 2 columns minimum */
-  .papers-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+  /* Papers grid — single column on mobile */
+  .papers-grid { grid-template-columns: 1fr; gap: 12px; }
 
   /* Timeline */
   .t-role { font-size: 17px; }
