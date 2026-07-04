@@ -61,8 +61,8 @@
       const prog = document.getElementById('prog');
       if (prog) prog.style.width = (frac * 100) + '%';
 
-      /* Scroll-driven background overlay: 0 at top → 0.6 at bottom */
-      if (overlay) overlay.style.opacity = (frac * 0.6).toFixed(3);
+      /* Scroll-driven background overlay: 0.7 at top → 0.9 at bottom */
+      if (overlay) overlay.style.opacity = (0.7 + frac * 0.2).toFixed(3);
 
       rafPending = false;
     });
@@ -251,18 +251,28 @@
 (function initHamburger() {
   const btn   = document.getElementById('nav-hamburger');
   const links = document.getElementById('nav-links');
+  const nav   = document.querySelector('nav');
+  const hero  = document.querySelector('.hero');
   if (!btn || !links) return;
+
+  /* Sync hero padding-top so the fixed nav (which grows when open) never overlaps content */
+  function syncHeroOffset() {
+    if (!hero || !nav || window.innerWidth > 768) return;
+    hero.style.paddingTop = (nav.offsetHeight + 14) + 'px';
+  }
 
   function close() {
     btn.classList.remove('open');
     links.classList.remove('open');
     btn.setAttribute('aria-expanded', 'false');
+    syncHeroOffset();
   }
 
   btn.addEventListener('click', () => {
     const isOpen = links.classList.toggle('open');
     btn.classList.toggle('open', isOpen);
     btn.setAttribute('aria-expanded', String(isOpen));
+    syncHeroOffset();
   });
 
   /* Close when a nav link is clicked */
@@ -275,6 +285,12 @@
 
   /* Close on Escape */
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
+
+  /* Keep offset correct on resize (e.g. phone rotation) */
+  window.addEventListener('resize', syncHeroOffset, { passive: true });
+
+  /* Set initial offset on page load */
+  syncHeroOffset();
 }());
 
 
