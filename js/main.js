@@ -335,41 +335,55 @@
 }());
 
 
-/* ── SCROLL AMBIENT AUDIO ────────────────────────────────── */
-(function initScrollAudio() {
+/* ── SCROLL AMBIENT AUDIO ENGINE ────────────────────────────
+   Called INSIDE the Resume button click handler.
+   Creating AudioContext inside a user gesture guarantees running
+   state on every browser — no resume() juggling, no suspended state.
+─────────────────────────────────────────────────────────── */
+function startAudioEngine() {
+  if (window.__scrollAudio) return; /* already running */
+
   const AC = window.AudioContext || window.webkitAudioContext;
   if (!AC) return;
 
-  /* Build the audio graph immediately — context may start suspended (browser policy) */
-  const actx       = new AC();
+  /* Create context INSIDE gesture = starts in running state on all browsers */
+  const actx = new AC();
+
+  /* Safari unlock: play a 1-sample silent buffer immediately */
+  const silentBuf = actx.createBuffer(1, 1, actx.sampleRate);
+  const silentSrc = actx.createBufferSource();
+  silentSrc.buffer = silentBuf;
+  silentSrc.connect(actx.destination);
+  silentSrc.start(0);
+
+  /* Belt-and-suspenders: force resume in case anything kept it suspended */
+  actx.resume();
+
   let masterGain, filterNode, fadeTimer;
   let prevFrac = 0;
 
   masterGain = actx.createGain();
-  masterGain.gain.value = 0;
+  masterGain.gain.value = 0.06; /* quiet hum right away */
   masterGain.connect(actx.destination);
 
   /* Hall reverb — two comb delays in parallel */
-  (function buildReverb() {
-    const wetG = actx.createGain(); wetG.gain.value = 0.55;
-    wetG.connect(masterGain);
-    [[1.4, 0.42], [1.9, 0.36]].forEach(([dt, fb]) => {
-      const d = actx.createDelay(3.0); d.delayTime.value = dt;
-      const g = actx.createGain();     g.gain.value = fb;
-      d.connect(g); g.connect(d); g.connect(wetG);
-      /* connect filter → comb delay below */
-      window.__reverbInputs = window.__reverbInputs || [];
-      window.__reverbInputs.push(d);
-    });
-  }());
+  const reverbInputs = [];
+  const wetG = actx.createGain();
+  wetG.gain.value = 0.55;
+  wetG.connect(masterGain);
+  [[1.4, 0.42], [1.9, 0.36]].forEach(([dt, fb]) => {
+    const d = actx.createDelay(3.0); d.delayTime.value = dt;
+    const g = actx.createGain();     g.gain.value = fb;
+    d.connect(g); g.connect(d); g.connect(wetG);
+    reverbInputs.push(d);
+  });
 
   filterNode = actx.createBiquadFilter();
   filterNode.type = 'lowpass';
   filterNode.frequency.value = 160;
   filterNode.Q.value = 2.2;
   filterNode.connect(masterGain);
-  (window.__reverbInputs || []).forEach((d) => filterNode.connect(d));
-  delete window.__reverbInputs;
+  reverbInputs.forEach((d) => filterNode.connect(d));
 
   /* Drone oscillator bank — pentatonic minor, slightly detuned for beating */
   [
@@ -388,12 +402,13 @@
   });
 
   function update(frac) {
-    if (actx.state !== 'running') return; /* still suspended — wait for gesture */
+    /* If somehow still suspended, keep retrying */
+    if (actx.state !== 'running') { actx.resume(); return; }
 
     const speed = Math.abs(frac - prevFrac);
     prevFrac = frac;
 
-    /* Filter sweeps with scroll position (reverses when scrolling back up) */
+    /* Filter sweeps with scroll position — reverses when scrolling back up */
     filterNode.frequency.setTargetAtTime(160 + frac * 1100, actx.currentTime, 0.7);
 
     /* Volume tracks scroll speed, fades to quiet hum when still */
@@ -409,8 +424,7 @@
   }
 
   window.__scrollAudio = { update, actx };
-
-}());
+}
 
 
 /* ── SITE ENTRY OVERLAY ──────────────────────────────────── */
@@ -420,23 +434,19 @@
   if (!overlay || !btn) return;
 
   function enter() {
-    /* Button click IS the required user gesture — resume audio now */
-    const audio = window.__scrollAudio;
-    if (audio && audio.actx && audio.actx.state !== 'running') {
-      audio.actx.resume();
-    }
+    /* START AUDIO — AudioContext created here, inside gesture callback.
+       This is the only 100% reliable way to get audio on all browsers. */
+    startAudioEngine();
 
     /* Fade out the overlay */
     overlay.classList.add('out');
 
-    /* Float hero content in from below shortly after overlay starts fading */
+    /* Float hero children in from below shortly after overlay starts fading */
     setTimeout(() => {
       document.body.classList.remove('pre-entry');
-      /* Start counters as hero comes into view */
       if (window.__startCounters) window.__startCounters();
     }, 180);
 
-    /* Remove overlay from DOM after transition completes */
     setTimeout(() => overlay.remove(), 1100);
   }
 
