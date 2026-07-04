@@ -94,7 +94,8 @@ img { display: block; max-width: 100%; height: auto; }
   position: fixed;
   inset: 0;
   width: 100%;
-  height: 100%;
+  height: 100vh;   /* fallback */
+  height: 100svh;  /* stable: does not change when iOS address bar shows/hides */
   z-index: 0;
 }
 
@@ -189,11 +190,14 @@ img { display: block; max-width: 100%; height: auto; }
 .entry-btn i { font-size: 17px; }
 
 /* ── PRE-ENTRY FLOAT-IN STATE ────────────────────────────── */
+/* Animate nav (dock slides up from off-screen) and hero children
+   (each child floats up within the hero's bounds — avoids stats
+   ever appearing behind the dock during the transition). */
 nav,
-.hero {
+.hero > * {
   transition:
-    opacity  0.85s cubic-bezier(0.16, 1, 0.3, 1),
-    transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+    opacity  0.75s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 body.pre-entry nav {
@@ -201,9 +205,9 @@ body.pre-entry nav {
   transform: translateX(-50%) translateY(42px);
 }
 
-body.pre-entry .hero {
+body.pre-entry .hero > * {
   opacity: 0;
-  transform: translateY(56px);
+  transform: translateY(32px);
 }
 
 @media (max-width: 480px) {
