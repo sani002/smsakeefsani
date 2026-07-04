@@ -168,10 +168,15 @@
     }(performance.now()));
   }
 
-  /* Start all counters immediately on page load — 3 s to reach final value */
-  document.querySelectorAll('[data-count]').forEach((el) => {
-    animateCount(el, parseInt(el.dataset.count, 10), 3000);
-  });
+  /* Exposed so entry overlay can trigger counters at the exact right moment */
+  window.__startCounters = function () {
+    document.querySelectorAll('[data-count]').forEach((el) => {
+      animateCount(el, parseInt(el.dataset.count, 10), 3000);
+    });
+  };
+
+  /* Fallback: start immediately if there's no entry overlay in the DOM */
+  if (!document.getElementById('site-entry')) window.__startCounters();
 }());
 
 
@@ -410,22 +415,39 @@
 
 /* ── SITE ENTRY OVERLAY ──────────────────────────────────── */
 (function initEntry() {
-  const el = document.getElementById('site-entry');
-  if (!el) return;
+  const overlay = document.getElementById('site-entry');
+  const btn     = document.getElementById('entry-btn');
+  if (!overlay || !btn) return;
 
   function enter() {
-    /* This click IS the user gesture — resume audio immediately */
+    /* Button click IS the required user gesture — resume audio now */
     const audio = window.__scrollAudio;
     if (audio && audio.actx && audio.actx.state !== 'running') {
       audio.actx.resume();
     }
-    el.classList.add('out');
-    setTimeout(() => el.remove(), 950);
+
+    /* Fade out the overlay */
+    overlay.classList.add('out');
+
+    /* Float hero content in from below shortly after overlay starts fading */
+    setTimeout(() => {
+      document.body.classList.remove('pre-entry');
+      /* Start counters as hero comes into view */
+      if (window.__startCounters) window.__startCounters();
+    }, 180);
+
+    /* Remove overlay from DOM after transition completes */
+    setTimeout(() => overlay.remove(), 1100);
   }
 
-  el.addEventListener('click', enter, { once: true });
-  el.addEventListener('touchend', (e) => {
+  btn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    enter();
+  }, { once: true });
+
+  btn.addEventListener('touchend', (e) => {
     e.preventDefault();
+    e.stopPropagation();
     enter();
   }, { once: true, passive: false });
 }());
