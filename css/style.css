@@ -1363,8 +1363,8 @@ footer {
     left: 50%;
     right: unset;
     transform: translateX(-50%);
-    width: calc(100% - 40px);
-    max-width: 420px;
+    width: calc(100% - 32px);
+    max-width: 480px;
     padding: 10px 12px;
     /* iOS safe-area clearance for home indicator */
     padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px));
@@ -1374,15 +1374,31 @@ footer {
   }
 
   /* Hide elements that belong to the desktop pill */
-  .nav-logo      { display: none; }
   .nav-contact   { display: none; }
   .nav-hamburger { display: none; }
+
+  /* Sani logo — show on left of dock */
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px 10px;
+    font-size: 14px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    background: linear-gradient(135deg, var(--cyan), var(--violet));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-decoration: none;
+    flex-shrink: 0;
+  }
 
   /* Nav links — always visible, laid out as dock icons */
   .nav-links {
     display: flex;
     position: static;
-    width: 100%;
+    flex: 1;
     flex-direction: row;
     justify-content: space-around;
     align-items: center;
