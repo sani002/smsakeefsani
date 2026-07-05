@@ -336,106 +336,90 @@
 
 
 /* ── SCROLL AMBIENT AUDIO ENGINE ────────────────────────────
-   Quiet at rest. Rises with scroll speed. Never annoying.
-   Created inside gesture callback — running state guaranteed.
+   Called INSIDE the Resume button click handler.
+   Creating AudioContext inside a user gesture guarantees running
+   state on every browser — no resume() juggling, no suspended state.
 ─────────────────────────────────────────────────────────── */
 function startAudioEngine() {
-  if (window.__scrollAudio) return;
+  if (window.__scrollAudio) return; /* already running */
+
   const AC = window.AudioContext || window.webkitAudioContext;
   if (!AC) return;
 
+  /* Create context INSIDE gesture = starts in running state on all browsers */
   const actx = new AC();
 
-  /* iOS/Safari unlock: real tone for 50ms activates the audio session */
-  const unlockOsc  = actx.createOscillator();
-  const unlockGain = actx.createGain();
-  unlockOsc.frequency.value = 220;
-  unlockGain.gain.value = 0.001;
-  unlockOsc.connect(unlockGain);
-  unlockGain.connect(actx.destination);
-  unlockOsc.start();
-  unlockOsc.stop(actx.currentTime + 0.05);
+  /* Safari unlock: play a 1-sample silent buffer immediately */
+  const silentBuf = actx.createBuffer(1, 1, actx.sampleRate);
+  const silentSrc = actx.createBufferSource();
+  silentSrc.buffer = silentBuf;
+  silentSrc.connect(actx.destination);
+  silentSrc.start(0);
 
-  if (actx.state !== 'running') actx.resume();
-  actx.onstatechange = () => { if (actx.state !== 'running') actx.resume(); };
+  /* Belt-and-suspenders: force resume in case anything kept it suspended */
+  actx.resume();
 
-  /* ── MASTER OUTPUT — very quiet at rest ── */
-  const master = actx.createGain();
-  master.gain.value = 0.07;
-  master.connect(actx.destination);
+  let masterGain, filterNode, fadeTimer;
+  let prevFrac = 0;
 
-  /* ── REVERB — light comb delays ── */
-  const dry = actx.createGain(); dry.gain.value = 0.5; dry.connect(master);
-  const wet = actx.createGain(); wet.gain.value = 0.5; wet.connect(master);
+  masterGain = actx.createGain();
+  masterGain.gain.value = 0.06; /* quiet hum right away */
+  masterGain.connect(actx.destination);
+
+  /* Hall reverb — two comb delays in parallel */
   const reverbInputs = [];
-  [[0.9, 0.30], [1.4, 0.22], [2.0, 0.16]].forEach(([dt, fb]) => {
-    const d = actx.createDelay(3); d.delayTime.value = dt;
-    const g = actx.createGain();   g.gain.value = fb;
-    d.connect(g); g.connect(d); g.connect(wet);
+  const wetG = actx.createGain();
+  wetG.gain.value = 0.55;
+  wetG.connect(masterGain);
+  [[1.4, 0.42], [1.9, 0.36]].forEach(([dt, fb]) => {
+    const d = actx.createDelay(3.0); d.delayTime.value = dt;
+    const g = actx.createGain();     g.gain.value = fb;
+    d.connect(g); g.connect(d); g.connect(wetG);
     reverbInputs.push(d);
   });
 
-  /* ── SCROLL-DRIVEN FILTER ── */
-  const filter = actx.createBiquadFilter();
-  filter.type = 'lowpass';
-  filter.frequency.value = 300;
-  filter.Q.value = 3.5;
-  filter.connect(dry);
-  reverbInputs.forEach((d) => filter.connect(d));
+  filterNode = actx.createBiquadFilter();
+  filterNode.type = 'lowpass';
+  filterNode.frequency.value = 160;
+  filterNode.Q.value = 2.2;
+  filterNode.connect(masterGain);
+  reverbInputs.forEach((d) => filterNode.connect(d));
 
-  /* ── OSCILLATOR BANK — soft sine/triangle only ── */
+  /* Drone oscillator bank — pentatonic minor, slightly detuned for beating */
   [
-    [36.7,  0.18, 'sine',     0  ],
-    [73.4,  0.20, 'sine',     0  ],
-    [73.4,  0.12, 'sine',     +7 ],
-    [110.0, 0.15, 'sine',     0  ],
-    [146.8, 0.12, 'triangle', 0  ],
-    [174.6, 0.08, 'triangle', +4 ],
-    [220.0, 0.06, 'sine',     0  ],
-    [293.7, 0.03, 'sine',     +5 ],
-  ].forEach(([hz, amp, type, det]) => {
+    [41.2, 0.13], [55.0, 0.11], [65.4, 0.08], [82.4, 0.07],
+    [98.0, 0.05], [110.0, 0.04], [130.8, 0.03], [220.0, 0.015],
+  ].forEach(([hz, amp], i) => {
     const osc = actx.createOscillator();
     const g   = actx.createGain();
-    osc.type  = type;
+    osc.type = i % 3 === 0 ? 'triangle' : 'sine';
     osc.frequency.value = hz;
-    osc.detune.value    = det + (Math.random() - 0.5) * 4;
+    osc.detune.value    = (Math.random() - 0.5) * 10;
     g.gain.value = amp;
     osc.connect(g);
-    g.connect(filter);
+    g.connect(filterNode);
     osc.start();
   });
 
-  /* ── SLOW LFO — subtle breath feel ── */
-  const lfo     = actx.createOscillator();
-  const lfoGain = actx.createGain();
-  lfo.frequency.value = 0.10;
-  lfoGain.gain.value  = 0.03;
-  lfo.connect(lfoGain);
-  lfoGain.connect(master.gain);
-  lfo.start();
-
-  /* ── UPDATE — called on every scroll frame ── */
-  let prevFrac  = 0;
-  let fadeTimer = null;
-
   function update(frac) {
+    /* If somehow still suspended, keep retrying */
     if (actx.state !== 'running') { actx.resume(); return; }
 
     const speed = Math.abs(frac - prevFrac);
     prevFrac = frac;
-    const t = actx.currentTime;
 
-    filter.frequency.setTargetAtTime(300 + frac * 1500, t, 0.5);
-    filter.Q.setTargetAtTime(2.5 + Math.sin(frac * Math.PI) * 2, t, 1.0);
+    /* Filter sweeps with scroll position — reverses when scrolling back up */
+    filterNode.frequency.setTargetAtTime(160 + frac * 1100, actx.currentTime, 0.7);
 
-    if (speed > 0.0003) {
+    /* Volume tracks scroll speed, fades to quiet hum when still */
+    if (speed > 0.0004) {
       clearTimeout(fadeTimer);
-      const vol = Math.min(0.38, speed * 200 + 0.12);
-      master.gain.setTargetAtTime(vol, t, 0.08);
-
+      masterGain.gain.setTargetAtTime(
+        Math.min(0.38, speed * 120 + 0.08), actx.currentTime, 0.12
+      );
       fadeTimer = setTimeout(() => {
-        master.gain.setTargetAtTime(0.07, actx.currentTime, 2.5);
-      }, 400);
+        masterGain.gain.setTargetAtTime(0.05, actx.currentTime, 1.6);
+      }, 280);
     }
   }
 
@@ -466,17 +450,14 @@ function startAudioEngine() {
     setTimeout(() => overlay.remove(), 1100);
   }
 
-  let entered = false;
-  function onEnterGesture(e) {
-    if (entered) return;
-    entered = true;
+  btn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    enter();
+  }, { once: true });
+
+  btn.addEventListener('touchend', (e) => {
     e.preventDefault();
     e.stopPropagation();
     enter();
-  }
-
-  /* pointerdown fires first in the touch chain and preserves gesture context on iOS */
-  btn.addEventListener('pointerdown', onEnterGesture, { once: true, passive: false });
-  /* click as fallback for non-pointer browsers */
-  btn.addEventListener('click', (e) => { if (!entered) onEnterGesture(e); }, { once: true });
+  }, { once: true, passive: false });
 }());

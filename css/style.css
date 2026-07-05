@@ -1363,8 +1363,8 @@ footer {
     left: 50%;
     right: unset;
     transform: translateX(-50%);
-    width: calc(100% - 32px);
-    max-width: 480px;
+    width: calc(100% - 40px);
+    max-width: 420px;
     padding: 10px 12px;
     /* iOS safe-area clearance for home indicator */
     padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px));
@@ -1374,31 +1374,15 @@ footer {
   }
 
   /* Hide elements that belong to the desktop pill */
+  .nav-logo      { display: none; }
   .nav-contact   { display: none; }
   .nav-hamburger { display: none; }
-
-  /* Sani logo — show on left of dock */
-  .nav-logo {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 4px 8px;
-    font-size: 13px;
-    font-weight: 800;
-    letter-spacing: -0.02em;
-    background: linear-gradient(135deg, var(--cyan), var(--violet));
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    text-decoration: none;
-    flex-shrink: 0;
-  }
 
   /* Nav links — always visible, laid out as dock icons */
   .nav-links {
     display: flex;
     position: static;
-    flex: 1;
+    width: 100%;
     flex-direction: row;
     justify-content: space-around;
     align-items: center;
@@ -1418,8 +1402,8 @@ footer {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 2px;
-    padding: 4px 7px;
+    gap: 3px;
+    padding: 5px 10px;
     border-radius: 14px;
     font-size: 8px;
     font-weight: 600;
@@ -1436,9 +1420,9 @@ footer {
     transform: translateY(-3px);  /* subtle dock-lift */
   }
 
-  /* Icons: slightly smaller so Sani + 5 items all fit */
-  .nav-link-icon  { display: block; font-size: 19px; line-height: 1; }
-  .nav-link-label { display: block; font-size: 7px; }
+  /* Icons: visible and large on mobile */
+  .nav-link-icon  { display: block; font-size: 22px; line-height: 1; }
+  .nav-link-label { display: block; }
 
   /* Hero — no top-nav offset; add bottom clearance for the dock */
   .hero { padding: 40px 20px 100px; }
