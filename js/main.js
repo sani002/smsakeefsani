@@ -366,7 +366,7 @@ function startAudioEngine() {
   actx.resume();
 
   const masterGain = actx.createGain();
-  masterGain.gain.value = 0.65; /* each click has its own envelope, so this just sets overall level */
+  masterGain.gain.value = 0.6; /* each click has its own envelope, so this just sets overall level */
 
   /* Limiter so overlapping ticks during a fast flick never clip/distort */
   const limiter = actx.createDynamicsCompressor();
@@ -394,7 +394,7 @@ function startAudioEngine() {
     noise.buffer = noiseBuffer;
     const lp = actx.createBiquadFilter();
     lp.type = 'lowpass';
-    lp.frequency.value = 260 + (Math.random() - 0.5) * 60;
+    lp.frequency.value = 180 + (Math.random() - 0.5) * 60;
     lp.Q.value = 1.1;
     const tickGain = actx.createGain();
     tickGain.gain.setValueAtTime(0.0001, now);
