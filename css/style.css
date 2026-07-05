@@ -1382,8 +1382,8 @@ footer {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 5px 10px;
-    font-size: 14px;
+    padding: 4px 8px;
+    font-size: 13px;
     font-weight: 800;
     letter-spacing: -0.02em;
     background: linear-gradient(135deg, var(--cyan), var(--violet));
@@ -1418,8 +1418,8 @@ footer {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 3px;
-    padding: 5px 10px;
+    gap: 2px;
+    padding: 4px 7px;
     border-radius: 14px;
     font-size: 8px;
     font-weight: 600;
@@ -1436,9 +1436,9 @@ footer {
     transform: translateY(-3px);  /* subtle dock-lift */
   }
 
-  /* Icons: visible and large on mobile */
-  .nav-link-icon  { display: block; font-size: 22px; line-height: 1; }
-  .nav-link-label { display: block; }
+  /* Icons: slightly smaller so Sani + 5 items all fit */
+  .nav-link-icon  { display: block; font-size: 19px; line-height: 1; }
+  .nav-link-label { display: block; font-size: 7px; }
 
   /* Hero — no top-nav offset; add bottom clearance for the dock */
   .hero { padding: 40px 20px 100px; }

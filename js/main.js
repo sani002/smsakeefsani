@@ -336,9 +336,8 @@
 
 
 /* ── SCROLL AMBIENT AUDIO ENGINE ────────────────────────────
-   Called INSIDE the Resume button handler — AudioContext created
-   inside a user gesture = running state guaranteed on all platforms.
-   Designed to be immediately audible, scroll-reactive, and mysterious.
+   Quiet at rest. Rises with scroll speed. Never annoying.
+   Created inside gesture callback — running state guaranteed.
 ─────────────────────────────────────────────────────────── */
 function startAudioEngine() {
   if (window.__scrollAudio) return;
@@ -347,117 +346,73 @@ function startAudioEngine() {
 
   const actx = new AC();
 
-  /* ── MOBILE UNLOCK: play 1-sample silent buffer immediately (Safari/iOS) ── */
-  const silentBuf = actx.createBuffer(1, 1, actx.sampleRate);
-  const silentSrc = actx.createBufferSource();
-  silentSrc.buffer = silentBuf;
-  silentSrc.connect(actx.destination);
-  silentSrc.start(0);
+  /* iOS/Safari unlock: real tone for 50ms activates the audio session */
+  const unlockOsc  = actx.createOscillator();
+  const unlockGain = actx.createGain();
+  unlockOsc.frequency.value = 220;
+  unlockGain.gain.value = 0.001;
+  unlockOsc.connect(unlockGain);
+  unlockGain.connect(actx.destination);
+  unlockOsc.start();
+  unlockOsc.stop(actx.currentTime + 0.05);
 
-  /* Aggressive resume: retry every 400ms until running (mobile robustness) */
-  function ensureRunning() { if (actx.state !== 'running') actx.resume(); }
-  ensureRunning();
-  actx.onstatechange = ensureRunning;
-  let retryCount = 0;
-  const retryId = setInterval(() => {
-    ensureRunning();
-    if (actx.state === 'running' || ++retryCount > 25) clearInterval(retryId);
-  }, 400);
+  if (actx.state !== 'running') actx.resume();
+  actx.onstatechange = () => { if (actx.state !== 'running') actx.resume(); };
 
-  /* ── MASTER OUTPUT ── */
+  /* ── MASTER OUTPUT — very quiet at rest ── */
   const master = actx.createGain();
-  master.gain.value = 0.28;          /* audible from the first moment */
+  master.gain.value = 0.07;
   master.connect(actx.destination);
 
-  /* ── SPACIOUS REVERB ── */
-  /* Dry path */
-  const dry = actx.createGain(); dry.gain.value = 0.45; dry.connect(master);
-  /* Wet path */
-  const wet = actx.createGain(); wet.gain.value = 0.55; wet.connect(master);
-  /* Long comb delays for cavernous hall tail */
+  /* ── REVERB — light comb delays ── */
+  const dry = actx.createGain(); dry.gain.value = 0.5; dry.connect(master);
+  const wet = actx.createGain(); wet.gain.value = 0.5; wet.connect(master);
   const reverbInputs = [];
-  [[1.1, 0.38], [1.7, 0.30], [2.3, 0.24], [2.9, 0.18]].forEach(([dt, fb]) => {
-    const d = actx.createDelay(3.5); d.delayTime.value = dt;
-    const g = actx.createGain();     g.gain.value = fb;
+  [[0.9, 0.30], [1.4, 0.22], [2.0, 0.16]].forEach(([dt, fb]) => {
+    const d = actx.createDelay(3); d.delayTime.value = dt;
+    const g = actx.createGain();   g.gain.value = fb;
     d.connect(g); g.connect(d); g.connect(wet);
     reverbInputs.push(d);
   });
 
-  /* ── SCROLL-DRIVEN FILTER (main control) ── */
+  /* ── SCROLL-DRIVEN FILTER ── */
   const filter = actx.createBiquadFilter();
   filter.type = 'lowpass';
-  filter.frequency.value = 420;      /* starts partially open — audible immediately */
-  filter.Q.value = 4.0;              /* resonant peak = mysterious, musical */
+  filter.frequency.value = 300;
+  filter.Q.value = 3.5;
   filter.connect(dry);
   reverbInputs.forEach((d) => filter.connect(d));
 
-  /* ── OSCILLATOR BANK — D minor pentatonic, rich harmonics ── */
-  /* Sawtooth waves for brightness & audibility; detuned pairs for chorus beating */
+  /* ── OSCILLATOR BANK — soft sine/triangle only ── */
   [
-    /* [freq Hz, amp, type, detune cents] */
-    [36.7,  0.20, 'sine',     0   ],  /* D1 — sub foundation */
-    [73.4,  0.22, 'sawtooth', 0   ],  /* D2 — main bass drone */
-    [73.4,  0.14, 'sawtooth', +7  ],  /* D2 detuned — chorus beating */
-    [110.0, 0.18, 'sawtooth', 0   ],  /* A2 — 5th */
-    [110.0, 0.10, 'sawtooth', -6  ],  /* A2 detuned */
-    [146.8, 0.14, 'triangle', 0   ],  /* D3 */
-    [174.6, 0.10, 'triangle', +4  ],  /* F3 — minor 3rd, gives darkness */
-    [196.0, 0.08, 'triangle', 0   ],  /* G3 */
-    [220.0, 0.07, 'sine',     0   ],  /* A3 */
-    [293.7, 0.04, 'sine',     +5  ],  /* D4 — shimmer */
-    [440.0, 0.018,'sine',     0   ],  /* A4 — air */
+    [36.7,  0.18, 'sine',     0  ],
+    [73.4,  0.20, 'sine',     0  ],
+    [73.4,  0.12, 'sine',     +7 ],
+    [110.0, 0.15, 'sine',     0  ],
+    [146.8, 0.12, 'triangle', 0  ],
+    [174.6, 0.08, 'triangle', +4 ],
+    [220.0, 0.06, 'sine',     0  ],
+    [293.7, 0.03, 'sine',     +5 ],
   ].forEach(([hz, amp, type, det]) => {
     const osc = actx.createOscillator();
     const g   = actx.createGain();
     osc.type  = type;
     osc.frequency.value = hz;
-    osc.detune.value    = det + (Math.random() - 0.5) * 6; /* add tiny drift */
+    osc.detune.value    = det + (Math.random() - 0.5) * 4;
     g.gain.value = amp;
     osc.connect(g);
     g.connect(filter);
     osc.start();
   });
 
-  /* ── SLOW LFO tremolo — makes static sound feel alive ── */
+  /* ── SLOW LFO — subtle breath feel ── */
   const lfo     = actx.createOscillator();
   const lfoGain = actx.createGain();
-  lfo.frequency.value = 0.12;        /* one tremolo cycle every ~8 seconds */
-  lfoGain.gain.value  = 0.06;        /* ±6% amplitude variation */
+  lfo.frequency.value = 0.10;
+  lfoGain.gain.value  = 0.03;
   lfo.connect(lfoGain);
   lfoGain.connect(master.gain);
   lfo.start();
-
-  /* ── SCROLL WHOOSH — white-noise burst on fast scroll ── */
-  /* Pre-build a 3-second white noise buffer, re-used for every whoosh */
-  const noiseBuf  = actx.createBuffer(1, actx.sampleRate * 3, actx.sampleRate);
-  const noiseData = noiseBuf.getChannelData(0);
-  for (let i = 0; i < noiseData.length; i++) noiseData[i] = Math.random() * 2 - 1;
-
-  const whooshGain = actx.createGain();
-  whooshGain.gain.value = 0;
-  whooshGain.connect(master);
-
-  const whooshFilter = actx.createBiquadFilter();
-  whooshFilter.type = 'bandpass';
-  whooshFilter.frequency.value = 600;
-  whooshFilter.Q.value = 0.7;
-  whooshFilter.connect(whooshGain);
-
-  let whooshSrc = null;
-  function triggerWhoosh(frac) {
-    if (whooshSrc) { try { whooshSrc.stop(); } catch (_) {} }
-    whooshSrc = actx.createBufferSource();
-    whooshSrc.buffer = noiseBuf;
-    whooshSrc.connect(whooshFilter);
-    whooshSrc.start();
-    /* Filter sweeps high → low (like wind passing) */
-    const t = actx.currentTime;
-    whooshFilter.frequency.setValueAtTime(800 + frac * 800, t);
-    whooshFilter.frequency.setTargetAtTime(200, t + 0.05, 0.15);
-    whooshGain.gain.setValueAtTime(0.22, t);
-    whooshGain.gain.setTargetAtTime(0, t + 0.08, 0.18);
-    setTimeout(() => { try { whooshSrc.stop(); } catch (_) {} }, 600);
-  }
 
   /* ── UPDATE — called on every scroll frame ── */
   let prevFrac  = 0;
@@ -470,24 +425,17 @@ function startAudioEngine() {
     prevFrac = frac;
     const t = actx.currentTime;
 
-    /* Filter: 420Hz (top, mysterious) → 2600Hz (bottom, intense, open) */
-    filter.frequency.setTargetAtTime(420 + frac * 2180, t, 0.45);
-    /* Q resonance peaks in the middle of the page for drama */
-    filter.Q.setTargetAtTime(3 + Math.sin(frac * Math.PI) * 4.5, t, 0.9);
+    filter.frequency.setTargetAtTime(300 + frac * 1500, t, 0.5);
+    filter.Q.setTargetAtTime(2.5 + Math.sin(frac * Math.PI) * 2, t, 1.0);
 
-    if (speed > 0.0002) {
+    if (speed > 0.0003) {
       clearTimeout(fadeTimer);
-      /* Volume: louder the faster you scroll */
-      const vol = Math.min(0.6, speed * 280 + 0.22);
-      master.gain.setTargetAtTime(vol, t, 0.07);
+      const vol = Math.min(0.38, speed * 200 + 0.12);
+      master.gain.setTargetAtTime(vol, t, 0.08);
 
-      /* Whoosh on sharp, fast movement */
-      if (speed > 0.003) triggerWhoosh(frac);
-
-      /* Fade back to ambient hum after stillness */
       fadeTimer = setTimeout(() => {
-        master.gain.setTargetAtTime(0.18, actx.currentTime, 2.2);
-      }, 260);
+        master.gain.setTargetAtTime(0.07, actx.currentTime, 2.5);
+      }, 400);
     }
   }
 
@@ -518,14 +466,17 @@ function startAudioEngine() {
     setTimeout(() => overlay.remove(), 1100);
   }
 
-  btn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    enter();
-  }, { once: true });
-
-  btn.addEventListener('touchend', (e) => {
+  let entered = false;
+  function onEnterGesture(e) {
+    if (entered) return;
+    entered = true;
     e.preventDefault();
     e.stopPropagation();
     enter();
-  }, { once: true, passive: false });
+  }
+
+  /* pointerdown fires first in the touch chain and preserves gesture context on iOS */
+  btn.addEventListener('pointerdown', onEnterGesture, { once: true, passive: false });
+  /* click as fallback for non-pointer browsers */
+  btn.addEventListener('click', (e) => { if (!entered) onEnterGesture(e); }, { once: true });
 }());
