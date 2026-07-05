@@ -369,7 +369,7 @@ function startAudioEngine() {
   /* Hall reverb — two comb delays in parallel */
   const reverbInputs = [];
   const wetG = actx.createGain();
-  wetG.gain.value = 0.55;
+  wetG.gain.value = 0.9;
   wetG.connect(masterGain);
   [[1.4, 0.42], [1.9, 0.36]].forEach(([dt, fb]) => {
     const d = actx.createDelay(3.0); d.delayTime.value = dt;
