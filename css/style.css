@@ -99,6 +99,16 @@ img { display: block; max-width: 100%; height: auto; }
   z-index: 0;
 }
 
+/* ── iOS audio-unlock video (hidden) ─────────────────────── */
+#ios-audio-unlock {
+  position: fixed;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+  left: -9999px;
+}
+
 /* ── SITE ENTRY OVERLAY ──────────────────────────────────── */
 #site-entry {
   position: fixed;

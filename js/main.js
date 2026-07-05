@@ -335,10 +335,16 @@
 }());
 
 
-/* ── SCROLL AMBIENT AUDIO ENGINE ────────────────────────────
+/* ── SCROLL CLICK-WHEEL AUDIO ENGINE ────────────────────────
    Called INSIDE the Resume button click handler.
    Creating AudioContext inside a user gesture guarantees running
    state on every browser — no resume() juggling, no suspended state.
+
+   Emulates a mechanical rotary encoder (Apple Watch digital-crown
+   style): a fixed number of "detents" span the whole page, so a
+   soft tick fires per unit of scroll distance — not a continuous
+   tone. Scrolling faster naturally produces a quicker train of
+   ticks, and it's silent in between, same as a real click-wheel.
 ─────────────────────────────────────────────────────────── */
 function startAudioEngine() {
   if (window.__scrollAudio) return; /* already running */
@@ -359,71 +365,104 @@ function startAudioEngine() {
   /* Belt-and-suspenders: force resume in case anything kept it suspended */
   actx.resume();
 
-  let masterGain, filterNode, fadeTimer;
-  let prevFrac = 0;
+  const masterGain = actx.createGain();
+  masterGain.gain.value = 0.65; /* each click has its own envelope, so this just sets overall level */
 
-  masterGain = actx.createGain();
-  masterGain.gain.value = 0.06; /* quiet hum right away */
-  masterGain.connect(actx.destination);
+  /* Limiter so overlapping ticks during a fast flick never clip/distort */
+  const limiter = actx.createDynamicsCompressor();
+  limiter.threshold.value = -10;
+  limiter.knee.value      = 12;
+  limiter.ratio.value     = 14;
+  limiter.attack.value    = 0.002;
+  limiter.release.value   = 0.08;
+  masterGain.connect(limiter);
+  limiter.connect(actx.destination);
 
-  /* Hall reverb — two comb delays in parallel */
-  const reverbInputs = [];
-  const wetG = actx.createGain();
-  wetG.gain.value = 0.9;
-  wetG.connect(masterGain);
-  [[1.4, 0.42], [1.9, 0.36]].forEach(([dt, fb]) => {
-    const d = actx.createDelay(3.0); d.delayTime.value = dt;
-    const g = actx.createGain();     g.gain.value = fb;
-    d.connect(g); g.connect(d); g.connect(wetG);
-    reverbInputs.push(d);
-  });
+  /* One reusable noise burst, re-triggered (not re-generated) per click */
+  const NOISE_DUR = 0.07;
+  const noiseBuffer = actx.createBuffer(1, Math.ceil(actx.sampleRate * NOISE_DUR), actx.sampleRate);
+  const noiseData = noiseBuffer.getChannelData(0);
+  for (let i = 0; i < noiseData.length; i++) noiseData[i] = Math.random() * 2 - 1;
 
-  filterNode = actx.createBiquadFilter();
-  filterNode.type = 'lowpass';
-  filterNode.frequency.value = 160;
-  filterNode.Q.value = 2.2;
-  filterNode.connect(masterGain);
-  reverbInputs.forEach((d) => filterNode.connect(d));
+  function playClick(intensity) {
+    const now = actx.currentTime;
+    const amp = Math.min(1, Math.max(0.16, intensity));
 
-  /* Drone oscillator bank — pentatonic minor, slightly detuned for beating */
-  [
-    [41.2, 0.13], [55.0, 0.11], [65.4, 0.08], [82.4, 0.07],
-    [98.0, 0.05], [110.0, 0.04], [130.8, 0.03], [220.0, 0.015],
-  ].forEach(([hz, amp], i) => {
+    /* Low, buzzy "grit" — noise heavily lowpassed so it reads as a soft
+       rumble/texture rather than a bright click */
+    const noise = actx.createBufferSource();
+    noise.buffer = noiseBuffer;
+    const lp = actx.createBiquadFilter();
+    lp.type = 'lowpass';
+    lp.frequency.value = 260 + (Math.random() - 0.5) * 60;
+    lp.Q.value = 1.1;
+    const tickGain = actx.createGain();
+    tickGain.gain.setValueAtTime(0.0001, now);
+    tickGain.gain.linearRampToValueAtTime(amp * 0.32, now + 0.002);
+    tickGain.gain.exponentialRampToValueAtTime(0.0005, now + 0.05);
+    noise.connect(lp);
+    lp.connect(tickGain);
+    tickGain.connect(masterGain);
+    noise.start(now);
+    noise.stop(now + NOISE_DUR);
+
+    /* Low sine "buzz" body — sits in the ~110-150Hz range where a phone
+       speaker/chassis physically buzzes, so it reads as vibration rather
+       than a tone. This is the dominant part of the click now. */
     const osc = actx.createOscillator();
-    const g   = actx.createGain();
-    osc.type = i % 3 === 0 ? 'triangle' : 'sine';
-    osc.frequency.value = hz;
-    osc.detune.value    = (Math.random() - 0.5) * 10;
-    g.gain.value = amp;
-    osc.connect(g);
-    g.connect(filterNode);
-    osc.start();
-  });
+    osc.type = 'sine';
+    osc.frequency.value = 130 + (Math.random() - 0.5) * 20;
+    const bodyGain = actx.createGain();
+    bodyGain.gain.setValueAtTime(0.0001, now);
+    bodyGain.gain.linearRampToValueAtTime(amp * 0.55, now + 0.002);
+    bodyGain.gain.exponentialRampToValueAtTime(0.0005, now + 0.065);
+    osc.connect(bodyGain);
+    bodyGain.connect(masterGain);
+    osc.start(now);
+    osc.stop(now + 0.08);
+  }
+
+  const DETENTS = 140;       /* clicks across the full page scroll */
+  const STEP = 1 / DETENTS;
+  let accum = 0;
+  let prevFrac = 0;
 
   function update(frac) {
     /* If somehow still suspended, keep retrying */
     if (actx.state !== 'running') { actx.resume(); return; }
 
-    const speed = Math.abs(frac - prevFrac);
+    const delta = frac - prevFrac;
     prevFrac = frac;
+    accum += Math.abs(delta);
 
-    /* Filter sweeps with scroll position — reverses when scrolling back up */
-    filterNode.frequency.setTargetAtTime(160 + frac * 1100, actx.currentTime, 0.7);
+    const intensity = Math.min(1, 0.28 + Math.abs(delta) * 260);
 
-    /* Volume tracks scroll speed, fades to quiet hum when still */
-    if (speed > 0.0004) {
-      clearTimeout(fadeTimer);
-      masterGain.gain.setTargetAtTime(
-        Math.min(0.38, speed * 120 + 0.08), actx.currentTime, 0.12
-      );
-      fadeTimer = setTimeout(() => {
-        masterGain.gain.setTargetAtTime(0.05, actx.currentTime, 1.6);
-      }, 280);
+    let fired = 0;
+    while (accum >= STEP && fired < 8) {
+      playClick(intensity);
+      accum -= STEP;
+      fired++;
     }
   }
 
   window.__scrollAudio = { update, actx };
+}
+
+
+/* ── iOS SILENT-SWITCH AUDIO UNLOCK ─────────────────────────
+   iOS Safari mutes the Web Audio API whenever the hardware
+   ring/silent switch is flipped to silent — but that mute does
+   NOT apply to <video> elements with a real audio track. Playing
+   one (even hidden/inaudible) switches the page's audio session
+   so the ambient engine above stays audible with the switch on.
+─────────────────────────────────────────────────────────── */
+function unlockIOSAudio() {
+  const el = document.getElementById('ios-audio-unlock');
+  if (!el || window.__iosAudioUnlocked) return;
+  window.__iosAudioUnlocked = true;
+  el.volume = 0.01;
+  const p = el.play();
+  if (p && p.catch) p.catch(() => { window.__iosAudioUnlocked = false; });
 }
 
 
@@ -437,6 +476,7 @@ function startAudioEngine() {
     /* START AUDIO — AudioContext created here, inside gesture callback.
        This is the only 100% reliable way to get audio on all browsers. */
     startAudioEngine();
+    unlockIOSAudio();
 
     /* Fade out the overlay */
     overlay.classList.add('out');

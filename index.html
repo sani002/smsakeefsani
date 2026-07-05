@@ -140,6 +140,12 @@
     </div>
   </div>
 
+  <!-- iOS audio unlock: playing a <video> (not <audio>) with a real audio
+       track routes the page's audio session around the hardware mute
+       switch, so the Web Audio ambient engine below stays audible even
+       when the iPhone's silent switch is on. Muted visually, kept tiny. -->
+  <video id="ios-audio-unlock" src="assets/audio/ios-unlock.mp4" playsinline loop preload="auto" aria-hidden="true"></video>
+
   <!-- Fixed background layers -->
   <canvas id="scroll-canvas" aria-hidden="true"></canvas>
   <div id="canvas-overlay" aria-hidden="true"></div>
