@@ -1,0 +1,288 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage{latexsym}
+\usepackage[empty]{fullpage}
+\usepackage{titlesec}
+\usepackage{marvosym}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{verbatim}
+\usepackage{enumitem}
+\usepackage[pdftex,colorlinks=true,urlcolor=NavyBlue,linkcolor=NavyBlue]{hyperref}
+\usepackage{fancyhdr}
+\usepackage{xcolor}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyfoot{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+% Adjust margins
+\addtolength{\oddsidemargin}{-0.530in}
+\addtolength{\evensidemargin}{-0.375in}
+\addtolength{\textwidth}{1in}
+\addtolength{\topmargin}{-.45in}
+\addtolength{\textheight}{1in}
+
+\urlstyle{rm}
+\raggedbottom
+\raggedright
+\setlength{\tabcolsep}{0in}
+
+% ---- Color Definitions ----
+\definecolor{accentblue}{RGB}{10, 70, 160}
+\definecolor{metricbg}{RGB}{237, 242, 251}
+\definecolor{sectiongray}{RGB}{30, 30, 30}
+
+% ---- Section Formatting ----
+\titleformat{\section}{
+  \vspace{-9pt}\scshape\raggedright\large\color{sectiongray}
+}{}{0em}{}[\color{accentblue}\titlerule\vspace{-6pt}]
+
+% ---- Custom Commands ----
+\newcommand{\resumeItem}[2]{
+  \item\small{
+    \textbf{#1}{: #2 \vspace{-2pt}}
+  }
+}
+
+\newcommand{\resumeSubheading}[4]{
+  \vspace{-1pt}\item
+    \begin{tabular*}{0.97\textwidth}{l@{\extracolsep{\fill}}r}
+      \textbf{#1} & \small #2 \\
+      \textit{\small #3} & \textit{\small #4} \\
+    \end{tabular*}\vspace{-5pt}
+}
+
+\newcommand{\resumeSubItem}[2]{\resumeItem{#1}{#2}\vspace{-3pt}}
+
+\renewcommand{\labelitemii}{$\circ$}
+
+\newcommand{\resumeSubHeadingListStart}{\begin{itemize}[leftmargin=*]}
+\newcommand{\resumeSubHeadingListEnd}{\end{itemize}}
+\newcommand{\resumeItemListStart}{\begin{itemize}}
+\newcommand{\resumeItemListEnd}{\end{itemize}\vspace{-5pt}}
+
+% ---- Helper: Research Metric Pill ----
+\newcommand{\metric}[2]{\textbf{#1}~{\small #2}}
+
+%%%%%%  CV STARTS HERE  %%%%%%
+\begin{document}
+
+%----------HEADING-----------------
+\begin{center}
+  {\LARGE\textbf{S. M. Sakeef Sani}}
+\end{center}
+\vspace{-6pt}
+\begin{center}
+  \small
+  \href{mailto:sani.sani00740@gmail.com}{sani.sani00740@gmail.com}~$|$~%
+  +880-187-4890-491~$|$~%
+  \href{https://smsakeefsani.hbitcorp.com}{smsakeefsani.hbitcorp.com}~$|$~%
+  \href{https://github.com/sani002}{github.com/sani002}~$|$~%
+  \href{https://scholar.google.com/citations?user=Yd_jx4AAAAAJ&hl=en}{Google Scholar}
+\end{center}
+
+\vspace{3pt}
+
+%----------RESEARCH IMPACT BAR-----------------
+\noindent\fcolorbox{accentblue}{metricbg}{%
+  \parbox{\dimexpr\linewidth-2\fboxsep-2\fboxrule\relax}{%
+    \centering\small
+    \textsc{\textbf{Research Impact}} \quad\textbf{---}\quad
+    \metric{10}{Publications}~~%
+    $\cdot$~~\metric{502}{Citations}~~%
+    $\cdot$~~\metric{h-index: 5}{}~~%
+    $\cdot$~~\metric{i10-index: 3}{}~~%
+    $\cdot$~~{\footnotesize\textit{Source: Google Scholar}}
+  }%
+}
+
+\vspace{2pt}
+
+%-----------EDUCATION (moved to later)-----------------
+% Education block defined here, inserted after Projects
+\newcommand{\educationblock}{%
+\section{Education}
+  \resumeSubHeadingListStart
+    \resumeSubheading
+      {Bangladesh University of Engineering and Technology (BUET)}{Dhaka, Bangladesh}
+      {Bachelor of Science in Biomedical Engineering}{2020 -- 2025}
+    \vspace{1pt}
+    \begin{tabular*}{0.955\textwidth}{l@{\extracolsep{\fill}}r}
+      {\scriptsize\textit{Courses: Machine Learning, Artificial Intelligence, Deep Learning, Biomedical Imaging, Data Structures}}
+      & {\scriptsize\textit{CGPA: 3.57\,/\,4.00}} \\
+    \end{tabular*}
+  \resumeSubHeadingListEnd
+}
+
+%-----------EXPERIENCE-----------------
+\section{Experience}
+  \resumeSubHeadingListStart
+
+    % --- Hinton Bit Corp ---
+    \resumeSubheading{Hinton Bit Corp}{Dhaka, Bangladesh}
+    {Co-founder \& Director of Operations}{2026 -- Present}
+    \resumeItemListStart
+      \resumeItem{RAVEN --- Bangladesh's First National OSINT Platform}
+        {Conceived, led a cross-functional engineering team, and delivered \textbf{RAVEN} ---
+         Bangladesh's \textbf{first open-source intelligence (OSINT) platform}, now in active
+         operational use by national Law Enforcement Agencies. An \textbf{8-module} end-to-end
+         intelligence suite actively deployed with national law enforcement agencies, covering: real-time social media monitoring
+         with AI-graded post \& sentiment analysis; virality \& trend detection; autonomous
+         LLM-powered event watchtower; deepfake \& AI-media forensics with manipulation
+         heatmaps; agentic multi-tool claim-origin investigation; face detection/recognition;
+         NID-linked identity dossiers; and 3-hop relationship network mapping.}
+      \resumeItem{Enterprise \& Government Solutions}
+        {Delivers mission-critical software, data \& AI systems, and compute infrastructure
+         (GPU provisioning, server deployment, network hardening) for government and
+         private-sector clients alongside globally renowned technology partners.}
+      \resumeItem{Product Portfolio Leadership}
+        {Drives strategy and end-to-end delivery across: \textbf{RAVEN} (national security
+         intelligence), \textbf{Citizen Portal} (AI-powered complaint \& case management for
+         public agencies, with WhatsApp bot intake and immutable audit trails), and
+         \textbf{LMSMate} (white-label EdTech platform with live classes, AI quizzes, and
+         local payments).}
+    \resumeItemListEnd
+
+    \vspace{-5pt}
+
+    % --- BAT ---
+    \resumeSubheading{British American Tobacco}{Bangladesh}
+    {Territory Officer}{2025 -- 2026}
+    \resumeItemListStart
+      \resumeItem{Distribution Analytics}
+        {Managed a \textbf{420 Mn BDT} annual distribution network; designed an innovative
+         rural coverage model for remote `Char' regions using satellite imagery, geographic
+         data, and ROI analytics.}
+      \resumeItem{Shipment Automation Application}
+        {Engineered a real-time automated shipment application for route-to-market
+         efficiency, improving distributor performance tracking across the territory.}
+    \resumeItemListEnd
+
+    \vspace{-5pt}
+
+    % --- mHealth Lab ---
+    \resumeSubheading{mHealth Lab, BUET}{Dhaka, Bangladesh}
+    {Research Engineer \normalfont{\small$\cdot$ Youngest recruit; joined in sophomore year}}{2021 -- 2025}
+    \resumeItemListStart
+      \resumeItem{mLabLLM \normalfont{\small[\textit{Published, AAAI 2025}]}}
+        {Core contributor to \textbf{mLabLLM} --- a fine-tuned LLaMA~3.2 model achieving
+         \textbf{82.8\% Top-3 accuracy} for differential diagnosis of Dengue, Malaria, and
+         Chikungunya via Bayesian reasoning, LoRA, and model pruning. Published at
+         \textit{AAAI 2025}.}
+      \resumeItem{Real-time Physiological Data Collector}
+        {Designed and deployed a Raspberry Pi--based real-time physiological data collection
+         system for field deployment in low-resource clinical settings.}
+      \resumeItem{3D Landmarks from Sparse 2D Video}
+        {Developed a pipeline to reconstruct 3D anatomical landmarks from sparse 2D video,
+         improving imaging accuracy under low-compute constraints.}
+    \resumeItemListEnd
+
+    \vspace{-5pt}
+
+    % --- PakhiDrone ---
+    \resumeSubheading{PakhiDrone BD}{Bangladesh}
+    {Founder \& Chief Marketing and Licensing Officer (CMLO)}{2023 -- 2024}
+    \resumeItemListStart
+      \resumeItem{Agro-Drone for Precision Farming}
+        {Founded and led development of an agro-drone tailored for Bangladesh's rural
+         smallholder terrain; secured \textbf{UIHP} grant and BHTPA incubation support.}
+    \resumeItemListEnd
+
+    \vspace{-5pt}
+
+    % --- Enigmatter Studio ---
+    \resumeSubheading{Enigmatter Studio}{Bangladesh}
+    {Founder, Animator \& Lead VFX Artist}{2021 -- 2025}
+    \resumeItemListStart
+      \resumeItem{Award-Winning 3D Animation \& VFX}
+        {Produced award-winning short films using Blender and Unreal Engine; spanned
+         iOS \& Android game development, sci-fi writing, and complex 3D scene design.}
+    \resumeItemListEnd
+
+  \resumeSubHeadingListEnd
+
+%-----------PUBLICATIONS-----------------
+\vspace{-5pt}
+\section{Publications}
+\vspace{-1pt}
+{\small\centering 10 publications~$\cdot$~\textbf{502 citations}~$\cdot$~\textbf{h-index: 5}~$\cdot$~\textbf{i10-index: 3}~$\cdot$~\textit{(Google Scholar)}\par}
+\vspace{2pt}
+\resumeSubHeadingListStart
+
+  \resumeSubItem{Efficient Antihallucinogenic AI for Tropical Medicine: A Probabilistic Framework for Differential Diagnosis}
+    {\textbf{AAAI 2025}~$\cdot$~Fine-tuned LLaMA~3.2 with Bayesian reasoning \& LoRA; 82.8\% Top-3 accuracy for tropical disease diagnosis.\\
+    \href{https://openreview.net/forum?id=E6J9IFPE0w}{\textit{openreview.net/forum?id=E6J9IFPE0w}}}
+
+  \vspace{2pt}
+  \resumeSubItem{A Web-Based Mpox Skin Lesion Detection System Considering Racial Diversity}
+    {\textbf{Biomedical Signal Processing and Control, Elsevier 2025}~$\cdot$~Racially diverse MSLD v2.0 dataset; ResNet50 benchmarking via HAM10000 transfer learning.\\
+    \href{https://www.sciencedirect.com/science/article/pii/S1746809424008000}{\textit{sciencedirect.com/science/article/pii/S1746809424008000}}}
+
+  \vspace{2pt}
+  \resumeSubItem{Monkeypox Skin Lesion Detection Using Deep Learning Models: A Feasibility Study}
+    {\textbf{arXiv 2022}~$\cdot$~Foundational MSLD dataset; \textasciitilde82.96\% accuracy distinguishing mpox from similar skin conditions.\\
+    \href{https://arxiv.org/abs/2207.03342}{\textit{arxiv.org/abs/2207.03342}}}
+
+  \vspace{2pt}
+  \resumeSubItem{BUET Multi-Disease Heart Sound Dataset (BMD-HS): A Comprehensive Auscultation Dataset for Computer-Aided Diagnostics}
+    {\textbf{arXiv 2024}~$\cdot$~864 multi-label heart sound recordings for complex valvular diseases; bridges auscultation with AI diagnostics.\\
+    \href{https://arxiv.org/abs/2409.00724}{\textit{arxiv.org/abs/2409.00724}}}
+
+\resumeSubHeadingListEnd
+
+%-----------PROJECTS-----------------
+\vspace{-5pt}
+\section{Projects}
+\resumeSubHeadingListStart
+
+  \resumeSubItem{mLabLLM --- Efficient Antihallucinogenic AI for Tropical Medicine \textnormal{(AI, LLM, Bayesian Framework)}}
+    {Fine-tuned LLaMA~3.2 for differential diagnosis of Dengue, Malaria, and Chikungunya; 82.8\% Top-3 accuracy via LoRA and model pruning for real-time clinical support.
+    \textit{Python, TensorFlow} (2025)}
+
+  \vspace{2pt}
+  \resumeSubItem{MSLD v2.0 --- Racial-Diversity-Aware Mpox Detection System \textnormal{(Deep Learning, Fairness AI)}}
+    {Created the racially diverse MSLD v2.0 dataset; benchmarked ResNet50 via HAM10000 transfer learning; deployed Flask prototype for inclusive, rapid mpox screening.
+    \textit{Python, Keras, Flask} (2025)}
+
+  \vspace{2pt}
+  \resumeSubItem{BMD-HS --- BUET Multi-Disease Heart Sound Dataset \textnormal{(Dataset Development, AI Diagnostics)}}
+    {Co-developed 864 multi-label heart sound recordings for complex valvular diseases, bridging clinical auscultation with AI diagnostics.
+    \textit{Python, Audio Processing} (2024)}
+
+  \vspace{2pt}
+  \resumeSubItem{FetoSynth --- Fetal Heart Sound Localization \normalfont{\textbf{[2nd Place, Johns Hopkins Global Health Track 2024]}}}
+    {Real-time acoustic system for fetal heart sound localization and prenatal monitoring in low-resource settings.
+    \textit{Raspberry Pi, AI Models} (2024)}
+
+  \vspace{2pt}
+  \resumeSubItem{DengueDrops --- Smart IV Fluid Calculator \normalfont{\textbf{[2nd Place, Johns Hopkins Digital Health Track 2024]}}}
+    {AI-powered IV fluid optimization and hospital workflow management for dengue patients.
+    \textit{Mobile Development, AI} (2024)}
+
+  \vspace{2pt}
+  \resumeSubItem{MSLD v1.0 --- Monkeypox Skin Lesion Detection Feasibility Study \textnormal{(Deep Learning, Dataset Curation)}}
+    {Foundational MSLD dataset; evaluated pre-trained models achieving \textasciitilde82.96\% accuracy distinguishing mpox from similar conditions.
+    \textit{Python, TensorFlow} (2022)}
+
+\resumeSubHeadingListEnd
+
+\vspace{-5pt}
+\educationblock
+
+%-----------HONORS AND AWARDS-----------------
+\vspace{-5pt}
+\section{Honors \& Awards}
+\begin{description}[font=$\bullet$]
+  \item {\textbf{Honda Young Engineer and Scientist (Y-E-S) Award 2023}~---~Honda Foundation, Bangladesh}
+  \vspace{-5pt}
+  \item {\textbf{2nd Place}~---~Johns Hopkins Healthcare Design Competition, \textit{Global Health Track} 2024 \hfill Team FetoSynth}
+  \vspace{-5pt}
+  \item {\textbf{2nd Place}~---~Johns Hopkins Healthcare Design Competition, \textit{Digital Health Track} 2024 \hfill Team DengueDrops}
+  \vspace{-5pt}
+  \item {\textbf{Innovation Award}~---~International Planetary Aerial Systems Challenge (IPAS) 2021 \hfill 1\textsuperscript{st} in Bangladesh, 8\textsuperscript{th} Globally}
+  \vspace{-5pt}
+  \item {\textbf{UIHP Winner 2023}~---~University Innovation Hub Programme, BHTPA \hfill PakhiDrone BD}
+\end{description}
+
+\end{document}
